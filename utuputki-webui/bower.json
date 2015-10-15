@@ -1,0 +1,29 @@
+{
+  "name": "utuputki-webui",
+  "version": "0.0.1",
+  "homepage": "https://github.com/katajakasa/utuputki2",
+  "authors": [
+    "Tuomas Virtanen <katajakasa@gmail.com>"
+  ],
+  "description": "Lanparty Video Streamer",
+  "license": "GPLv3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/public/static/components/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.7",
+    "angular-route": "~1.4.7",
+    "ng-sockjs": "~0.0.1",
+    "angular-bootstrap": "~0.14.2",
+    "bootstrap": "~3.3.5",
+    "angular-dialog-service": "~5.2.8",
+    "api-check": "~7.5.3",
+    "angular-formly": "~7.2.1",
+    "angular-formly-templates-bootstrap": "~6.1.5"
+  }
+}

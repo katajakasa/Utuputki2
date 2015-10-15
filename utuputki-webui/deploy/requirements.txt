@@ -1,0 +1,6 @@
+tornado==4.2.1
+sockjs-tornado==1.0.2
+sqlalchemy==1.0.8
+isodate==0.5.4
+passlib==1.6.5
+pytz

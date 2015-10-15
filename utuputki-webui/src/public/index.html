@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='utuputki'>
+<head>
+    <meta charset="utf-8" />
+    <title>Utuputki2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/components/angular-dialog-service/dist/dialogs.css">
+    <link rel="stylesheet" type="text/css" href="/static/style/site.css">
+    <script type="text/javascript" src="/static/components/sockjs/sockjs.min.js" defer></script>
+    <script type="text/javascript" src="/static/components/angular/angular.min.js" defer></script>
+    <script type="text/javascript" src="/static/components/angular-route/angular-route.min.js" defer></script>
+    <script type="text/javascript" src="/static/components/ng-sockjs/dist/ng-sockjs.min.js" defer></script>
+    <script type="text/javascript" src="/static/components/angular-bootstrap/ui-bootstrap-tpls.min.js" defer></script>
+    <script type="text/javascript" src="/static/components/angular-sanitize/angular-sanitize.min.js" defer></script>
+    <script type="text/javascript" src="/static/components/angular-dialog-service/dist/dialogs.min.js" defer></script>
+    <script type="text/javascript" src="/static/components/api-check/dist/api-check.min.js" defer></script>
+    <script type="text/javascript" src="/static/components/angular-formly/dist/formly.min.js" defer></script>
+    <script type="text/javascript" src="/static/components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.min.js" defer></script>
+    <script type="text/javascript" src="/static/custom/app.js" defer></script>
+    <script type="text/javascript" src="/static/custom/controllers/dashboard.js" defer></script>
+    <script type="text/javascript" src="/static/custom/controllers/login.js" defer></script>
+    <script type="text/javascript" src="/static/custom/controllers/logout.js" defer></script>
+    <script type="text/javascript" src="/static/custom/controllers/nav.js" defer></script>
+    <script type="text/javascript" src="/static/custom/controllers/register.js" defer></script>
+    <script type="text/javascript" src="/static/custom/controllers/root.js" defer></script>
+    <script type="text/javascript" src="/static/custom/services/auth.js" defer></script>
+    <script type="text/javascript" src="/static/custom/services/session.js" defer></script>
+    <script type="text/javascript" src="/static/custom/services/sock.js" defer></script>
+    <script type="text/javascript" src="/static/custom/other/constants.js" defer></script>
+    <script type="text/javascript" src="/static/custom/other/utils.js" defer></script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="https://github.com/katajakasa/utuputki2">Utuputki2</a>
+        </div>
+        <div class="" id="topnav">
+            <ul class="nav navbar-nav" ng-controller="NavController">
+                <li ng-repeat="site in sites" ng-if="is_visible(site.url)" ng-class="{ active: is_active(site.url) }">
+                    <a href="#{{ site.url }}">{{ site.name }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <ng-view></ng-view>
+    </div>
+</div>
+</body>
+</html>
