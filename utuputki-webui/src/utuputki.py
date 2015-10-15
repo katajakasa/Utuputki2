@@ -10,6 +10,7 @@ from utils import generate_session, to_isodate, from_isodate, utc_now, utc_minus
 from tornado import web, ioloop
 from sockjs.tornado import SockJSRouter, SockJSConnection
 from sqlalchemy.orm.exc import NoResultFound
+from queue import queue_init
 
 
 class UtuputkiSock(SockJSConnection):
@@ -236,6 +237,9 @@ if __name__ == '__main__':
 
     # Set up the database
     db_init(settings.DATABASE_CONFIG)
+
+    # Set up celery queue
+    queue_init()
 
     # SockJS interface
     router = SockJSRouter(UtuputkiSock, '/sock')

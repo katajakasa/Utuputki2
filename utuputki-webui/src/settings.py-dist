@@ -4,9 +4,11 @@
 import os
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
 
-
 # Port for the server.
 PORT = 8000
+
+# TZ
+TIMEZONE = "Europe/Helsinki"
 
 # Debug mode.
 # If true, the daemons will print on commandline instead of logfile.
@@ -19,4 +21,3 @@ DATABASE_CONFIG = 'sqlite:///{}'.format(os.path.join(BASEDIR, "audiostash.db"))
 
 # No point in changing these
 PUBLIC_PATH = os.path.join(BASEDIR, "public")
-
