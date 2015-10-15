@@ -55,3 +55,12 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Pycharm
+.idea
+
+# Others
+utuputki-webui/src/settings.py
+utuputki-webui/src/audiostash.db
+utuputki-webui/src/public/static/style/site.css
+utuputki-webui/src/public/static/components
