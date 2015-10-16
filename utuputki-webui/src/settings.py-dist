@@ -21,3 +21,10 @@ DATABASE_CONFIG = 'sqlite:///{}'.format(os.path.join(BASEDIR, "audiostash.db"))
 
 # No point in changing these
 PUBLIC_PATH = os.path.join(BASEDIR, "public")
+
+# Celery broker
+CELERY_BROKER = 'sqla+'+DATABASE_CONFIG
+# CELERY_BROKER = 'amqp://user:password@localhost:5672//'
+
+# Celery results backend
+CELERY_BACKEND = 'sqla+'+DATABASE_CONFIG
