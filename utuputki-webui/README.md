@@ -14,8 +14,12 @@ Run all commands in utuputki-webui directory.
 Running
 -------
 
-1. Copy settings.py-dist to settings.py in src/ directory. Edit as necessary.
-2. Run with `python src/utuputki.py`
+Again, Run all commands in utuputki-webui directory.
+
+1. Create utuputki.conf (or ~/.utuputki.conf or /etc/utuputki.conf) and edit it as necessary.
+   See utuputki.conf.dist for help.
+2. Run database migrations with alembic: `alembic upgrade head`.
+3. Run with `python src/utuputki.py`.
 
 License
 -------

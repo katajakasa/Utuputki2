@@ -240,8 +240,12 @@ class UtuputkiSock(SockJSConnection):
 
 
 if __name__ == '__main__':
-    print("Starting server on port {}.".format(settings.PORT))
+    print("Utuputki2 Web UI Daemon starting up.")
+
+    settings.config_init("../utuputki.conf")
+
     if settings.DEBUG:
+        print("Server port = {}.".format(settings.PORT))
         print("Public path = {}".format(settings.PUBLIC_PATH))
 
     # Set up the database
