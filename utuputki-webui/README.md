@@ -21,6 +21,12 @@ Again, Run all commands in utuputki-webui directory.
 2. Run database migrations with alembic: `alembic upgrade head`.
 3. Run with `python src/utuputki.py`.
 
+Notes
+-----
+
+* Making new alembic revisions: `alembic revision --autogenerate -m "My short desc"`. Remember to check results!
+* Running migrations: `alembic upgrade head`.
+
 License
 -------
 
