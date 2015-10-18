@@ -33,6 +33,7 @@ class AuthenticateHandler(HandlerBase):
             self.sock.sid = sid
             self.sock.uid = user.id
             self.sock.authenticated = True
+            self.sock.level = user.level
             self.log.set_sid(sid)
 
             # Send login success message

@@ -8,7 +8,7 @@ from ConfigParser import SafeConfigParser
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
 
 # Make SQLite database default for everything
-default_db = 'sqlite:///{}'.format(os.path.join(BASEDIR, "audiostash.db"))
+default_db = 'sqlite:///{}'.format(os.path.join(BASEDIR, "utuputki.db"))
 default_celery_backend = 'sqla+'+default_db
 default_celery_broker = 'sqla+'+default_db
 

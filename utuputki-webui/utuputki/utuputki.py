@@ -9,7 +9,7 @@ from sockjs.tornado import SockJSRouter, SockJSConnection
 
 from db import db_init
 from queue import queue_init
-from handlers import login, logout, authenticate, queue, register, unknown
+from handlers import login, logout, authenticate, queue, register, player, event, unknown
 from log import GlobalLog, SessionLog
 
 
@@ -21,6 +21,7 @@ class UtuputkiSock(SockJSConnection):
         self.sid = None
         self.uid = None
         self.ip = None
+        self.level = 0
         self.log = None
         super(UtuputkiSock, self).__init__(session)
 
@@ -56,6 +57,8 @@ class UtuputkiSock(SockJSConnection):
             'logout': logout.LogoutHandler,
             'register': register.RegisterHandler,
             'queue': queue.QueueHandler,
+            'event': event.EventHandler,
+            'player': player.PlayerHandler,
             'unknown': unknown.UnknownHandler
         }
         cbs[packet_type if packet_type in cbs else 'unknown'](self, packet_type).handle(packet_msg)
@@ -67,6 +70,7 @@ class UtuputkiSock(SockJSConnection):
         self.sid = None
         self.ip = None
         self.log = None
+        self.level = 0
         return super(UtuputkiSock, self).on_close()
 
 

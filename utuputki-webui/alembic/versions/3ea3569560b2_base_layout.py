@@ -1,13 +1,13 @@
 """Base layout
 
-Revision ID: 10f1d9760a41
+Revision ID: 3ea3569560b2
 Revises: 
-Create Date: 2015-10-18 17:40:23.194000
+Create Date: 2015-10-19 00:29:50.597000
 
 """
 
 # revision identifiers, used by Alembic.
-revision = '10f1d9760a41'
+revision = '3ea3569560b2'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,7 +28,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('hash', sa.String(length=64), nullable=True),
     sa.Column('youtube_hash', sa.String(length=32), nullable=True),
-    sa.Column('fetch_url', sa.String(length=512), nullable=True),
+    sa.Column('other_url', sa.String(length=512), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('title', sa.String(length=100), nullable=True),
     sa.PrimaryKeyConstraint('id')
@@ -109,6 +109,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('queue', sa.Integer(), nullable=True),
     sa.Column('media', sa.Integer(), nullable=True),
+    sa.Column('played', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['media'], ['media.id'], ),
     sa.ForeignKeyConstraint(['queue'], ['sourcequeue.id'], ),
     sa.PrimaryKeyConstraint('id')

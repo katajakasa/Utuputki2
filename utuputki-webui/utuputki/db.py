@@ -54,6 +54,7 @@ class Player(Base):
 
     def serialize(self, show_token=False):
         return {
+            'id': self.id,
             'token': self.token if show_token else None,
             'name': self.name,
             'event_id': self.event,
@@ -107,11 +108,11 @@ class SourceQueue(Base):
 class Source(Base):
     __tablename__ = "source"
     id = Column(Integer, primary_key=True)
-    hash = Column(String(64))
-    youtube_hash = Column(String(32), nullable=True)
-    fetch_url = Column(String(512), nullable=True)
+    hash = Column(String(64), default='')
+    youtube_hash = Column(String(32), default='')
+    other_url = Column(String(512), default='')
     created_at = Column(DateTime(timezone=True), default=utc_now())
-    title = Column(String(100), nullable=True)
+    title = Column(String(100), default='')
 
     def serialize(self):
         return {

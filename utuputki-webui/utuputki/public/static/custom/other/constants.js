@@ -12,6 +12,18 @@ app.constant('AUTH_EVENTS', {
     registerFailed: 'auth-register-failed'
 });
 
+app.constant('SYNC_EVENTS', {
+    eventAddSuccess: 'event-add-success',
+    eventAddFailed: 'event-add-failed',
+    eventsRefresh: 'events-refresh',
+    playerAddSuccess: 'player-add-success',
+    playerAddFailed: 'player-add-failed',
+    playersRefresh: 'players-refresh',
+    queueAddSuccess: 'queue-add-success',
+    queueAddFailed: 'queue-add-failed',
+    queuesRefresh: 'queues-refresh'
+});
+
 app.constant('USERLEVELS', {
     'none': 0,
     'user': 10,

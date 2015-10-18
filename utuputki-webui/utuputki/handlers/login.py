@@ -38,6 +38,7 @@ class LoginHandler(HandlerBase):
             self.sock.sid = session_id
             self.sock.uid = user.id
             self.sock.authenticated = True
+            self.sock.level = user.level
             self.log.set_sid(session_id)
 
             # Send login success message

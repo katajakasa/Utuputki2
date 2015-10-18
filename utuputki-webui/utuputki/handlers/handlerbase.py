@@ -9,9 +9,10 @@ class HandlerBase(object):
         self.mtype = mtype
         self.log = self.sock.log
 
-    def _send_error(self, mtype, message, code):
+    def _send_error(self, mtype, message, code, query=None):
         msg = json.dumps({
             'type': mtype,
+            'query': query,
             'error': 1,
             'data': {
                 'code': code,
@@ -21,20 +22,21 @@ class HandlerBase(object):
         self.log.debug("Error {}".format(msg))
         self.sock.send(msg)
 
-    def _send_message(self, mtype, message):
+    def _send_message(self, mtype, message, query=None):
         msg = json.dumps({
             'type': mtype,
+            'query': query,
             'error': 0,
             'data': message,
         })
         self.log.debug("Message {}".format(msg))
         self.sock.send(msg)
 
-    def send_error(self, message, code):
-        self._send_error(self.mtype, message, code)
+    def send_error(self, message, code, query=None):
+        self._send_error(self.mtype, message, code, query=query)
 
-    def send_message(self, message):
-        self._send_message(self.mtype, message)
+    def send_message(self, message, query=None):
+        self._send_message(self.mtype, message, query=query)
 
     def handle(self, msg):
         pass
