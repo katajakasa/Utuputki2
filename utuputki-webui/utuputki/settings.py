@@ -26,6 +26,8 @@ defaults = {
 
 # Read configuration file
 def config_init():
+    sys.path.append(BASEDIR)
+
     parser = SafeConfigParser()
     files = parser.read(['utuputki.conf', os.path.expanduser('~/.utuputki.conf'), '/etc/utuputki.conf'])
     for m_file in files:

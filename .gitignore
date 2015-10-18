@@ -61,6 +61,6 @@ target/
 
 # Others
 utuputki-webui/utuputki.conf
-utuputki-webui/src/audiostash.db
-utuputki-webui/src/public/static/style/site.css
-utuputki-webui/src/public/static/components
+utuputki-webui/utuputki/audiostash.db
+utuputki-webui/utuputki/public/static/style/site.css
+utuputki-webui/utuputki/public/static/components

@@ -48,7 +48,7 @@ class Player(Base):
     def serialize(self):
         return {
             'token': self.token,
-            'name': self.name,
+            'name': self.name
         }
 
 
@@ -186,7 +186,6 @@ class User(Base):
     def serialize(self):
         s = db_session()
         settings = [setting.serialize() for setting in s.query(Setting).filter_by(user=self.id).all()],
-        players = [player.serialize() for player in s.query(Player).filter_by(user=self.id).all()],
         queues = [queue.serialize() for queue in s.query(SourceQueue).filter_by(user=self.id).all()],
         s.close()
         return {
@@ -196,8 +195,7 @@ class User(Base):
             'email': self.email,
             'level': self.level,
             'settings': settings,
-            'queues': queues,
-            'players': players
+            'queues': queues
         }
 
 
