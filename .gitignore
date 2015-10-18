@@ -60,6 +60,7 @@ target/
 .idea
 
 # Others
+utuputki-webui/alembic.ini
 utuputki-webui/src/settings.py
 utuputki-webui/src/audiostash.db
 utuputki-webui/src/public/static/style/site.css

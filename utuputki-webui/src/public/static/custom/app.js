@@ -6,6 +6,7 @@ var app = angular.module(
         'ngRoute',
         'ng.sockjs',
         'ui.bootstrap',
+        'ui.grid',
         'formly',
         'formlyBootstrap',
         'dialogs.main'

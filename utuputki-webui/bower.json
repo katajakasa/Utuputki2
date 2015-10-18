@@ -24,6 +24,7 @@
     "angular-dialog-service": "~5.2.8",
     "api-check": "~7.5.3",
     "angular-formly": "~7.2.1",
-    "angular-formly-templates-bootstrap": "~6.1.5"
+    "angular-formly-templates-bootstrap": "~6.1.5",
+    "angular-ui-grid": "~3.0.7"
   }
 }

@@ -9,7 +9,7 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'AUTH_EVENTS',
                 Session.create(
                     msg['data']['sid'],
                     msg['data']['uid'],
-                    msg['data']['level']
+                    msg['data']['user']
                 );
                 $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                 console.log("Authentication success!");
@@ -33,7 +33,7 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'AUTH_EVENTS',
                 Session.create(
                     msg['data']['sid'],
                     msg['data']['uid'],
-                    msg['data']['level']
+                    msg['data']['user']
                 );
                 $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
             } else {

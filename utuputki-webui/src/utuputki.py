@@ -52,6 +52,9 @@ class UtuputkiSock(SockJSConnection):
     def on_unknown_msg(self, packet_msg):
         print("Unknown or nonexistent packet type!")
 
+    def on_queue_msg(self, packet_msg):
+        pass
+
     def on_login_msg(self, packet_msg):
         username = packet_msg.get('username', '')
         password = packet_msg.get('password', '')
@@ -88,7 +91,7 @@ class UtuputkiSock(SockJSConnection):
             self.send_message('login', {
                 'uid': user.id,
                 'sid': session_id,
-                'level': user.level
+                'user': user.serialize()
             })
         else:
             self.send_error('login', 'Incorrect username or password', 401)
@@ -193,7 +196,7 @@ class UtuputkiSock(SockJSConnection):
             self.send_message('auth', {
                 'uid': user.id,
                 'sid': sid,
-                'level': user.level
+                'user': user.serialize()
             })
             return
 
@@ -225,6 +228,7 @@ class UtuputkiSock(SockJSConnection):
             'login': self.on_login_msg,
             'logout': self.on_logout_msg,
             'register': self.on_register_msg,
+            'queue': self.on_queue_msg,
             'unknown': self.on_unknown_msg
         }
         cbs[packet_type if packet_type in cbs else 'unknown'](packet_msg)

@@ -3,7 +3,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Text, Boolean
+from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Text, Boolean, UniqueConstraint
 from utils import utc_now
 
 Base = declarative_base()
@@ -31,36 +31,49 @@ MEDIASTATUS = {
 }
 
 
+class Event(Base):
+    __tablename__ = "event"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(32))
+    visible = Column(Boolean)
+
+
 class Player(Base):
     __tablename__ = "player"
-    token = Column(String(16), primary_key=True)
-    user = Column(ForeignKey('user.id'))
-    playlist = Column(ForeignKey('playlist.id'))
+    id = Column(Integer, primary_key=True)
+    token = Column(String(16), unique=True)
+    event = Column(ForeignKey('event.id'))
+    name = Column(String(32))
 
     def serialize(self):
         return {
             'token': self.token,
-            'playlist_id': self.playlist_id
+            'name': self.name,
         }
 
 
-class PlaylistItem(Base):
-    __tablename__ = "playlistitem"
+class SourceQueueItem(Base):
+    __tablename__ = "sourcequeueitem"
     id = Column(Integer, primary_key=True)
-    playlist = Column(ForeignKey('playlist.id'))
+    queue = Column(ForeignKey('sourcequeue.id'))
     media = Column(ForeignKey('media.id'))
 
 
-class Playlist(Base):
-    __tablename__ = "playlist"
+class SourceQueue(Base):
+    __tablename__ = "sourcequeue"
     id = Column(Integer, primary_key=True)
     user = Column(ForeignKey('user.id'))
-    name = Column(String(32))
+    target = Column(ForeignKey('player.id'))
     created_at = Column(DateTime(timezone=True), default=utc_now())
+
+    # Allow only one source queue per user per target player
+    __table_args__ = (
+        UniqueConstraint('user', 'target', name='_user_target_uc'),
+    )
 
     def serialize(self):
         s = db_session()
-        items = [item.media.serialize() for item in s.query(PlaylistItem).filter_by(playlist=self.id).all()],
+        items = [item.media.serialize() for item in s.query(SourceQueueItem).filter_by(playlist=self.id).all()],
         s.close()
         return {
             'id': self.id,
@@ -174,6 +187,7 @@ class User(Base):
         s = db_session()
         settings = [setting.serialize() for setting in s.query(Setting).filter_by(user=self.id).all()],
         players = [player.serialize() for player in s.query(Player).filter_by(user=self.id).all()],
+        queues = [queue.serialize() for queue in s.query(SourceQueue).filter_by(user=self.id).all()],
         s.close()
         return {
             'id': self.id,
@@ -182,6 +196,7 @@ class User(Base):
             'email': self.email,
             'level': self.level,
             'settings': settings,
+            'queues': queues,
             'players': players
         }
 
