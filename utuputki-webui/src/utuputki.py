@@ -139,7 +139,6 @@ class UtuputkiSock(SockJSConnection):
         except NoResultFound:
             pass
 
-
         pw_hash = pbkdf2_sha256.encrypt(password)
         user = User(username=username, password=pw_hash, email=email, nickname=nickname, level=USERLEVELS['user'])
         s.add(user)
@@ -159,13 +158,19 @@ class UtuputkiSock(SockJSConnection):
         # Dump out log
         print("{} Logged out '{}'".format(self.ip, self.sid))
 
-        # Disauthenticate & clear session ID
+        # Deauthenticate & clear session ID
         self.authenticated = False
         self.sid = None
 
     def on_auth_msg(self, packet_msg):
-        sid = packet_msg.get('sid', '')
+        sid = packet_msg.get('sid')
 
+        # Make sure we at least do get a sid (not empty string or stuff)
+        if not sid:
+            self.send_error('auth', "Invalid session", 403)
+            return
+
+        # Attempt to find an active session and the attached user account
         user = None
         ses = None
         s = db_session()

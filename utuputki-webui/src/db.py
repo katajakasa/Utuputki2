@@ -35,10 +35,12 @@ class Player(Base):
     __tablename__ = "player"
     token = Column(String(16), primary_key=True)
     user = Column(ForeignKey('user.id'))
+    playlist = Column(ForeignKey('playlist.id'))
 
     def serialize(self):
         return {
-            'token': self.token
+            'token': self.token,
+            'playlist_id': self.playlist_id
         }
 
 

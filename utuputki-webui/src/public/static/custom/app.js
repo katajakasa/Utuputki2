@@ -32,9 +32,19 @@ app.config(['$routeProvider',
                 templateUrl: '/partials/register.html',
                 controller: 'RegisterController'
             }).
+            when('/history', {
+                templateUrl: '/partials/history.html',
+                controller: 'HistoryController',
+                requireLogin: true
+            }).
+            when('/playlist', {
+                templateUrl: '/partials/playlist.html',
+                controller: 'PlaylistController',
+                requireLogin: true
+            }).
             when('/', {
-                templateUrl: '/partials/dashboard.html',
-                controller: 'DashboardController',
+                templateUrl: '/partials/myqueue.html',
+                controller: 'MyQueueController',
                 requireLogin: true
             }).
             otherwise({

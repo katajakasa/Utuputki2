@@ -3,9 +3,9 @@
 app.controller('NavController', ['$scope', '$location', 'AuthService',
     function ($scope, $location, AuthService) {
         $scope.sites = [
-            {url: '/dashboard', name: 'Dashboard', requireLogin: true},
+            {url: '/', name: 'My Queue', requireLogin: true},
+            {url: '/playlist', name: 'Playlist', requireLogin: true},
             {url: '/history', name: 'History', requireLogin: true},
-            {url: '/settings', name: 'Settings', requireLogin: true},
             {url: '/login', name: 'Login', requireLogin: false},
             {url: '/register', name: 'Register', requireLogin: false},
             {url: '/logout', name: 'Logout', requireLogin: true}

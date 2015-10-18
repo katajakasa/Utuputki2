@@ -98,7 +98,7 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'AUTH_EVENTS',
         function setup() {
             SockService.add_recv_handler('auth', auth_event);
             SockService.add_recv_handler('login', login_event);
-            SockService.add_recv_handler('register', register_event);
+            SockService.add_recv_handler('register', login_event);
         }
 
         function get_last_error() {
@@ -110,7 +110,6 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'AUTH_EVENTS',
             authenticate: authenticate,
             login: login,
             logout: logout,
-            register: register,
             is_authorized: is_authorized,
             is_authenticated: is_authenticated,
             get_last_error: get_last_error,

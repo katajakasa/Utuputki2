@@ -5,9 +5,13 @@ app.run(['$rootScope', '$location', 'AuthService', 'SockService', 'Session', 'AU
 
         // Make sure we are logged in the next page requires that
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
-            if (AuthService.is_authenticated() && next.originalPath == '/login') {
-                event.preventDefault();
-                $location.path('/dashboard');
+            if(next.requireLogin) {
+                if(!AuthService.is_authenticated()) {
+                    if(next.originalPath != '/login' || current.originalPath != '/') {
+                        event.preventDefault();
+                        $location.path('/login');
+                    }
+                }
             }
         });
 

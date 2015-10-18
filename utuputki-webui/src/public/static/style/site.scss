@@ -1,18 +1,8 @@
 
-body {}
-
-.layout-content {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 1000px;
-
-  .vertical-form {
-    div {
-      display: block;
-    }
-  }
+h1,h2,h3,h4,h5,p,td,th,span {
+  font-family: 'Open Sans', sans-serif;
 }
 
-.alert {
-  color: red;
+h2 {
+  margin-top: 0px;
 }

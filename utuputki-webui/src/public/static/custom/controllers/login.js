@@ -35,7 +35,7 @@ app.controller('LoginController', ['$scope', '$location', '$rootScope', 'AUTH_EV
         ];
 
         $scope.$on(AUTH_EVENTS.loginSuccess, function (event, args) {
-            $location.path('/dashboard');
+            $location.path('/');
         });
 
         $scope.$on(AUTH_EVENTS.loginFailed, function (event, args) {
