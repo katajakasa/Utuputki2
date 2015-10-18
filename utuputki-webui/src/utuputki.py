@@ -242,7 +242,8 @@ class UtuputkiSock(SockJSConnection):
 if __name__ == '__main__':
     print("Utuputki2 Web UI Daemon starting up.")
 
-    settings.config_init("../utuputki.conf")
+    # Set up configuration vars
+    settings.config_init()
 
     if settings.DEBUG:
         print("Server port = {}.".format(settings.PORT))

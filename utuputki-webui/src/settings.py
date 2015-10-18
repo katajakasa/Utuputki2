@@ -25,9 +25,9 @@ defaults = {
 
 
 # Read configuration file
-def config_init(filename):
+def config_init():
     parser = SafeConfigParser()
-    files = parser.read([filename, 'utuputki.conf', os.path.expanduser('~/.utuputki.conf'), '/etc/utuputki.conf'])
+    files = parser.read(['utuputki.conf', os.path.expanduser('~/.utuputki.conf'), '/etc/utuputki.conf'])
     for m_file in files:
         print("Config: Read {} !".format(m_file))
 
