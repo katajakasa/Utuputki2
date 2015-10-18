@@ -7,7 +7,7 @@ Requirements
 
 Run all commands in utuputki-webui directory.
 
-1. Platform requirements: python2.7, python2.7-dev, nodejs + npm + bower, scss
+1. Platform requirements: python2.7, python2.7-dev, nodejs + npm + bower, . Optionally RabbitMQ.
 2. Python requirements: `pip install --upgrade -r deploy/requirements.txt`
 3. JS requirements `bower install`
 

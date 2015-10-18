@@ -3,5 +3,5 @@ PORT=8000
 TIMEZONE=Europe/Helsinki
 DEBUG=False
 DATABASE_CONFIG=mysql://username:password@localhost/databasename
-CELERY_BROKER=amqp://tuomas:tuomas@localhost:5672/utuputki
+CELERY_BROKER=amqp://guest:guest@localhost:5672/utuputki
 CELERY_BACKEND=sqla+mysql://username:password@localhost/databasename
