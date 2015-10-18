@@ -13,6 +13,7 @@ class AuthenticateHandler(HandlerBase):
         # Make sure we at least do get a sid (not empty string or stuff)
         if not sid:
             self.send_error("Invalid session", 403)
+            self.log.info("Authentication failed.")
             return
 
         # Attempt to find an active session and the attached user account
@@ -31,8 +32,7 @@ class AuthenticateHandler(HandlerBase):
         if ses and user:
             self.sock.sid = sid
             self.sock.authenticated = True
-
-            print("{} authenticated with '{}'.".format(self.sock.ip, self.sock.sid))
+            self.log.set_sid(sid)
 
             # Send login success message
             self.send_message({
@@ -40,8 +40,9 @@ class AuthenticateHandler(HandlerBase):
                 'sid': sid,
                 'user': user.serialize()
             })
+            self.log.info("Authenticated.")
             return
 
         # Error out
         self.send_error("Invalid session", 403)
-        print("{} authentication failed.".format(self.sock.ip))
+        self.log.info("Authentication failed.")

@@ -10,6 +10,7 @@ from sockjs.tornado import SockJSRouter, SockJSConnection
 from db import db_init
 from queue import queue_init
 from handlers import login, logout, authenticate, queue, register, unknown
+from log import GlobalLog, SessionLog
 
 
 class UtuputkiSock(SockJSConnection):
@@ -19,13 +20,15 @@ class UtuputkiSock(SockJSConnection):
         self.authenticated = False
         self.sid = None
         self.ip = None
+        self.log = None
         super(UtuputkiSock, self).__init__(session)
 
     def on_open(self, info):
         self.authenticated = False
         self.ip = info.ip
+        self.log = SessionLog(global_log, self)
         self.clients.add(self)
-        print("Connection accepted from {}".format(self.ip))
+        self.log.info("Connection accepted")
 
     def on_message(self, raw_message):
         # Load packet and parse as JSON
@@ -41,9 +44,9 @@ class UtuputkiSock(SockJSConnection):
 
         # Censor login packets for obvious reasons ...
         if packet_type != 'login':
-            print("Message: {}.".format(raw_message))
+            self.log.debug("Message: {}.".format(raw_message))
         else:
-            print("Message: **login**")
+            self.log.debug("Message: **login**")
 
         # Find and run callback
         cbs = {
@@ -58,25 +61,33 @@ class UtuputkiSock(SockJSConnection):
 
     def on_close(self):
         self.clients.remove(self)
-        print("Connection closed to {}".format(self.ip))
+        self.log.info("Connection closed")
         return super(UtuputkiSock, self).on_close()
 
 
 if __name__ == '__main__':
-    print("Utuputki2 Web UI Daemon starting up.")
+    print("Utuputki2 Web UI Daemon starting up ...")
 
     # Set up configuration vars
     settings.config_init()
 
+    # Set up the global log
     if settings.DEBUG:
-        print("Server port = {}.".format(settings.PORT))
-        print("Public path = {}".format(settings.PUBLIC_PATH))
+        global_log = GlobalLog(None, settings.LOG_LEVEL)
+    else:
+        global_log = GlobalLog(settings.LOG_FILE, settings.LOG_LEVEL)
+
+    global_log.debug("Server port = {}.".format(settings.PORT))
+    global_log.debug("Public path = {}".format(settings.PUBLIC_PATH))
 
     # Set up the database
     db_init(settings.DATABASE_CONFIG)
 
     # Set up celery queue
     queue_init()
+
+    # Just log success
+    global_log.info("Init OK & server running.")
 
     # SockJS interface
     router = SockJSRouter(UtuputkiSock, '/sock')

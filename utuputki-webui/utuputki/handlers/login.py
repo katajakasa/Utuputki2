@@ -18,7 +18,7 @@ class LoginHandler(HandlerBase):
             user = s.query(User).filter_by(username=username).one()
         except NoResultFound:
             self.send_error('Incorrect username or password', 401)
-            print("{} Invalid username or password in login request.".format(self.sock.ip))
+            self.log.info("Invalid username or password.")
             return
         finally:
             s.close()
@@ -37,6 +37,7 @@ class LoginHandler(HandlerBase):
             # Mark connection as authenticated, and save session id
             self.sock.sid = session_id
             self.sock.authenticated = True
+            self.log.set_sid(session_id)
 
             # Send login success message
             self.send_message({
@@ -46,7 +47,7 @@ class LoginHandler(HandlerBase):
             })
 
             # Dump out log
-            print("{} Logged in '{}'".format(self.sock.ip, self.sock.sid))
+            self.log.info("Logged in.")
         else:
             self.send_error('Incorrect username or password', 401)
-            print("{} Invalid username or password in login request.".format(self.sock.ip))
+            self.log.info("Invalid username or password.")

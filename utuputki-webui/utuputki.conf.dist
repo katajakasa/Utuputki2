@@ -1,7 +1,27 @@
 [utuputki]
+
+# Server port
 PORT=8000
+
+# Current timesome.
 TIMEZONE=Europe/Helsinki
+
+# Only set on development boxes.
 DEBUG=False
+
+# Database access string. See SQLAlchemy for more info
 DATABASE_CONFIG=mysql://username:password@localhost/databasename
+
+# Celery broker and backend paths. See Celery configuration for more info.
 CELERY_BROKER=amqp://guest:guest@localhost:5672/utuputki
 CELERY_BACKEND=sqla+mysql://username:password@localhost/databasename
+
+# 0 = Debug
+# 1 = Info
+# 2 = Warning
+# 3 = Error
+LOG_LEVEL=0
+
+# Note that the directory must exist!
+# If DEBUG = True, this will be ignored and errors go to stdout.
+LOG_FILE=/var/log/utuputki/utuputki-ui.log

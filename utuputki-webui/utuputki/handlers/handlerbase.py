@@ -7,6 +7,7 @@ class HandlerBase(object):
     def __init__(self, sock, mtype):
         self.sock = sock
         self.mtype = mtype
+        self.log = self.sock.log
 
     def _send_error(self, mtype, message, code):
         msg = json.dumps({
@@ -17,7 +18,7 @@ class HandlerBase(object):
                 'message': message
             }
         })
-        print("Error {}".format(msg))
+        self.log.debug("Error {}".format(msg))
         self.sock.send(msg)
 
     def _send_message(self, mtype, message):
@@ -26,7 +27,7 @@ class HandlerBase(object):
             'error': 0,
             'data': message,
         })
-        print("Message {}".format(msg))
+        self.log.debug("Message {}".format(msg))
         self.sock.send(msg)
 
     def send_error(self, message, code):
