@@ -11,3 +11,9 @@ app.constant('AUTH_EVENTS', {
     registerSuccess: 'auth-register-success',
     registerFailed: 'auth-register-failed'
 });
+
+app.constant('USERLEVELS', {
+    'none': 0,
+    'user': 10,
+    'admin': 20
+});

@@ -3,11 +3,11 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 from logging.config import fileConfig
 import sys
-sys.path.append("src/")
+sys.path.append("utuputki/")
 import settings
 import db
 
-settings.config_init("../utuputki.conf")
+settings.config_init()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

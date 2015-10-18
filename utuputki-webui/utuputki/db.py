@@ -37,6 +37,13 @@ class Event(Base):
     name = Column(String(32))
     visible = Column(Boolean)
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'visible': self.visible
+        }
+
 
 class Player(Base):
     __tablename__ = "player"
@@ -45,10 +52,11 @@ class Player(Base):
     event = Column(ForeignKey('event.id'))
     name = Column(String(32))
 
-    def serialize(self):
+    def serialize(self, show_token=False):
         return {
-            'token': self.token,
-            'name': self.name
+            'token': self.token if show_token else None,
+            'name': self.name,
+            'event_id': self.event,
         }
 
 
@@ -57,6 +65,7 @@ class SourceQueueItem(Base):
     id = Column(Integer, primary_key=True)
     queue = Column(ForeignKey('sourcequeue.id'))
     media = Column(ForeignKey('media.id'))
+    played = Column(Boolean, default=False)
 
     def serialize(self):
         s = db_session()
@@ -65,7 +74,8 @@ class SourceQueueItem(Base):
         return {
             'id': self.id,
             'media_id': self.media,
-            'media': media
+            'media': media,
+            'played': self.played
         }
 
 
@@ -194,18 +204,12 @@ class User(Base):
     level = Column(Integer, default=USERLEVELS['none'])
 
     def serialize(self):
-        s = db_session()
-        settings = [setting.serialize() for setting in s.query(Setting).filter_by(user=self.id).all()],
-        queues = [queue.serialize() for queue in s.query(SourceQueue).filter_by(user=self.id).all()],
-        s.close()
         return {
             'id': self.id,
             'username': self.username,
             'nickname': self.nickname,
             'email': self.email,
-            'level': self.level,
-            'settings': settings,
-            'queues': queues
+            'level': self.level
         }
 
 

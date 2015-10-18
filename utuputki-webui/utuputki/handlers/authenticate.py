@@ -31,13 +31,14 @@ class AuthenticateHandler(HandlerBase):
         # Session found with token.
         if ses and user:
             self.sock.sid = sid
+            self.sock.uid = user.id
             self.sock.authenticated = True
             self.log.set_sid(sid)
 
             # Send login success message
             self.send_message({
-                'uid': user.id,
-                'sid': sid,
+                'uid': self.sock.uid,
+                'sid': self.sock.sid,
                 'user': user.serialize()
             })
             self.log.info("Authenticated.")

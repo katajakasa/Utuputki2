@@ -1,7 +1,7 @@
 'use strict';
 
-app.factory('AuthService', ['$location', '$rootScope', 'Session', 'AUTH_EVENTS', 'SockService',
-    function ($location, $rootScope, Session, AUTH_EVENTS, SockService) {
+app.factory('AuthService', ['$location', '$rootScope', 'Session', 'User', 'AUTH_EVENTS', 'SockService',
+    function ($location, $rootScope, Session, User, AUTH_EVENTS, SockService) {
         var last_error = "";
 
         function auth_event(msg) {
@@ -9,8 +9,9 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'AUTH_EVENTS',
                 Session.create(
                     msg['data']['sid'],
                     msg['data']['uid'],
-                    msg['data']['user']
+                    msg['data']['user']['level']
                 );
+                User.create(msg['data']['user']);
                 $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                 console.log("Authentication success!");
             } else {
@@ -33,8 +34,9 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'AUTH_EVENTS',
                 Session.create(
                     msg['data']['sid'],
                     msg['data']['uid'],
-                    msg['data']['user']
+                    msg['data']['user']['level']
                 );
+                User.create(msg['data']['user']);
                 $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
             } else {
                 last_error = msg['data']['message'];
@@ -80,6 +82,7 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'AUTH_EVENTS',
                 'message': {}
             });
             Session.destroy();
+            User.destroy();
             $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
         }
 
@@ -98,7 +101,7 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'AUTH_EVENTS',
         function setup() {
             SockService.add_recv_handler('auth', auth_event);
             SockService.add_recv_handler('login', login_event);
-            SockService.add_recv_handler('register', login_event);
+            SockService.add_recv_handler('register', register_event);
         }
 
         function get_last_error() {

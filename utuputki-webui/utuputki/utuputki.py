@@ -19,6 +19,7 @@ class UtuputkiSock(SockJSConnection):
     def __init__(self, session):
         self.authenticated = False
         self.sid = None
+        self.uid = None
         self.ip = None
         self.log = None
         super(UtuputkiSock, self).__init__(session)
@@ -60,8 +61,12 @@ class UtuputkiSock(SockJSConnection):
         cbs[packet_type if packet_type in cbs else 'unknown'](self, packet_type).handle(packet_msg)
 
     def on_close(self):
-        self.clients.remove(self)
         self.log.info("Connection closed")
+        self.clients.remove(self)
+        self.uid = None
+        self.sid = None
+        self.ip = None
+        self.log = None
         return super(UtuputkiSock, self).on_close()
 
 

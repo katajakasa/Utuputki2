@@ -36,13 +36,14 @@ class LoginHandler(HandlerBase):
 
             # Mark connection as authenticated, and save session id
             self.sock.sid = session_id
+            self.sock.uid = user.id
             self.sock.authenticated = True
             self.log.set_sid(session_id)
 
             # Send login success message
             self.send_message({
-                'uid': user.id,
-                'sid': session_id,
+                'uid': self.sock.uid,
+                'sid': self.sock.sid,
                 'user': user.serialize()
             })
 
