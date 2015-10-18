@@ -58,6 +58,16 @@ class SourceQueueItem(Base):
     queue = Column(ForeignKey('sourcequeue.id'))
     media = Column(ForeignKey('media.id'))
 
+    def serialize(self):
+        s = db_session()
+        media = [media.serialize() for media in s.query(Media).filter_by(id=self.media).all()],
+        s.close()
+        return {
+            'id': self.id,
+            'media_id': self.media,
+            'media': media
+        }
+
 
 class SourceQueue(Base):
     __tablename__ = "sourcequeue"
@@ -73,7 +83,7 @@ class SourceQueue(Base):
 
     def serialize(self):
         s = db_session()
-        items = [item.media.serialize() for item in s.query(SourceQueueItem).filter_by(playlist=self.id).all()],
+        items = [item.serialize() for item in s.query(SourceQueueItem).filter_by(queue=self.id).all()],
         s.close()
         return {
             'id': self.id,

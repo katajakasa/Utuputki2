@@ -15,30 +15,30 @@ class RegisterHandler(HandlerBase):
         nickname = packet_msg.get('nickname')
 
         if not username or not password or not nickname:
-            self.send_error('register', 'Fill all fields', 400)
+            self.send_error('Fill all fields', 400)
             return
 
         if len(username) < 6 or len(username) > 32:
-            self.send_error('register', 'Username should be between 6 and 32 characters long', 400)
+            self.send_error('Username should be between 6 and 32 characters long', 400)
             return
 
         if len(nickname) < 4 or len(nickname) > 32:
-            self.send_error('register', 'Nickname should be between 4 and 32 characters long', 400)
+            self.send_error('Nickname should be between 4 and 32 characters long', 400)
             return
 
         if email and (len(email) < 3 or len(email) > 128):
-            self.send_error('register', 'Email should be between 3 and 128 characters long', 400)
+            self.send_error('Email should be between 3 and 128 characters long', 400)
             return
 
         if len(password) < 9:
-            self.send_error('register', 'Password should be at least 8 characters long', 400)
+            self.send_error('Password should be at least 8 characters long', 400)
             return
 
         # Make sure the nickname is not yet reserved
         s = db_session()
         try:
             s.query(User).filter_by(nickname=nickname).one()
-            self.send_error('register', 'Nickname is already reserved', 405)
+            self.send_error('Nickname is already reserved', 405)
             s.close()
             return
         except NoResultFound:
@@ -47,7 +47,7 @@ class RegisterHandler(HandlerBase):
         # Make sure the username is not yet reserved
         try:
             s.query(User).filter_by(username=username).one()
-            self.send_error('register', 'Username is already reserved', 405)
+            self.send_error('Username is already reserved', 405)
             s.close()
             return
         except NoResultFound:
@@ -60,4 +60,4 @@ class RegisterHandler(HandlerBase):
         s.close()
 
         # Send simple notification
-        self.send_message('register', {})
+        self.send_message({})

@@ -47,14 +47,14 @@ class UtuputkiSock(SockJSConnection):
 
         # Find and run callback
         cbs = {
-            'auth': authenticate.AuthenticateHandler(self),
-            'login': login.LoginHandler(self),
-            'logout': logout.LogoutHandler(self),
-            'register': register.RegisterHandler(self),
-            'queue': queue.QueueHandler(self),
-            'unknown': unknown.UnknownHandler(self)
+            'auth': authenticate.AuthenticateHandler,
+            'login': login.LoginHandler,
+            'logout': logout.LogoutHandler,
+            'register': register.RegisterHandler,
+            'queue': queue.QueueHandler,
+            'unknown': unknown.UnknownHandler
         }
-        cbs[packet_type if packet_type in cbs else 'unknown'].handle(packet_msg)
+        cbs[packet_type if packet_type in cbs else 'unknown'](self, packet_type).handle(packet_msg)
 
     def on_close(self):
         self.clients.remove(self)
