@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import logging
 import urlparse
 from sqlalchemy.orm.exc import NoResultFound
+
 from handlerbase import HandlerBase
 from common.db import db_session, SourceQueue, Media, Source, Cache
+
+log = logging.getLogger(__name__)
 
 
 class QueueHandler(HandlerBase):
@@ -161,7 +165,7 @@ class QueueHandler(HandlerBase):
                 s.commit()
                 s.close()
             else:
-                # Okay, Let's save the first draft and then poke at the downloader with celery
+                # Okay, Let's save the first draft and then poke at the downloader with MQ message
                 s = db_session()
                 source = Source(
                     youtube_hash=youtube_hash if youtube_hash else '',
@@ -181,7 +185,7 @@ class QueueHandler(HandlerBase):
             # Resend all queue data (for now)
             self.handle_fetchall_sig()
             self.send_message({}, query=query)
-            self.log.info("New media added to queue.")
+            log.info("[{}] New media added to queue".format(self.sock.sid[0:6]))
 
         # Drop entry from Queue. Media entries MAY be cleaned up later.
         if query == 'del':

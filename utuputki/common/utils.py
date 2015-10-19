@@ -6,6 +6,7 @@ import pytz
 import isodate
 import datetime
 import binascii
+import logging
 
 
 def utc_now():
@@ -48,4 +49,3 @@ def get_or_create(session, model, **kwargs):
 def generate_session():
     """ Generates a session ID. Secure enough. """
     return binascii.hexlify(os.urandom(16))
-

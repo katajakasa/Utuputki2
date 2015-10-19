@@ -19,7 +19,8 @@ AMQP_URL=amqp://guest:guest@localhost:5672/utuputki
 # 1 = Info
 # 2 = Warning
 # 3 = Error
-LOG_LEVEL=0
+# 4 = Critical
+LOG_LEVEL=1
 
 # Note that the directory must exist!
 # If DEBUG = True, this will be ignored and errors go to stdout.

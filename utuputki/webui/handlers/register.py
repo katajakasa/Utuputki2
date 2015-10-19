@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from passlib.hash import pbkdf2_sha256
 from sqlalchemy.orm.exc import NoResultFound
 
 from handlerbase import HandlerBase
 from common.db import db_session, User, USERLEVELS
+
+log = logging.getLogger(__name__)
 
 
 class RegisterHandler(HandlerBase):
@@ -60,5 +63,5 @@ class RegisterHandler(HandlerBase):
         s.close()
 
         # Send simple notification
-        self.log.info("Registered new user {}.".format(username))
+        log.info("Registered new user {}.".format(username))
         self.send_message({})

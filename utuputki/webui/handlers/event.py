@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from handlerbase import HandlerBase
 from common.db import db_session, Event
+
+log = logging.getLogger(__name__)
 
 
 class EventHandler(HandlerBase):

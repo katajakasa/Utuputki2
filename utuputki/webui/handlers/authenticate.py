@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from sqlalchemy.orm.exc import NoResultFound
 
 from handlerbase import HandlerBase
 from common.db import db_session, User, Session
+
+log = logging.getLogger(__name__)
 
 
 class AuthenticateHandler(HandlerBase):
@@ -13,7 +16,7 @@ class AuthenticateHandler(HandlerBase):
         # Make sure we at least do get a sid (not empty string or stuff)
         if not sid:
             self.send_error("Invalid session", 403)
-            self.log.info("Authentication failed.")
+            log.info("[{}] Authentication failed".format(sid[0:6]))
             return
 
         # Attempt to find an active session and the attached user account
@@ -34,7 +37,6 @@ class AuthenticateHandler(HandlerBase):
             self.sock.uid = user.id
             self.sock.authenticated = True
             self.sock.level = user.level
-            self.log.set_sid(sid)
 
             # Send login success message
             self.send_message({
@@ -42,9 +44,9 @@ class AuthenticateHandler(HandlerBase):
                 'sid': self.sock.sid,
                 'user': user.serialize()
             })
-            self.log.info("Authenticated.")
+            log.info("[{}] Authenticated".format(sid[0:6]))
             return
 
         # Error out
         self.send_error("Invalid session", 403)
-        self.log.info("Authentication failed.")
+        log.info("[{}] Authentication failed".format(sid[0:6]))

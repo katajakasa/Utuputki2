@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from handlerbase import HandlerBase
+
+log = logging.getLogger(__name__)
 
 
 class UnknownHandler(HandlerBase):
     def handle(self, packet_msg):
         if packet_msg:
-            print("Missing or unknown packet type!")
+            log.debug("Missing or unknown packet type!")
         else:
-            print("Erroneous and/or unserializable packet!")
+            log.debug("Erroneous and/or unserializable packet!")

@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import json
+import logging
+
+log = logging.getLogger(__name__)
 
 
 class HandlerBase(object):
     def __init__(self, sock, mtype):
         self.sock = sock
         self.mtype = mtype
-        self.log = self.sock.log
 
     def _send_error(self, mtype, message, code, query=None):
         msg = json.dumps({
@@ -19,7 +21,7 @@ class HandlerBase(object):
                 'message': message
             }
         })
-        self.log.debug("Error {}".format(msg))
+        log.debug("Error", msg)
         self.sock.send(msg)
 
     def _send_message(self, mtype, message, query=None):
@@ -29,7 +31,7 @@ class HandlerBase(object):
             'error': 0,
             'data': message,
         })
-        self.log.debug("Message {}".format(msg))
+        log.debug("Message", msg)
         self.sock.send(msg)
 
     def send_error(self, message, code, query=None):

@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from passlib.hash import pbkdf2_sha256
 from sqlalchemy.orm.exc import NoResultFound
 
 from handlerbase import HandlerBase
 from common.db import db_session, User, Session
 from common.utils import generate_session
+
+log = logging.getLogger(__name__)
 
 
 class LoginHandler(HandlerBase):
@@ -18,7 +21,7 @@ class LoginHandler(HandlerBase):
             user = s.query(User).filter_by(username=username).one()
         except NoResultFound:
             self.send_error('Incorrect username or password', 401)
-            self.log.info("Invalid username or password.")
+            log.info("Invalid username or password.")
             return
         finally:
             s.close()
@@ -39,7 +42,6 @@ class LoginHandler(HandlerBase):
             self.sock.uid = user.id
             self.sock.authenticated = True
             self.sock.level = user.level
-            self.log.set_sid(session_id)
 
             # Send login success message
             self.send_message({
@@ -49,7 +51,7 @@ class LoginHandler(HandlerBase):
             })
 
             # Dump out log
-            self.log.info("Logged in.")
+            log.info("[{}] Logged in".format(self.sock.sid[0:6]))
         else:
             self.send_error('Incorrect username or password', 401)
-            self.log.info("Invalid username or password.")
+            log.info("Invalid username or password.")

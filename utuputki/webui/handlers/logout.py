@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from handlerbase import HandlerBase
 from common.db import db_session, Session
+
+log = logging.getLogger(__name__)
 
 
 class LogoutHandler(HandlerBase):
@@ -13,10 +16,9 @@ class LogoutHandler(HandlerBase):
         s.close()
 
         # Dump out log
-        self.log.info("Logged out.")
-        self.log.set_sid(None)
+        log.info("[{}] Logged out".format(self.sock.sid[0:6]))
 
-        # Deauthenticate & clear session ID
+        # De-auth & clear session information
         self.sock.authenticated = False
         self.sock.sid = None
         self.sock.uid = None

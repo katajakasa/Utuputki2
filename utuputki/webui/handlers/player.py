@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from handlerbase import HandlerBase
 from common.db import db_session, Player
+
+log = logging.getLogger(__name__)
 
 
 class PlayerHandler(HandlerBase):
