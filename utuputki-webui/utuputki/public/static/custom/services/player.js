@@ -1,13 +1,14 @@
 'use strict';
 
-app.factory('Player', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS',
-    function ($location, $rootScope, SockService, AUTH_EVENTS) {
+app.factory('Player', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', 'SYNC_EVENTS',
+    function ($location, $rootScope, SockService, AUTH_EVENTS, SYNC_EVENTS) {
         var last_error = "";
         var players = [];
 
         function player_event(msg) {
             if (msg['error'] == 0) {
                 players = msg['data'];
+                $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
             } else {
                 last_error = msg['data']['message'];
             }

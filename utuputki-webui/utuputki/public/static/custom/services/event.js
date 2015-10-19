@@ -1,13 +1,14 @@
 'use strict';
 
-app.factory('Event', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS',
-    function ($location, $rootScope, SockService, AUTH_EVENTS) {
+app.factory('Event', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', 'SYNC_EVENTS',
+    function ($location, $rootScope, SockService, AUTH_EVENTS, SYNC_EVENTS) {
         var last_error = "";
         var events = [];
 
         function event_event(msg) {
             if (msg['error'] == 0) {
                 events = msg['data'];
+                $rootScope.$broadcast(SYNC_EVENTS.eventsRefresh);
             } else {
                 last_error = msg['data']['message'];
             }

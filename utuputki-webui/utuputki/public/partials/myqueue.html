@@ -38,6 +38,6 @@
 </div>
 <div class="col-sm-12 queue_show_block">
     <div class="queue_info" ng-if="grid_opts.data">
-        <div ui-grid="grid_opts" ui-grid-auto-resize ng-style="{ 'height': height }" class="queue_grid"></div>
+        <div ui-grid="grid_opts" ui-grid-auto-resize ng-style="getTableHeight()" class="queue_grid"></div>
     </div>
 </div>

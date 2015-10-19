@@ -30,6 +30,24 @@ class MessageQueue(object):
     def on_channel_open(self, channel):
         self.log.info('MQ: Channel {} open.'.format(channel))
         self.channel = channel
+        self.channel.exchange_declare(self.on_exchange_declareok, 'message', 'topic')
+
+    def on_exchange_declareok(self, unused_frame):
+        self.channel.queue_declare(self.on_queue_download_ok, 'download')
+        self.channel.queue_declare(self.on_queue_convert_ok, 'convert')
+
+    def on_queue_download_ok(self, method_frame):
+        binding = ('download', 'utuputki.download')
+        self.log.info("MQ: Binding queue {} to key {}".format(binding[0], binding[1]))
+        self.channel.queue_bind(self.on_bindok, binding[0], 'message', binding[1])
+
+    def on_queue_convert_ok(self, method_frame):
+        binding = ('convert', 'utuputki.convert')
+        self.log.info("MQ: Binding queue {} to key {}".format(binding[0], binding[1]))
+        self.channel.queue_bind(self.on_bindok, binding[0], 'message', binding[1])
+
+    def on_bindok(self, unused_frame):
+        self.log.info("MQ: Queue bound")
 
     def on_closed(self, connection):
         self.log.info('MQ: Connection closed')

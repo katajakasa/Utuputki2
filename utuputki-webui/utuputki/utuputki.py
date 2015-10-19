@@ -17,7 +17,7 @@ class UtuputkiSock(SockJSConnection):
     clients = set()
 
     def __init__(self, session):
-        self.app = app
+        self.mq = mq
         self.authenticated = False
         self.sid = None
         self.uid = None
@@ -31,7 +31,7 @@ class UtuputkiSock(SockJSConnection):
         self.ip = info.ip
         self.log = SessionLog(global_log, self)
         self.clients.add(self)
-        self.app.mq.add_event_listener(self)
+        self.mq.add_event_listener(self)
         self.log.info("Connection accepted")
 
     def on_message(self, raw_message):
@@ -71,7 +71,7 @@ class UtuputkiSock(SockJSConnection):
     def on_close(self):
         self.log.info("Connection closed")
         self.clients.remove(self)
-        self.app.mq.del_event_listener(self)
+        self.mq.del_event_listener(self)
         self.uid = None
         self.sid = None
         self.ip = None
@@ -118,8 +118,7 @@ if __name__ == '__main__':
     io_loop = ioloop.IOLoop.instance()
 
     mq = MessageQueue(io_loop, global_log)
-    app.mq = mq
-    app.mq.connect()
+    mq.connect()
 
     app.listen(settings.PORT)
     try:

@@ -7,6 +7,7 @@ var app = angular.module(
         'ng.sockjs',
         'ui.bootstrap',
         'ui.grid',
+        'ui.grid.autoResize',
         'formly',
         'formlyBootstrap',
         'dialogs.main'
