@@ -124,6 +124,19 @@ class QueueHandler(HandlerBase):
             finally:
                 s.close()
 
+            # If the existing source entry belongs to current user, show error.
+            # Don't let user post the same video again and again (rudimentary protection)
+            if found_src:
+                s = db_session()
+                try:
+                    s.query(Media).filter_by(user=self.sock.uid, source=found_src.id).all()
+                    self.send_error('Url is already in the queue', 500, query=query)
+                    return
+                except NoResultFound:
+                    pass
+                finally:
+                    s.close()
+
             if found_src:
                 # Item was already in the db. Let's just use that instead.
                 # Since we found a source, see if we can also find a cached entry
