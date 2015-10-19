@@ -19,3 +19,5 @@ class LogoutHandler(HandlerBase):
         # Deauthenticate & clear session ID
         self.sock.authenticated = False
         self.sock.sid = None
+        self.sock.uid = None
+        self.sock.level = 0
