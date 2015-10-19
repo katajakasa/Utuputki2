@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Text, Boolean, UniqueConstraint
-from utils import utc_now
+from datetime import datetime
 
 Base = declarative_base()
 
@@ -66,7 +66,7 @@ class SourceQueue(Base):
     id = Column(Integer, primary_key=True)
     user = Column(ForeignKey('user.id'))
     target = Column(ForeignKey('player.id'))
-    created_at = Column(DateTime(timezone=True), default=utc_now())
+    created_at = Column(DateTime(timezone=True), default=datetime.utcnow())
 
     # Allow only one source queue per user per target player
     __table_args__ = (
@@ -91,7 +91,7 @@ class Source(Base):
     hash = Column(String(64), default='')
     youtube_hash = Column(String(32), default='')
     other_url = Column(String(512), default='')
-    created_at = Column(DateTime(timezone=True), default=utc_now())
+    created_at = Column(DateTime(timezone=True), default=datetime.utcnow())
     title = Column(String(100), default='')
 
     def serialize(self):
@@ -113,7 +113,7 @@ class Cache(Base):
     size_bytes = Column(Integer, default=0)
     media_type = Column(Integer, default=0)
     length_seconds = Column(Integer, default=0)
-    created_at = Column(DateTime(timezone=True), default=utc_now())
+    created_at = Column(DateTime(timezone=True), default=datetime.utcnow())
 
     def serialize(self):
         return {
@@ -197,7 +197,7 @@ class Session(Base):
     __tablename__ = "session"
     key = Column(String(32), primary_key=True)
     user = Column(ForeignKey('user.id'))
-    start = Column(DateTime(timezone=True), default=utc_now())
+    start = Column(DateTime(timezone=True), default=datetime.utcnow())
 
 
 def db_init(engine_str):

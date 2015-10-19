@@ -69,7 +69,7 @@ if 'create_player' in sys.argv:
     name = raw_input("Player name: ")
 
     s = db_session()
-    player = Player(event=event_id, name=name, token=generate_session())
+    player = Player(event=event_id, name=name, token=generate_session()[:16])
     s.add(player)
     s.commit()
     s.close()
