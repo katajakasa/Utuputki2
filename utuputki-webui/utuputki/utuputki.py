@@ -8,7 +8,7 @@ from tornado import web, ioloop
 from sockjs.tornado import SockJSRouter, SockJSConnection
 
 from db import db_init
-from queue import queue_init
+from mq import MessageQueue
 from handlers import login, logout, authenticate, queue, register, player, event, unknown
 from log import GlobalLog, SessionLog
 
@@ -17,6 +17,7 @@ class UtuputkiSock(SockJSConnection):
     clients = set()
 
     def __init__(self, session):
+        self.app = app
         self.authenticated = False
         self.sid = None
         self.uid = None
@@ -30,6 +31,7 @@ class UtuputkiSock(SockJSConnection):
         self.ip = info.ip
         self.log = SessionLog(global_log, self)
         self.clients.add(self)
+        self.app.mq.add_event_listener(self)
         self.log.info("Connection accepted")
 
     def on_message(self, raw_message):
@@ -63,9 +65,13 @@ class UtuputkiSock(SockJSConnection):
         }
         cbs[packet_type if packet_type in cbs else 'unknown'](self, packet_type).handle(packet_msg)
 
+    def on_mq_packet(self, packet):
+        pass
+
     def on_close(self):
         self.log.info("Connection closed")
         self.clients.remove(self)
+        self.app.mq.del_event_listener(self)
         self.uid = None
         self.sid = None
         self.ip = None
@@ -92,9 +98,6 @@ if __name__ == '__main__':
     # Set up the database
     db_init(settings.DATABASE_CONFIG)
 
-    # Set up celery queue
-    queue_init()
-
     # Just log success
     global_log.info("Init OK & server running.")
 
@@ -112,5 +115,16 @@ if __name__ == '__main__':
 
     # Start up everything
     app = web.Application(handlers, **conf)
+    io_loop = ioloop.IOLoop.instance()
+
+    mq = MessageQueue(io_loop, global_log)
+    app.mq = mq
+    app.mq.connect()
+
     app.listen(settings.PORT)
-    ioloop.IOLoop.instance().start()
+    try:
+        io_loop.start()
+    except KeyboardInterrupt:
+        io_loop.stop()
+
+    global_log.close()

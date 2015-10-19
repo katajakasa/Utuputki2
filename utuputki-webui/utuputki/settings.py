@@ -9,8 +9,7 @@ BASEDIR = os.path.dirname(os.path.abspath(__file__))
 
 # Make SQLite database default for everything
 default_db = 'sqlite:///{}'.format(os.path.join(BASEDIR, "utuputki.db"))
-default_celery_backend = 'sqla+'+default_db
-default_celery_broker = 'sqla+'+default_db
+default_amqp = 'amqp://guest:guest@localhost:5672//'
 
 # Config values that we should attempt to read
 config_values = [
@@ -19,8 +18,7 @@ config_values = [
     'DEBUG',
     'DATABASE_CONFIG',
     'PUBLIC_PATH',
-    'CELERY_BROKER',
-    'CELERY_BACKEND',
+    'AMQP_URL',
     'LOG_LEVEL',
     'LOG_FILE'
 ]
@@ -31,8 +29,7 @@ TIMEZONE = "Europe/Helsinki"
 DEBUG = False
 DATABASE_CONFIG = default_db
 PUBLIC_PATH = os.path.join(BASEDIR, "public")
-CELERY_BROKER = default_celery_broker
-CELERY_BACKEND = default_celery_backend
+AMQP_URL = default_amqp
 LOG_LEVEL = 0
 LOG_FILE = 'utuputki_ui.log'
 

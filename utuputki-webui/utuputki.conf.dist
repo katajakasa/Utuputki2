@@ -3,7 +3,7 @@
 # Server port
 PORT=8000
 
-# Current timesome.
+# Current timezone.
 TIMEZONE=Europe/Helsinki
 
 # Only set on development boxes.
@@ -12,9 +12,8 @@ DEBUG=False
 # Database access string. See SQLAlchemy for more info
 DATABASE_CONFIG=mysql://username:password@localhost/databasename
 
-# Celery broker and backend paths. See Celery configuration for more info.
-CELERY_BROKER=amqp://guest:guest@localhost:5672/utuputki
-CELERY_BACKEND=sqla+mysql://username:password@localhost/databasename
+# AMQP broker url. See RabbitMQ configuration for more info.
+AMQP_URL=amqp://guest:guest@localhost:5672/utuputki
 
 # 0 = Debug
 # 1 = Info

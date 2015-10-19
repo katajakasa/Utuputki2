@@ -51,6 +51,9 @@ app.controller('MyQueueController', ['$scope', '$location', 'Player', 'Event', '
             ];
 
             var num = SourceQueue.get_queue_num($scope.c_player.id);
+            if(num <= 0) {
+                return;
+            }
             var queue = SourceQueue.get_queue(num);
             var len = queue.items[0].length;
             $scope.grid_opts.minRowsToShow = len;

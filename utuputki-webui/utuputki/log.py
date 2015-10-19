@@ -49,6 +49,9 @@ class GlobalLog(Log):
             stream = codecs.getwriter('utf8')(sys.stdout)
         super(GlobalLog, self).__init__(stream, level, '')
 
+    def close(self):
+        self.stream.close()
+
 
 class SessionLog(Log):
     def __init__(self, global_log, sock):
