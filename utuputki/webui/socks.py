@@ -1,23 +1,17 @@
 # -*- coding: utf-8 -*-
 
-
 import json
-import settings
-
-from tornado import web, ioloop
-from sockjs.tornado import SockJSRouter, SockJSConnection
-
-from db import db_init
-from mq import MessageQueue
+from sockjs.tornado import SockJSConnection
 from handlers import login, logout, authenticate, queue, register, player, event, unknown
-from log import GlobalLog, SessionLog
+from log import SessionLog
 
 
 class UtuputkiSock(SockJSConnection):
     clients = set()
+    mq = None
+    global_log = None
 
     def __init__(self, session):
-        self.mq = mq
         self.authenticated = False
         self.sid = None
         self.uid = None
@@ -29,9 +23,9 @@ class UtuputkiSock(SockJSConnection):
     def on_open(self, info):
         self.authenticated = False
         self.ip = info.ip
-        self.log = SessionLog(global_log, self)
         self.clients.add(self)
         self.mq.add_event_listener(self)
+        self.log = SessionLog(self.global_log, self)
         self.log.info("Connection accepted")
 
     def on_message(self, raw_message):
@@ -79,51 +73,3 @@ class UtuputkiSock(SockJSConnection):
         self.level = 0
         return super(UtuputkiSock, self).on_close()
 
-
-if __name__ == '__main__':
-    print("Utuputki2 Web UI Daemon starting up ...")
-
-    # Set up configuration vars
-    settings.config_init()
-
-    # Set up the global log
-    if settings.DEBUG:
-        global_log = GlobalLog(None, settings.LOG_LEVEL)
-    else:
-        global_log = GlobalLog(settings.LOG_FILE, settings.LOG_LEVEL)
-
-    global_log.debug("Server port = {}.".format(settings.PORT))
-    global_log.debug("Public path = {}".format(settings.PUBLIC_PATH))
-
-    # Set up the database
-    db_init(settings.DATABASE_CONFIG)
-
-    # Just log success
-    global_log.info("Init OK & server running.")
-
-    # SockJS interface
-    router = SockJSRouter(UtuputkiSock, '/sock')
-
-    # Index and static handlers
-    handlers = router.urls + [
-        (r'/(.*)$', web.StaticFileHandler, {'path': settings.PUBLIC_PATH, 'default_filename': 'index.html'}),
-    ]
-
-    conf = {
-        'debug': settings.DEBUG,
-    }
-
-    # Start up everything
-    app = web.Application(handlers, **conf)
-    io_loop = ioloop.IOLoop.instance()
-
-    mq = MessageQueue(io_loop, global_log)
-    mq.connect()
-
-    app.listen(settings.PORT)
-    try:
-        io_loop.start()
-    except KeyboardInterrupt:
-        io_loop.stop()
-
-    global_log.close()

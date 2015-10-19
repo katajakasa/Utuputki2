@@ -60,7 +60,7 @@ target/
 .idea
 
 # Others
-utuputki-webui/utuputki.conf
-utuputki-webui/utuputki/utuputki.db
-utuputki-webui/utuputki/public/static/style/site.css
-utuputki-webui/utuputki/public/static/components
+utuputki.conf
+utuputki.db
+utuputki/webui/public/static/style/site.css
+utuputki/webui/public/static/components

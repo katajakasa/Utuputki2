@@ -5,7 +5,7 @@ import sys
 from ConfigParser import SafeConfigParser
 
 # Find basedir
-BASEDIR = os.path.dirname(os.path.abspath(__file__))
+BASEDIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Make SQLite database default for everything
 default_db = 'sqlite:///{}'.format(os.path.join(BASEDIR, "utuputki.db"))
@@ -28,7 +28,7 @@ PORT = 8000
 TIMEZONE = "Europe/Helsinki"
 DEBUG = False
 DATABASE_CONFIG = default_db
-PUBLIC_PATH = os.path.join(BASEDIR, "public")
+PUBLIC_PATH = os.path.join(BASEDIR, "utuputki/webui/public")
 AMQP_URL = default_amqp
 LOG_LEVEL = 0
 LOG_FILE = 'utuputki_ui.log'

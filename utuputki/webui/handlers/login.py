@@ -3,9 +3,9 @@
 from passlib.hash import pbkdf2_sha256
 from sqlalchemy.orm.exc import NoResultFound
 
-from handlers.handlerbase import HandlerBase
-from db import db_session, User, Session
-from utils import generate_session
+from handlerbase import HandlerBase
+from common.db import db_session, User, Session
+from common.utils import generate_session
 
 
 class LoginHandler(HandlerBase):

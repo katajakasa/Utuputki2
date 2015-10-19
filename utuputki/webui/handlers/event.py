@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from handlers.handlerbase import HandlerBase
-from db import db_session, Event
+from handlerbase import HandlerBase
+from common.db import db_session, Event
 
 
 class EventHandler(HandlerBase):

@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-import settings
+
 import sys
 import getpass
 from passlib.hash import pbkdf2_sha256
-from db import USERLEVELS, db_init, db_session, User, Event, Player
 from sqlalchemy.exc import IntegrityError
-from utils import generate_session
+
+import settings
+from common.db import USERLEVELS, db_init, db_session, User, Event, Player
+from common.utils import generate_session
 
 
 def create_admin(_username, _password):

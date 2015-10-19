@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from handlers.handlerbase import HandlerBase
+from handlerbase import HandlerBase
 
 
 class UnknownHandler(HandlerBase):

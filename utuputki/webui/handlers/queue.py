@@ -2,8 +2,8 @@
 
 import urlparse
 from sqlalchemy.orm.exc import NoResultFound
-from handlers.handlerbase import HandlerBase
-from db import db_session, SourceQueue, Media, Source, Cache
+from handlerbase import HandlerBase
+from common.db import db_session, SourceQueue, Media, Source, Cache
 
 
 class QueueHandler(HandlerBase):

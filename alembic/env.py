@@ -4,8 +4,9 @@ from sqlalchemy import engine_from_config, pool
 from logging.config import fileConfig
 import sys
 sys.path.append("utuputki/")
+sys.path.append("../utuputki/")
 import settings
-import db
+from common import db
 
 settings.config_init()
 
