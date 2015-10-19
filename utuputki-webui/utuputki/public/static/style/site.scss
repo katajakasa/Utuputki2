@@ -7,3 +7,16 @@ h2 {
   margin-top: 0px;
   font-size: 1.4em;
 }
+
+.queue_add_block {
+  margin-top: 25px;
+}
+
+.queue_show_block {
+  margin-top: 25px;
+}
+
+// Overwrite bootstrap
+.alert {
+  padding: 8px;
+}

@@ -12,7 +12,11 @@ class QueueHandler(HandlerBase):
         return p.scheme == 'http' or p.scheme == 'https'
 
     def get_youtube_code(self, url):
-        parsed = urlparse.urlparse(url)
+        try:
+            parsed = urlparse.urlparse(url)
+        except AttributeError:
+            return None
+
         if not self.check_scheme(parsed):
             return None
 
@@ -38,10 +42,32 @@ class QueueHandler(HandlerBase):
         return None
 
     def validate_other_url(self, url):
-        parsed = urlparse.urlparse(url)
+        try:
+            parsed = urlparse.urlparse(url)
+        except AttributeError:
+            return None
         if self.check_scheme(parsed) and len(parsed.netloc) > 3:
             return url
         return None
+
+    def ensure_sourcequeue(self, player_id):
+        s = db_session()
+        try:
+            r = s.query(SourceQueue).filter_by(user=self.sock.uid, target=player_id).one()
+            return r.id
+        except NoResultFound:
+            sq = SourceQueue(user=self.sock.uid, target=player_id)
+            s.add(sq)
+            s.commit()
+            return sq.id
+        finally:
+            s.close()
+
+    def handle_fetchall_sig(self):
+        s = db_session()
+        queues = [queue.serialize() for queue in s.query(SourceQueue).filter_by(user=self.sock.uid).all()]
+        s.close()
+        self.send_message(queues, query='fetchall')
 
     def handle(self, packet_msg):
         if not self.sock.authenticated:
@@ -51,17 +77,14 @@ class QueueHandler(HandlerBase):
 
         # Fetch all queues. Use this to init client state
         if query == 'fetchall':
-            s = db_session()
-            queues = [queue.serialize() for queue in s.query(SourceQueue).filter_by(user=self.sock.uid).all()]
-            s.close()
-            self.send_message(queues, query=query)
+            self.handle_fetchall_sig()
 
         # Fetch a single queue (for refreshing)
         if query == 'fetchone':
             s = db_session()
             try:
-                queues = s.query(SourceQueue).filter_by(user=self.sock.uid).one().serialize()
-                self.send_message(queues)
+                queue = s.query(SourceQueue).filter_by(user=self.sock.uid).one().serialize()
+                self.send_message(queue)
             except NoResultFound:
                 self.send_error('No queue found', 404, query=query)
             finally:
@@ -70,6 +93,12 @@ class QueueHandler(HandlerBase):
         # Add new item to the queue. Log to DB, send Celery signal
         if query == 'add':
             url = packet_msg.get('url')
+            player_id = packet_msg.get('player_id')
+            if not url or not player_id:
+                self.send_error('Invalid input data', 500, query=query)
+                return
+
+            queue_id = self.ensure_sourcequeue(player_id)
 
             # Attempt to parse the url
             youtube_hash = self.get_youtube_code(url)
@@ -79,7 +108,7 @@ class QueueHandler(HandlerBase):
 
             # Error out if necessary
             if not youtube_hash and not other_url:
-                self.send_error('Invalid URL!', 500, query=query)
+                self.send_error('Invalid URL', 500, query=query)
                 return
 
             # First, attempt to find the source from database. If it exists, simply use that.
@@ -87,9 +116,9 @@ class QueueHandler(HandlerBase):
             found_src = None
             try:
                 if youtube_hash:
-                    found_src = s.query(Source).filter(youtube_hash=youtube_hash).one()
+                    found_src = s.query(Source).filter_by(youtube_hash=youtube_hash).one()
                 elif other_url:
-                    found_src = s.query(Source).filter(other_url=other_url).one()
+                    found_src = s.query(Source).filter_by(other_url=other_url).one()
             except NoResultFound:
                 pass
             finally:
@@ -100,22 +129,23 @@ class QueueHandler(HandlerBase):
                 # Since we found a source, see if we can also find a cached entry
                 s = db_session()
                 try:
-                    found_cache = s.query(Cache).filter(source=found_src.id).one()
+                    found_cache = s.query(Cache).filter_by(source=found_src.id).one()
                 except NoResultFound:
                     found_cache = None
                 finally:
                     s.close()
 
                 # Add a new media entry
+                s = db_session()
                 media = Media(
-                    source=found_src,
-                    cache=found_cache,
+                    source=found_src.id,
+                    cache=found_cache.id if found_cache else None,
                     user=self.sock.uid,
+                    queue=queue_id,
                     status=1,  # Mark as sourced
                 )
-                s = db_session()
                 s.add(media)
-                s.commit(media)
+                s.commit()
                 s.close()
             else:
                 # Okay, Let's save the first draft and then poke at the downloader with celery
@@ -124,18 +154,21 @@ class QueueHandler(HandlerBase):
                     youtube_hash=youtube_hash if youtube_hash else '',
                     other_url=other_url if other_url else '',
                 )
-                media = Media(
-                    source=source,
-                    user=self.sock.uid
-                )
                 s.add(source)
+                s.commit()
+                media = Media(
+                    source=source.id,
+                    user=self.sock.uid,
+                    queue=queue_id
+                )
                 s.add(media)
                 s.commit()
                 s.close()
 
-            # Just poke at the client
+            # Resend all queue data (for now)
+            self.handle_fetchall_sig()
             self.send_message({}, query=query)
-            self.log.info("New media added to queue with id {}.".format(media.id))
+            self.log.info("New media added to queue.")
 
         # Drop entry from Queue. Media entries MAY be cleaned up later.
         if query == 'del':

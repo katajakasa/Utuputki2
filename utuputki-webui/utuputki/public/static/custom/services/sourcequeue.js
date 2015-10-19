@@ -8,7 +8,7 @@ app.factory('SourceQueue', ['$location', '$rootScope', 'SockService', 'AUTH_EVEN
         function queue_event(msg) {
             if (msg['error'] == 0) {
                 if(msg['query'] == 'fetchall') {
-                    queues = msg['data']['ret'];
+                    queues = msg['data'];
                     $rootScope.$broadcast(SYNC_EVENTS.queuesRefresh);
                 }
                 if(msg['query'] == 'add') {
@@ -35,24 +35,25 @@ app.factory('SourceQueue', ['$location', '$rootScope', 'SockService', 'AUTH_EVEN
             });
         }
 
-        function get_queue_num(event_id, player_id) {
+        function get_queue_num(player_id) {
             for(var i = 0; i < queues.length; i++) {
-                if(queues[i].event_id == event_id && queues[i].player_id == player_id) {
-                    return i
+                if(queues[i].target == player_id) {
+                    return i;
                 }
             }
             return -1;
         }
 
-        function get_queue_items(queue_num) {
+        function get_queue(queue_num) {
             return queues[queue_num];
         }
 
-        function add(queue_id, url) {
+        function add(player_id, url) {
             SockService.send({
                 'type': 'queue',
                 'message': {
                     'query': 'add',
+                    'player_id': player_id,
                     'url': url
                 }
             });
@@ -72,7 +73,7 @@ app.factory('SourceQueue', ['$location', '$rootScope', 'SockService', 'AUTH_EVEN
             add: add,
             remove: remove,
             get_queue_num: get_queue_num,
-            get_queue_items: get_queue_items,
+            get_queue: get_queue,
             get_last_error: get_last_error
         };
     }

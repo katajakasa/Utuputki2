@@ -61,25 +61,6 @@ class Player(Base):
         }
 
 
-class SourceQueueItem(Base):
-    __tablename__ = "sourcequeueitem"
-    id = Column(Integer, primary_key=True)
-    queue = Column(ForeignKey('sourcequeue.id'))
-    media = Column(ForeignKey('media.id'))
-    played = Column(Boolean, default=False)
-
-    def serialize(self):
-        s = db_session()
-        media = [media.serialize() for media in s.query(Media).filter_by(id=self.media).all()],
-        s.close()
-        return {
-            'id': self.id,
-            'media_id': self.media,
-            'media': media,
-            'played': self.played
-        }
-
-
 class SourceQueue(Base):
     __tablename__ = "sourcequeue"
     id = Column(Integer, primary_key=True)
@@ -94,13 +75,12 @@ class SourceQueue(Base):
 
     def serialize(self):
         s = db_session()
-        items = [item.serialize() for item in s.query(SourceQueueItem).filter_by(queue=self.id).all()],
+        items = [media.serialize() for media in s.query(Media).filter_by(queue=self.id).all()],
         s.close()
         return {
             'id': self.id,
             'user': self.user,
-            'name': self.name,
-            'created_at': self.created_at,
+            'target': self.target,
             'items': items
         }
 
@@ -118,8 +98,7 @@ class Source(Base):
         return {
             'id': self.id,
             'youtube_hash': self.youtube_hash,
-            'fetch_url': self.fetch_url,
-            'created_at': self.created_at,
+            'other_url': self.other_url,
             'title': self.title
         }
 
@@ -144,7 +123,6 @@ class Cache(Base):
             'size_bytes': self.size_bytes,
             'media_type': self.media_type,
             'length_seconds': self.length_seconds,
-            'created_at': self.created_at,
         }
 
 
@@ -156,6 +134,7 @@ class Media(Base):
     cache = Column(ForeignKey('cache.id'), nullable=True, default=None)
     source = Column(ForeignKey('source.id'), nullable=True, default=None)
     user = Column(ForeignKey('user.id'))
+    queue = Column(ForeignKey('sourcequeue.id'))
 
     def serialize(self):
         s = db_session()
@@ -164,8 +143,8 @@ class Media(Base):
         s.close()
         return {
             'id': self.id,
-            'type': self.type,
             'status': self.status,
+            'step_progress': self.step_progress,
             'cache_id': self.cache,
             'cache': cache_entry,
             'source_id': self.source,
