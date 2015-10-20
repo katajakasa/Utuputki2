@@ -164,6 +164,12 @@ class QueueHandler(HandlerBase):
                 s.add(media)
                 s.commit()
                 s.close()
+
+                # Send message to kick the converter
+                if not found_cache:
+                    self.sock.mq.send_msg(self.sock.mq.KEY_CONVERT, {
+                        'source_id': found_src.id,
+                    })
             else:
                 # Okay, Let's save the first draft and then poke at the downloader with MQ message
                 s = db_session()
@@ -180,6 +186,12 @@ class QueueHandler(HandlerBase):
                 )
                 s.add(media)
                 s.commit()
+
+                # Send message to kick the downloader
+                self.sock.mq.send_msg(self.sock.mq.KEY_DOWNLOAD, {
+                    'source_id': source.id,
+                })
+
                 s.close()
 
             # Resend all queue data (for now)

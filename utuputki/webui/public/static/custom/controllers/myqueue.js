@@ -92,6 +92,10 @@ app.controller('MyQueueController', ['$scope', '$rootScope', '$location', 'Playe
             $rootScope.$on(SYNC_EVENTS.queueAddFailed, function (event, args) {
                 $scope.error = SourceQueue.get_last_error();
             });
+            $rootScope.$on(SYNC_EVENTS.queueAddSuccess, function (event, args) {
+                $scope.error = "";
+                $scope.add_model.url = '';
+            });
             $rootScope.$on(SYNC_EVENTS.queuesRefresh, function(event, args) {
                 refresh_queue();
             });

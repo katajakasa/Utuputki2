@@ -89,6 +89,7 @@ class Source(Base):
     __tablename__ = "source"
     id = Column(Integer, primary_key=True)
     hash = Column(String(64), default='')
+    file_path = Column(String(512), default='')
     youtube_hash = Column(String(32), default='')
     other_url = Column(String(512), default='')
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow())

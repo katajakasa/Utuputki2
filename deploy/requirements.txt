@@ -6,3 +6,4 @@ passlib==1.6.5
 alembic==0.8.3
 pika==0.10.0
 pytz
+youtube-dl

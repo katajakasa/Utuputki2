@@ -20,7 +20,9 @@ config_values = [
     'PUBLIC_PATH',
     'AMQP_URL',
     'LOG_LEVEL',
-    'LOG_FILE'
+    'LOG_FILE',
+    'TMP_DIR',
+    'CACHE_DIR'
 ]
 
 # Defaults
@@ -32,6 +34,8 @@ PUBLIC_PATH = os.path.join(BASEDIR, "utuputki/webui/public")
 AMQP_URL = default_amqp
 LOG_LEVEL = 0
 LOG_FILE = 'utuputki_ui.log'
+TMP_DIR = '/tmp'
+CACHE_DIR = '/tmp'
 
 
 # Read configuration file

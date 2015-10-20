@@ -25,3 +25,9 @@ LOG_LEVEL=1
 # Note that the directory must exist!
 # If DEBUG = True, this will be ignored and errors go to stdout.
 LOG_FILE=/var/log/utuputki/utuputki-ui.log
+
+# This is where files are temporarily downloaded while they wait for handling
+TMP_DIR='/tmp'
+
+# This is where the converted files are stored (persistent)
+CACHE_DIR='/tmp'
