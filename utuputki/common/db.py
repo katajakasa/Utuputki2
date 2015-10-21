@@ -25,9 +25,10 @@ MEDIATYPES = {
 
 MEDIASTATUS = {
     'not_started': 0,
-    'sourced': 1,
-    'cached': 2,
-    'finished': 3
+    'fetching_metadata': 1,
+    'downloading': 2,
+    'finished': 3,
+    'error': 4
 }
 
 
@@ -90,64 +91,65 @@ class Source(Base):
     id = Column(Integer, primary_key=True)
     hash = Column(String(64), default='')
     file_path = Column(String(512), default='')
+    file_ext = Column(String(4))
+    mime_type = Column(String(32))
+    size_bytes = Column(Integer, default=0)
+    media_type = Column(Integer, default=0)
     youtube_hash = Column(String(32), default='')
     other_url = Column(String(512), default='')
+    length_seconds = Column(Integer, default=0)
     created_at = Column(DateTime(timezone=True), default=datetime.utcnow())
     title = Column(String(100), default='')
+    description = Column(Text, default='')
+    status = Column(Integer, default=0)
+    message = Column(String(64), default='')
+    video_codec = Column(String(16), default='')
+    video_bitrate = Column(Integer, default=0)
+    video_w = Column(Integer, default=0)
+    video_h = Column(Integer, default=0)
+    audio_codec = Column(String(16), default='')
+    audio_bitrate = Column(Integer, default=0)
 
     def serialize(self):
         return {
             'id': self.id,
             'youtube_hash': self.youtube_hash,
             'other_url': self.other_url,
-            'title': self.title
-        }
-
-
-class Cache(Base):
-    __tablename__ = "cache"
-    id = Column(Integer, primary_key=True)
-    source = Column(ForeignKey('source.id'))
-    file_path = Column(String(512))
-    file_ext = Column(String(4))
-    mime_type = Column(String(32))
-    size_bytes = Column(Integer, default=0)
-    media_type = Column(Integer, default=0)
-    length_seconds = Column(Integer, default=0)
-    created_at = Column(DateTime(timezone=True), default=datetime.utcnow())
-
-    def serialize(self):
-        return {
-            'id': self.id,
+            'status': self.status,
+            'title': self.title,
+            'description': self.description,
             'file_ext': self.file_ext,
             'mime_type': self.mime_type,
             'size_bytes': self.size_bytes,
             'media_type': self.media_type,
             'length_seconds': self.length_seconds,
+            'message': self.message,
+            'audio': {
+                'codec': self.audio_codec,
+                'bitrate': self.audio_bitrate
+            },
+            'video': {
+                'codec': self.video_codec,
+                'bitrate': self.video_bitrate,
+                'width': self.video_w,
+                'height': self.video_h
+            }
         }
 
 
 class Media(Base):
     __tablename__ = "media"
     id = Column(Integer, primary_key=True)
-    status = Column(Integer, default=0)
-    step_progress = Column(Integer, default=0)
-    cache = Column(ForeignKey('cache.id'), nullable=True, default=None)
     source = Column(ForeignKey('source.id'), nullable=True, default=None)
     user = Column(ForeignKey('user.id'))
     queue = Column(ForeignKey('sourcequeue.id'))
 
     def serialize(self):
         s = db_session()
-        cache_entry = s.query(Cache).filter_by(id=self.cache).one().serialize() if self.cache else None,
         source_entry = s.query(Source).filter_by(id=self.source).one().serialize() if self.source else None,
         s.close()
         return {
             'id': self.id,
-            'status': self.status,
-            'step_progress': self.step_progress,
-            'cache_id': self.cache,
-            'cache': cache_entry,
             'source_id': self.source,
             'source': source_entry,
             'user_id': self.user

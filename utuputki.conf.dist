@@ -26,8 +26,17 @@ LOG_LEVEL=1
 # If DEBUG = True, this will be ignored and errors go to stdout.
 LOG_FILE=/var/log/utuputki/utuputki-ui.log
 
-# This is where files are temporarily downloaded while they wait for handling
-TMP_DIR='/tmp'
-
 # This is where the converted files are stored (persistent)
-CACHE_DIR='/tmp'
+CACHE_DIR=/tmp
+
+# This is a temporary cache for files. Should be cleared every now and then.
+TMP_DIR=/tmp
+
+# Limit video/audio duration
+LIMIT_DURATION = 900
+
+# Limit video filesize
+LIMIT_VIDEO_SIZE = 134217728
+
+# Limit audio filesize
+LIMIT_VIDEO_SIZE = 10485760

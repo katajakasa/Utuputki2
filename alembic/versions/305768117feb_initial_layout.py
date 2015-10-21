@@ -1,13 +1,13 @@
-"""Base layout
+"""Initial layout
 
-Revision ID: 4feb443aebc7
+Revision ID: 305768117feb
 Revises: 
-Create Date: 2015-10-19 20:52:38.374000
+Create Date: 2015-10-21 03:34:02.944000
 
 """
 
 # revision identifiers, used by Alembic.
-revision = '4feb443aebc7'
+revision = '305768117feb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,10 +27,25 @@ def upgrade():
     op.create_table('source',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('hash', sa.String(length=64), nullable=True),
+    sa.Column('file_path', sa.String(length=512), nullable=True),
+    sa.Column('file_ext', sa.String(length=4), nullable=True),
+    sa.Column('mime_type', sa.String(length=32), nullable=True),
+    sa.Column('size_bytes', sa.Integer(), nullable=True),
+    sa.Column('media_type', sa.Integer(), nullable=True),
     sa.Column('youtube_hash', sa.String(length=32), nullable=True),
     sa.Column('other_url', sa.String(length=512), nullable=True),
+    sa.Column('length_seconds', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('title', sa.String(length=100), nullable=True),
+    sa.Column('description', sa.Text(), nullable=True),
+    sa.Column('status', sa.Integer(), nullable=True),
+    sa.Column('message', sa.String(length=64), nullable=True),
+    sa.Column('video_codec', sa.String(length=16), nullable=True),
+    sa.Column('video_bitrate', sa.Integer(), nullable=True),
+    sa.Column('video_w', sa.Integer(), nullable=True),
+    sa.Column('video_h', sa.Integer(), nullable=True),
+    sa.Column('audio_codec', sa.String(length=16), nullable=True),
+    sa.Column('audio_bitrate', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
@@ -42,19 +57,6 @@ def upgrade():
     sa.Column('level', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('username')
-    )
-    op.create_table('cache',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('source', sa.Integer(), nullable=True),
-    sa.Column('file_path', sa.String(length=512), nullable=True),
-    sa.Column('file_ext', sa.String(length=4), nullable=True),
-    sa.Column('mime_type', sa.String(length=32), nullable=True),
-    sa.Column('size_bytes', sa.Integer(), nullable=True),
-    sa.Column('media_type', sa.Integer(), nullable=True),
-    sa.Column('length_seconds', sa.Integer(), nullable=True),
-    sa.Column('created_at', sa.DateTime(timezone=True), nullable=True),
-    sa.ForeignKeyConstraint(['source'], ['source.id'], ),
-    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('player',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -95,13 +97,9 @@ def upgrade():
     )
     op.create_table('media',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('status', sa.Integer(), nullable=True),
-    sa.Column('step_progress', sa.Integer(), nullable=True),
-    sa.Column('cache', sa.Integer(), nullable=True),
     sa.Column('source', sa.Integer(), nullable=True),
     sa.Column('user', sa.Integer(), nullable=True),
     sa.Column('queue', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['cache'], ['cache.id'], ),
     sa.ForeignKeyConstraint(['queue'], ['sourcequeue.id'], ),
     sa.ForeignKeyConstraint(['source'], ['source.id'], ),
     sa.ForeignKeyConstraint(['user'], ['user.id'], ),
@@ -117,7 +115,6 @@ def downgrade():
     op.drop_table('setting')
     op.drop_table('session')
     op.drop_table('player')
-    op.drop_table('cache')
     op.drop_table('user')
     op.drop_table('source')
     op.drop_table('event')

@@ -7,7 +7,7 @@ from passlib.hash import pbkdf2_sha256
 from sqlalchemy.exc import IntegrityError
 
 import settings
-from common.db import USERLEVELS, db_init, db_session, User, Event, Player
+from common.db import USERLEVELS, db_init, db_session, User, Event, Player, Media, Source
 from common.utils import generate_session
 
 
@@ -85,6 +85,17 @@ if 'list_players' in sys.argv:
     s.close()
     exit(0)
 
+if 'clear_media' in sys.argv:
+    settings.config_init()
+    db_init(settings.DATABASE_CONFIG)
+    s = db_session()
+    s.query(Media).delete()
+    s.query(Source).delete()
+    s.commit()
+    s.close()
+    print("Media and Sources cleared.")
+
+
 print("Utuputki utilities")
 print("create_admin - Creates a new admin user")
 print("create_test_admin - Create a test admin user")
@@ -92,4 +103,5 @@ print("create_event - Create an event")
 print("list_events - List all events")
 print("create_player - Create a player for event")
 print("list_players - List all players")
+print("clear_media - Clear all media and sources from db")
 exit(0)

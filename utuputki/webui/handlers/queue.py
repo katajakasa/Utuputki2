@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
 import logging
 import urlparse
 from sqlalchemy.orm.exc import NoResultFound
+import youtube_dl
 
 from handlerbase import HandlerBase
-from common.db import db_session, SourceQueue, Media, Source, Cache
+from common.db import db_session, SourceQueue, Media, Source
+from common.utils import format_time_delta
+import settings
 
 log = logging.getLogger(__name__)
 
@@ -94,7 +98,7 @@ class QueueHandler(HandlerBase):
             finally:
                 s.close()
 
-        # Add new item to the queue. Log to DB, send Celery signal
+        # Add new item to the queue. Log to DB, send signal
         if query == 'add':
             url = packet_msg.get('url')
             player_id = packet_msg.get('player_id')
@@ -107,8 +111,8 @@ class QueueHandler(HandlerBase):
             # Attempt to parse the url
             youtube_hash = self.get_youtube_code(url)
             other_url = None
-            if not youtube_hash:
-                other_url = self.validate_other_url(url)
+            # if not youtube_hash:
+            #     other_url = self.validate_other_url(url)
 
             # Error out if necessary
             if not youtube_hash and not other_url:
@@ -128,6 +132,29 @@ class QueueHandler(HandlerBase):
             finally:
                 s.close()
 
+            # First title and description for new video
+            first_title = "Unknown"
+            first_desc = ""
+            first_duration = 0
+
+            # If this is a youtube url, attempt to fetch information for it
+            if youtube_hash:
+                with youtube_dl.YoutubeDL({'logger': log, 'simulate': True}) as ydl:
+                    info = ydl.extract_info('http://www.youtube.com/watch?v=' + youtube_hash)
+
+                # Check video duration
+                if info['duration'] > settings.LIMIT_DURATION:
+                    current_str = format_time_delta(info['duration'])
+                    limit_str = format_time_delta(settings.LIMIT_DURATION)
+                    self.send_error('Video is too long ({}). Current limit is {}.'
+                                    .format(current_str, limit_str), 500, query=query)
+                    return
+
+                # Use video desc and title
+                first_duration = info['duration']
+                first_title = info['title']
+                first_desc = info['description']
+
             # If the existing source entry belongs to current user, show error.
             # Don't let user post the same video again and again (rudimentary protection)
             if found_src:
@@ -142,21 +169,10 @@ class QueueHandler(HandlerBase):
                     s.close()
 
             if found_src:
-                # Item was already in the db. Let's just use that instead.
-                # Since we found a source, see if we can also find a cached entry
-                s = db_session()
-                try:
-                    found_cache = s.query(Cache).filter_by(source=found_src.id).one()
-                except NoResultFound:
-                    found_cache = None
-                finally:
-                    s.close()
-
                 # Add a new media entry
                 s = db_session()
                 media = Media(
                     source=found_src.id,
-                    cache=found_cache.id if found_cache else None,
                     user=self.sock.uid,
                     queue=queue_id,
                     status=1,  # Mark as sourced
@@ -164,18 +180,15 @@ class QueueHandler(HandlerBase):
                 s.add(media)
                 s.commit()
                 s.close()
-
-                # Send message to kick the converter
-                if not found_cache:
-                    self.sock.mq.send_msg(self.sock.mq.KEY_CONVERT, {
-                        'source_id': found_src.id,
-                    })
             else:
                 # Okay, Let's save the first draft and then poke at the downloader with MQ message
                 s = db_session()
                 source = Source(
                     youtube_hash=youtube_hash if youtube_hash else '',
                     other_url=other_url if other_url else '',
+                    title=first_title,
+                    description=first_desc,
+                    length_seconds=first_duration,
                 )
                 s.add(source)
                 s.commit()

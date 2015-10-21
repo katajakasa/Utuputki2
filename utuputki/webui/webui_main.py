@@ -3,6 +3,7 @@
 import os
 import logging
 import sys
+from time import sleep
 os.sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from tornado import web, ioloop
@@ -84,5 +85,7 @@ if __name__ == '__main__':
     try:
         io_loop.start()
     except KeyboardInterrupt:
+        mq.close()
+        sleep(0.5)
         io_loop.stop()
 

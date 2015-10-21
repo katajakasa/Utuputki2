@@ -17,8 +17,11 @@ app.controller('MyQueueController', ['$scope', '$rootScope', '$location', 'Playe
             rowHeight: 30,
             columnDefs: [
                 {name: 'Title', field: 'title'},
+                {name: 'description', field: 'description'},
                 {name: 'Status', field: 'status'},
-                {name: 'Conversion', field: 'progress'}
+                {name: 'duration', field: 'duration'},
+                {name: 'Video', field: 'video'},
+                {name: 'Audio', field: 'audio'}
             ]
         };
 
@@ -54,9 +57,10 @@ app.controller('MyQueueController', ['$scope', '$rootScope', '$location', 'Playe
 
             var status_table = [
                 'Not Started',
-                'Sourced',
-                'Cached',
-                'Finished'
+                'Fetching metadata',
+                'Downloading',
+                'Finished',
+                'Error'
             ];
 
             var num = SourceQueue.get_queue_num($scope.c_player.id);
@@ -69,14 +73,36 @@ app.controller('MyQueueController', ['$scope', '$rootScope', '$location', 'Playe
             for(var i = 0; i < len; i++) {
                 var field = queue.items[0][i];
                 var source = field.source[0];
-                var origin = (source.youtube_hash.length > 0)
-                    ? source.youtube_hash
-                    : source.other_url;
-                var progress = 25 * field.status + (field.step_progress / 100) * 25;
+
+                // Format status message
+                var status = status_table[source.status];
+                if(source.status == 4) {
+                    status += '(' + source.message + ')'
+                }
+
+                // Format duration
+                var duration = moment.duration(source.length_seconds, "seconds").format();
+
+                var video = '';
+                if(source.video.codec != '') {
+                    var v = source.video;
+                    video = v.codec + '@' + v.bitrate + 'kbps, ' + v.width + 'x' + v.height;
+                }
+
+                var audio = '';
+                if(source.audio.codec != '') {
+                    var a = source.audio;
+                    audio = a.codec + '@' + a.bitrate + 'kbps';
+                }
+
+                // Add field
                 $scope.grid_opts.data.push({
-                    'title': (source.title.length > 0) ? source.title : origin,
-                    'status': status_table[field.status],
-                    'progress': progress+' %'
+                    'title': source.title,
+                    'description': source.description,
+                    'status': status,
+                    'duration': duration,
+                    'video': video,
+                    'audio': audio
                 });
             }
             $scope.grid_opts.minRowsToShow = $scope.grid_opts.data.length;

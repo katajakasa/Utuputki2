@@ -3,9 +3,7 @@
 
 class MqConstants(object):
     KEY_DOWNLOAD = 'utuputki.download'
-    KEY_CONVERT = 'utuputki.convert'
     KEY_PROGRESS = 'utuputki.progress'
     QUEUE_DOWNLOAD = 'u_fetch_queue'
-    QUEUE_CONVERT = 'u_convert_queue'
     QUEUE_PROGRESS = 'u_progress_queue'
     EXCHANGE = 'message'

@@ -11,27 +11,29 @@ class HandlerBase(object):
         self.sock = sock
         self.mtype = mtype
 
-    def _send_error(self, mtype, message, code, query=None):
-        msg = json.dumps({
+    @staticmethod
+    def format_msg(mtype, message, error=0, query=None):
+        msg = {
             'type': mtype,
-            'query': query,
-            'error': 1,
-            'data': {
-                'code': code,
-                'message': message
-            }
-        })
-        log.debug("Error", msg)
+            'error': error,
+            'data': message,
+        }
+        if query:
+            msg['query'] = query
+        return msg
+
+    def _send_error(self, mtype, message, code, query=None):
+        data = {
+            'code': code,
+            'message': message
+        }
+        msg = json.dumps(self.format_msg(mtype, data, 1, query))
+        log.debug("Error: {}".format(msg))
         self.sock.send(msg)
 
     def _send_message(self, mtype, message, query=None):
-        msg = json.dumps({
-            'type': mtype,
-            'query': query,
-            'error': 0,
-            'data': message,
-        })
-        log.debug("Message", msg)
+        msg = json.dumps(self.format_msg(mtype, message, 0, query))
+        log.debug("Message: {}".format(msg))
         self.sock.send(msg)
 
     def send_error(self, message, code, query=None):

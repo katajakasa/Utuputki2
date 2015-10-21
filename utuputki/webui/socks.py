@@ -27,6 +27,10 @@ class UtuputkiSock(SockJSConnection):
         self.mq.add_event_listener(self)
         log.info("Connection accepted")
 
+    def write_message(self, msg):
+        """ Broadcast message from MQ interface """
+        self.send(msg)
+
     def on_message(self, raw_message):
         # Load packet and parse as JSON
         try:

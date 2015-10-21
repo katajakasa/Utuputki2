@@ -49,3 +49,14 @@ def get_or_create(session, model, **kwargs):
 def generate_session():
     """ Generates a session ID. Secure enough. """
     return binascii.hexlify(os.urandom(16))
+
+
+def format_time_delta(s):
+    """ Formats seconds to a better representation of delta time """
+    hours, remainder = divmod(s, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    ht = '{}h'.format(hours) if hours else ''
+    mt = '{}m'.format(minutes) if minutes else ''
+    st = '{}s'.format(seconds) if seconds else ''
+    return '{} {} {}'.format(ht, mt, st)

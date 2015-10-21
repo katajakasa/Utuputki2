@@ -21,8 +21,11 @@ config_values = [
     'AMQP_URL',
     'LOG_LEVEL',
     'LOG_FILE',
+    'CACHE_DIR',
     'TMP_DIR',
-    'CACHE_DIR'
+    'LIMIT_DURATION',
+    'LIMIT_VIDEO_SIZE',
+    'LIMIT_AUDIO_SIZE'
 ]
 
 # Defaults
@@ -34,9 +37,11 @@ PUBLIC_PATH = os.path.join(BASEDIR, "utuputki/webui/public")
 AMQP_URL = default_amqp
 LOG_LEVEL = 0
 LOG_FILE = 'utuputki_ui.log'
-TMP_DIR = '/tmp'
 CACHE_DIR = '/tmp'
-
+TMP_DIR = '/tmp'
+LIMIT_DURATION = 1800
+LIMIT_VIDEO_SIZE = 90 * 1024 * 1024
+LIMIT_AUDIO_SIZE = 10 * 1024 * 1024
 
 # Read configuration file
 def config_init():

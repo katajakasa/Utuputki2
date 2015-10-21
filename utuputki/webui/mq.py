@@ -16,6 +16,7 @@ class MessageQueue(MqConstants):
         self.connection = None
         self.channel = None
         self.message_count = 0
+        self.consumer_tag = None
         self.event_listeners = set([])
 
     def connect(self):
@@ -38,16 +39,11 @@ class MessageQueue(MqConstants):
 
     def on_exchange_declareok(self, unused_frame):
         self.channel.queue_declare(self.on_queue_download_ok, self.QUEUE_DOWNLOAD, durable=True)
-        self.channel.queue_declare(self.on_queue_convert_ok, self.QUEUE_CONVERT, durable=True)
         self.channel.queue_declare(self.on_queue_progress_ok, self.QUEUE_PROGRESS, durable=True)
+        self.start_consumers()
 
     def on_queue_download_ok(self, method_frame):
         binding = (self.QUEUE_DOWNLOAD, self.KEY_DOWNLOAD)
-        log.info("MQ: Binding queue {} to key {}".format(binding[0], binding[1]))
-        self.channel.queue_bind(self.on_bindok, binding[0], self.EXCHANGE, binding[1])
-
-    def on_queue_convert_ok(self, method_frame):
-        binding = (self.QUEUE_CONVERT, self.KEY_CONVERT)
         log.info("MQ: Binding queue {} to key {}".format(binding[0], binding[1]))
         self.channel.queue_bind(self.on_bindok, binding[0], self.EXCHANGE, binding[1])
 
@@ -62,16 +58,29 @@ class MessageQueue(MqConstants):
     def on_closed(self, connection):
         log.info('MQ: Connection closed')
 
+    def stop_consumers(self):
+        if self.channel:
+            log.info('MQ: Sending RPC Cancel.')
+            self.channel.basic_cancel(consumer_tag=self.consumer_tag)
+
+    def start_consumers(self):
+        """ Start all consumers (start listening for messages) """
+        self.consumer_tag = self.channel.basic_consume(self.on_progress_msg, self.QUEUE_PROGRESS)
+
+    def on_progress_msg(self, unused_channel, basic_deliver, properties, body):
+        """ Message received from downloader; notify websocket clients """
+        self.notify(body)
+        self.channel.basic_ack(basic_deliver.delivery_tag)
+
     def send_msg(self, key, msg):
         data = json.dumps(msg)
-        log.info("MQ: Key {} => Queueing: {}".format(key, msg))
+        log.debug("MQ: Key {} => Queueing: {}".format(key, msg))
         properties = pika.spec.BasicProperties(content_type="application/json", delivery_mode=2)
         self.channel.basic_publish(exchange='message', routing_key=key, body=data, properties=properties)
 
-    def notify(self, packet):
-        event_json = json.dumps(packet)
+    def notify(self, data):
         for listener in self.event_listeners:
-            listener.write_message(event_json)
+            listener.write_message(data)
             log.info('MQ: Notify {}'.format(repr(listener)))
 
     def add_event_listener(self, listener):
@@ -84,3 +93,10 @@ class MessageQueue(MqConstants):
             log.info('MQ: listener {} removed'.format(repr(listener)))
         except KeyError:
             pass
+
+    def close(self):
+        self.stop_consumers()
+        self.channel.close()
+        self.connection.close()
+        self.connected = False
+        log.info("MQ: Connection closed.")
