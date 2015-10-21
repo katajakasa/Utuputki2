@@ -9,6 +9,9 @@ log = logging.getLogger(__name__)
 
 class LogoutHandler(HandlerBase):
     def handle(self, packet_msg):
+        if not self.is_user_auth():
+            return
+
         # Remove session
         s = db_session()
         s.query(Session).filter_by(key=self.sock.sid).delete()

@@ -49,7 +49,7 @@ class Event(Base):
 class Player(Base):
     __tablename__ = "player"
     id = Column(Integer, primary_key=True)
-    token = Column(String(16), unique=True)
+    token = Column(String(16), unique=True, index=True)
     event = Column(ForeignKey('event.id'))
     name = Column(String(32))
 

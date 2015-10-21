@@ -16,6 +16,7 @@ class UtuputkiSock(SockJSConnection):
         self.authenticated = False
         self.sid = None
         self.uid = None
+        self.client_type = None
         self.ip = None
         self.level = 0
         super(UtuputkiSock, self).__init__(session)

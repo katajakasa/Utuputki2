@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 class PlayerHandler(HandlerBase):
     def handle(self, packet_msg):
-        if not self.sock.authenticated:
+        if not self.is_user_auth():
             return
 
         query = packet_msg.get('query')

@@ -1,29 +1,48 @@
 'use strict';
 
-app.controller('MyQueueController', ['$scope', '$rootScope', '$location', 'Player', 'Event', 'SourceQueue', 'SYNC_EVENTS',
-    function ($scope, $rootScope, $location, Player, Event, SourceQueue, SYNC_EVENTS) {
+app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$location', 'Player', 'Event', 'SourceQueue', 'SYNC_EVENTS',
+    function ($scope, $window, $rootScope, $location, Player, Event, SourceQueue, SYNC_EVENTS) {
         $scope.events = [];
         $scope.players = [];
         $scope.c_event = null;
         $scope.c_player = null;
         $scope.data = [];
 
+        function redo_visibility(w) {
+            $scope.grid_opts.columnDefs[1].visible = (w > 900);
+            $scope.grid_opts.columnDefs[4].visible = (w > 1100);
+            $scope.grid_opts.columnDefs[5].visible = (w > 1100);
+            $scope.grid_opts.columnDefs[2].visible = (w > 400);
+            $scope.grid_opts.columnDefs[3].visible = (w > 400);
+            $scope.gridApi.core.refresh();
+        }
+
         $scope.grid_opts = {
             enableFiltering: false,
             enableSorting: false,
             enableGridMenu: false,
+            enableColumnMenus: false,
             enableHorizontalScrollbar: 0,
             enableVerticalScrollbar: 0,
             rowHeight: 30,
             columnDefs: [
                 {name: 'Title', field: 'title'},
                 {name: 'description', field: 'description'},
-                {name: 'Status', field: 'status'},
-                {name: 'duration', field: 'duration'},
-                {name: 'Video', field: 'video'},
-                {name: 'Audio', field: 'audio'}
-            ]
+                {name: 'Status', field: 'status', width: 90},
+                {name: 'duration', field: 'duration', width: 90},
+                {name: 'Video', field: 'video', width: 240},
+                {name: 'Audio', field: 'audio', width: 140}
+            ],
+            onRegisterApi: function(gridApi){
+                $scope.gridApi = gridApi;
+            }
         };
+
+        $scope.$watch(function(){
+           return $window.innerWidth;
+        }, function(value) {
+            redo_visibility(value);
+        });
 
         $scope.getTableHeight = function() {
             var rowHeight = 30; // your row height

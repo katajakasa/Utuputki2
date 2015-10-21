@@ -11,6 +11,12 @@ class HandlerBase(object):
         self.sock = sock
         self.mtype = mtype
 
+    def is_user_auth(self):
+        return self.sock.authenticated and self.sock.client_type == 'user'
+
+    def is_token_auth(self):
+        return self.sock.authenticated and self.sock.client_type == 'token'
+
     @staticmethod
     def format_msg(mtype, message, error=0, query=None):
         msg = {

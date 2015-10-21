@@ -37,6 +37,7 @@ class AuthenticateHandler(HandlerBase):
             self.sock.uid = user.id
             self.sock.authenticated = True
             self.sock.level = user.level
+            self.sock.client_type = 'user'
 
             # Send login success message
             self.send_message({

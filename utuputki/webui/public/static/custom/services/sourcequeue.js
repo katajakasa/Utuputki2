@@ -37,13 +37,11 @@ app.factory('SourceQueue', ['$location', '$rootScope', 'SockService', 'AUTH_EVEN
                     return;
                 }
                 if(msg['query'] == 'status') {
-                    console.log(msg['data']);
                     update_status(msg['data']['source_id'], msg['data']['status']);
                     $rootScope.$broadcast(SYNC_EVENTS.queuesRefresh);
                     return;
                 }
                 if(msg['query'] == 'single') {
-                    console.log(msg['data']);
                     update_single_data(msg['data']);
                     $rootScope.$broadcast(SYNC_EVENTS.queuesRefresh);
                     return;

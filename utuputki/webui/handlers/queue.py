@@ -78,7 +78,7 @@ class QueueHandler(HandlerBase):
         self.send_message(queues, query='fetchall')
 
     def handle(self, packet_msg):
-        if not self.sock.authenticated:
+        if not self.is_user_auth():
             return
 
         query = packet_msg.get('query')
