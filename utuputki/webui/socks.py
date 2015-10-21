@@ -29,8 +29,18 @@ class UtuputkiSock(SockJSConnection):
         log.info("Connection accepted")
 
     def write_message(self, msg):
-        """ Broadcast message from MQ interface """
-        self.send(msg)
+        """ Send message from MQ interface """
+        if self.authenticated and self.client_type == 'user':
+            self.send(msg)
+
+    def broadcast(self, msg, req_auth=True, avoid_self=True):
+        """ Broadcast message from websocket handlers to all clients """
+        for client in self.clients:
+            if (client is not self and avoid_self) or not avoid_self:
+                if req_auth and client.authenticated:
+                    client.send(msg)
+                else:
+                    client.send(msg)
 
     def on_message(self, raw_message):
         # Load packet and parse as JSON

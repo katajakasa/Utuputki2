@@ -7,6 +7,7 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
         $scope.c_event = null;
         $scope.c_player = null;
         $scope.data = [];
+        $scope.gridApi = null;
 
         function redo_visibility(w) {
             $scope.grid_opts.columnDefs[1].visible = (w > 900);
@@ -14,7 +15,7 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             $scope.grid_opts.columnDefs[5].visible = (w > 1100);
             $scope.grid_opts.columnDefs[2].visible = (w > 400);
             $scope.grid_opts.columnDefs[3].visible = (w > 400);
-            $scope.gridApi.core.refresh();
+            refresh_grid();
         }
 
         $scope.grid_opts = {
@@ -69,6 +70,12 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             }
         }
 
+        function refresh_grid() {
+            if($scope.gridApi == null)
+                return;
+            $scope.gridApi.core.queueRefresh();
+        }
+
         function refresh_queue() {
             if($scope.c_player == null) {
                 return;
@@ -82,13 +89,17 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
                 'Error'
             ];
 
+            $scope.grid_opts.data = [];
+            $scope.grid_opts.minRowsToShow = 0;
+            $scope.grid_opts.virtualizationThreshold = 0;
+
             var num = SourceQueue.get_queue_num($scope.c_player.id);
             if(num < 0) {
+                refresh_grid();
                 return;
             }
             var queue = SourceQueue.get_queue(num);
             var len = queue.items[0].length;
-            $scope.grid_opts.data = [];
             for(var i = 0; i < len; i++) {
                 var field = queue.items[0][i];
                 var source = field.source[0];
@@ -102,12 +113,12 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
                 // Format duration
                 var duration = moment.duration(source.length_seconds, "seconds").format();
 
+                // Video and audio codec information
                 var video = '';
                 if(source.video.codec != '') {
                     var v = source.video;
                     video = v.codec + '@' + v.bitrate + 'kbps, ' + v.width + 'x' + v.height;
                 }
-
                 var audio = '';
                 if(source.audio.codec != '') {
                     var a = source.audio;
@@ -126,7 +137,7 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             }
             $scope.grid_opts.minRowsToShow = $scope.grid_opts.data.length;
             $scope.grid_opts.virtualizationThreshold = $scope.grid_opts.data.length;
-            $scope.refresh = true;
+            refresh_grid();
         }
 
         function init() {

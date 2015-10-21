@@ -132,6 +132,19 @@ class QueueHandler(HandlerBase):
             finally:
                 s.close()
 
+            # If the existing source entry belongs to current user, show error.
+            # Don't let user post the same video again and again (rudimentary protection)
+            if found_src:
+                s = db_session()
+                try:
+                    s.query(Media).filter_by(user=self.sock.uid, source=found_src.id, queue=queue_id).one()
+                    self.send_error('Url is already in the queue', 500, query=query)
+                    return
+                except NoResultFound:
+                    pass
+                finally:
+                    s.close()
+
             # First title and description for new video
             first_title = "Unknown"
             first_desc = ""
@@ -155,27 +168,13 @@ class QueueHandler(HandlerBase):
                 first_title = info['title']
                 first_desc = info['description']
 
-            # If the existing source entry belongs to current user, show error.
-            # Don't let user post the same video again and again (rudimentary protection)
-            if found_src:
-                s = db_session()
-                try:
-                    s.query(Media).filter_by(user=self.sock.uid, source=found_src.id).all()
-                    self.send_error('Url is already in the queue', 500, query=query)
-                    return
-                except NoResultFound:
-                    pass
-                finally:
-                    s.close()
-
             if found_src:
                 # Add a new media entry
                 s = db_session()
                 media = Media(
                     source=found_src.id,
                     user=self.sock.uid,
-                    queue=queue_id,
-                    status=1,  # Mark as sourced
+                    queue=queue_id
                 )
                 s.add(media)
                 s.commit()
