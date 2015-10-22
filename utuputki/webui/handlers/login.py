@@ -30,6 +30,7 @@ class LoginHandler(HandlerBase):
 
             self.sock.authenticated = True
             self.sock.client_type = 'token'
+            self.sock.uid = player.id
 
             # Send login success message
             self.send_message({

@@ -4,6 +4,7 @@ app.factory('Event', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', '
     function ($location, $rootScope, SockService, AUTH_EVENTS, SYNC_EVENTS) {
         var last_error = "";
         var events = [];
+        var selected_event = 0;
 
         function event_event(msg, query) {
             if (msg['error'] == 1) {

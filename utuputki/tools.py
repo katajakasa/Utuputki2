@@ -94,6 +94,7 @@ if 'clear_media' in sys.argv:
     s.commit()
     s.close()
     print("Media and Sources cleared.")
+    exit(0)
 
 
 print("Utuputki utilities")

@@ -26,7 +26,6 @@ class DownloadConsumer(MqConstants):
         data = json.dumps({
             'type': 'queue',
             'query': mtype,
-            'error': 0,
             'data': msg
         })
         log.debug("MQ: Key {} => Queueing: {}".format(self.KEY_PROGRESS, data))
@@ -94,14 +93,19 @@ class DownloadConsumer(MqConstants):
                     source.mime_type = mimetypes.guess_type('file://'+file_path)[0]
 
                     # Save video and audio information
-                    if info['requested_formats']:
+                    if 'requested_formats' in info:
                         v, a = info['requested_formats']
                         source.video_bitrate = int(v['tbr'])
                         source.video_codec = v['vcodec']
                         source.video_w = v['width']
                         source.video_h = v['height']
-                        source.audio_bitrate = a['abr']
+                        source.audio_bitrate = int(a['abr'])
                         source.audio_codec = a['acodec']
+                    else:
+                        source.video_codec = info['vcodec']
+                        source.video_w = info['width']
+                        source.video_h = info['height']
+                        source.audio_codec = info['acodec']
 
                     # Dump to DB
                     s.add(source)

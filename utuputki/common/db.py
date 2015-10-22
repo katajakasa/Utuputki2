@@ -28,7 +28,7 @@ MEDIASTATUS = {
     'fetching_metadata': 1,
     'downloading': 2,
     'finished': 3,
-    'error': 4
+    'error': 4,
 }
 
 
@@ -52,6 +52,7 @@ class Player(Base):
     token = Column(String(16), unique=True, index=True)
     event = Column(ForeignKey('event.id'))
     name = Column(String(32))
+    last = Column(ForeignKey('media.id'), default=None)
 
     def serialize(self, show_token=False):
         return {
@@ -143,6 +144,7 @@ class Media(Base):
     source = Column(ForeignKey('source.id'), nullable=True, default=None)
     user = Column(ForeignKey('user.id'))
     queue = Column(ForeignKey('sourcequeue.id'))
+    played = Column(Boolean, default=False)
 
     def serialize(self):
         s = db_session()
@@ -152,7 +154,8 @@ class Media(Base):
             'id': self.id,
             'source_id': self.source,
             'source': source_entry,
-            'user_id': self.user
+            'user_id': self.user,
+            'played': self.played
         }
 
 
@@ -204,7 +207,7 @@ class Session(Base):
 
 
 def db_init(engine_str):
-    _engine = create_engine(engine_str)
+    _engine = create_engine(engine_str+'?charset=utf8', pool_recycle=3600)
     _session.configure(bind=_engine)
     Base.metadata.create_all(_engine)
 
