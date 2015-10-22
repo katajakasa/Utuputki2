@@ -3,7 +3,6 @@
 app.controller('RegisterController', ['$scope', '$location', '$rootScope', 'AUTH_EVENTS', 'AuthService',
     function ($scope, $location, $rootScope, AUTH_EVENTS, AuthService) {
         $scope.submit = function(new_user) {
-            console.log(new_user);
             AuthService.register(new_user);
         };
 

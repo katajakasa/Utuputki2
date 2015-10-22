@@ -4,8 +4,12 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'User', 'AUTH_
     function ($location, $rootScope, Session, User, AUTH_EVENTS, SockService) {
         var last_error = "";
 
-        function auth_event(msg) {
-            if (msg['error'] == 0) {
+        function auth_event(msg, query) {
+            if (msg['error'] == 1) {
+                last_error = msg['data']['message'];
+                $rootScope.$broadcast(AUTH_EVENTS.sessionTimeout);
+                console.error("Session timeout!");
+            } else {
                 Session.create(
                     msg['data']['sid'],
                     msg['data']['uid'],
@@ -13,24 +17,20 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'User', 'AUTH_
                 );
                 User.create(msg['data']['user']);
                 $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-                console.log("Authentication success!");
-            } else {
-                $rootScope.$broadcast(AUTH_EVENTS.sessionTimeout);
-                console.error("Session timeout!");
             }
         }
 
         function authenticate() {
-            SockService.send({
-                'type': 'auth',
-                'message': {
-                    'sid': Session.sid
-                }
+            SockService.send_msg('auth', {
+                'sid': Session.sid
             });
         }
 
-        function login_event(msg) {
-            if (msg['error'] == 0) {
+        function login_event(msg, query) {
+            if (msg['error'] == 1) {
+                last_error = msg['data']['message'];
+                $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+            } else {
                 Session.create(
                     msg['data']['sid'],
                     msg['data']['uid'],
@@ -38,49 +38,37 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'User', 'AUTH_
                 );
                 User.create(msg['data']['user']);
                 $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-            } else {
-                last_error = msg['data']['message'];
-                $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
             }
         }
 
-        function register_event(msg) {
-            if (msg['error'] == 0) {
-                $rootScope.$broadcast(AUTH_EVENTS.registerSuccess);
-            } else {
+        function register_event(msg, query) {
+            if (msg['error'] == 1) {
                 last_error = msg['data']['message'];
                 $rootScope.$broadcast(AUTH_EVENTS.registerFailed);
+            } else {
+                $rootScope.$broadcast(AUTH_EVENTS.registerSuccess);
             }
         }
 
         function login(credentials) {
-            SockService.send({
-                'type': 'login',
-                'message': {
-                    'username': credentials.username,
-                    'password': credentials.password
-                }
+            SockService.send_msg('login', {
+                'username': credentials.username,
+                'password': credentials.password
             });
         }
 
         function register(new_user) {
-            SockService.send({
-                'type': 'register',
-                'message': {
-                    'username': new_user.username,
-                    'password': new_user.password,
-                    'nickname': new_user.nickname,
-                    'email': new_user.email
-                }
+            SockService.send_msg('register', {
+                'username': new_user.username,
+                'password': new_user.password,
+                'nickname': new_user.nickname,
+                'email': new_user.email
             });
         }
 
         function logout() {
             $rootScope.$broadcast(AUTH_EVENTS.logoutBegin);
-            SockService.send({
-                'type': 'logout',
-                'message': {}
-            });
+            SockService.send_msg('logout', {});
             Session.destroy();
             User.destroy();
             $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
@@ -116,7 +104,8 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'User', 'AUTH_
             is_authorized: is_authorized,
             is_authenticated: is_authenticated,
             get_last_error: get_last_error,
-            session_id: session_id
+            session_id: session_id,
+            register: register
         };
     }
 ]);

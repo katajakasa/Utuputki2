@@ -69,6 +69,8 @@ if __name__ == '__main__':
 
     # Index and static handlers
     handlers = router.urls + [
+        (r'/video/(.*)$', web.StaticFileHandler, {
+            'path': settings.CACHE_DIR}),
         (r'/(.*)$', web.StaticFileHandler, {
             'path': settings.PUBLIC_PATH,
             'default_filename': 'index.html'}),

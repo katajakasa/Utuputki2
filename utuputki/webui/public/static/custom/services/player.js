@@ -5,24 +5,19 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', 
         var last_error = "";
         var players = [];
 
-        function player_event(msg) {
-            if (msg['error'] == 0) {
+        function player_event(msg, query) {
+            if (msg['error'] == 1) {
+                last_error = msg['data']['message'];
+            } else {
                 players = msg['data'];
                 $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
-            } else {
-                last_error = msg['data']['message'];
             }
         }
 
         function setup() {
             SockService.add_recv_handler('player', player_event);
             $rootScope.$on(AUTH_EVENTS.loginSuccess, function (event, args) {
-                SockService.send({
-                    'type': 'player',
-                    'message': {
-                        'query': 'fetchall'
-                    }
-                });
+                SockService.send_msg('player', {}, 'fetchall');
             });
         }
 

@@ -7,9 +7,10 @@ log = logging.getLogger(__name__)
 
 
 class HandlerBase(object):
-    def __init__(self, sock, mtype):
+    def __init__(self, sock, mtype, query):
         self.sock = sock
         self.mtype = mtype
+        self.query = query
 
     def is_user_auth(self):
         return self.sock.authenticated and self.sock.client_type == 'user'
@@ -17,13 +18,14 @@ class HandlerBase(object):
     def is_token_auth(self):
         return self.sock.authenticated and self.sock.client_type == 'token'
 
-    @staticmethod
-    def format_msg(mtype, message, error=0, query=None):
+    def format_msg(self, mtype, message, error=0, query=None):
         msg = {
             'type': mtype,
             'error': error,
             'data': message,
         }
+        if self.query:
+            msg['query'] = self.query
         if query:
             msg['query'] = query
         return msg

@@ -13,9 +13,10 @@ app.factory('SockService', ['socket',
             });
             socket.onMessage(function (msg) {
                 var type = msg['type'];
+                var query = msg['query'];
                 if (type in recv_handlers) {
                     for (var i = 0; i < recv_handlers[type].length; i++) {
-                        recv_handlers[type][i](msg);
+                        recv_handlers[type][i](msg, query);
                     }
                 }
             });
@@ -30,15 +31,22 @@ app.factory('SockService', ['socket',
             recv_handlers[type].push(fn);
         }
 
-        function send(msg) {
-            socket.send(msg)
+        function send_msg(type, msg, query) {
+            var data = {
+                'type': type,
+                'data': msg
+            };
+            if(query != undefined) {
+                data['query'] = query;
+            }
+            socket.send(data)
         }
 
         return {
             setup: setup,
             add_open_handler: add_open_handler,
             add_recv_handler: add_recv_handler,
-            send: send
+            send_msg: send_msg
         }
     }
 ]);

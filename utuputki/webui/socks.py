@@ -3,7 +3,7 @@
 import json
 import logging
 from sockjs.tornado import SockJSConnection
-from handlers import login, logout, authenticate, queue, register, player, event, unknown
+from handlers import login, logout, authenticate, queue, register, player, event, playerdev, unknown
 
 log = logging.getLogger(__name__)
 
@@ -47,12 +47,13 @@ class UtuputkiSock(SockJSConnection):
         try:
             message = json.loads(raw_message)
         except ValueError:
-            unknown.UnknownHandler(self).handle(None)
+            unknown.UnknownHandler(self, 'unknown').handle(raw_message)
             return
 
         # Handle packet by type
         packet_type = message.get('type', '')
-        packet_msg = message.get('message', {})
+        packet_msg = message.get('data', {})
+        packet_query = message.get('query')
 
         # Censor login packets for obvious reasons ...
         if packet_type != 'login':
@@ -69,9 +70,10 @@ class UtuputkiSock(SockJSConnection):
             'queue': queue.QueueHandler,
             'event': event.EventHandler,
             'player': player.PlayerHandler,
+            'playerdev': playerdev.PlayerDeviceHandler,
             'unknown': unknown.UnknownHandler
         }
-        cbs[packet_type if packet_type in cbs else 'unknown'](self, packet_type).handle(packet_msg)
+        cbs[packet_type if packet_type in cbs else 'unknown'](self, packet_type, packet_query).handle(packet_msg)
 
     def on_mq_packet(self, packet):
         pass

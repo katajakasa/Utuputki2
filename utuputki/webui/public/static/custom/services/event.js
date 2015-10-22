@@ -5,24 +5,19 @@ app.factory('Event', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', '
         var last_error = "";
         var events = [];
 
-        function event_event(msg) {
-            if (msg['error'] == 0) {
+        function event_event(msg, query) {
+            if (msg['error'] == 1) {
+                last_error = msg['data']['message'];
+            } else {
                 events = msg['data'];
                 $rootScope.$broadcast(SYNC_EVENTS.eventsRefresh);
-            } else {
-                last_error = msg['data']['message'];
             }
         }
 
         function setup() {
             SockService.add_recv_handler('event', event_event);
             $rootScope.$on(AUTH_EVENTS.loginSuccess, function (event, args) {
-                SockService.send({
-                    'type': 'event',
-                    'message': {
-                        'query': 'fetchall'
-                    }
-                });
+                SockService.send_msg('event', {}, 'fetchall');
             });
         }
 

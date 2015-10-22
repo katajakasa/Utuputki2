@@ -29,7 +29,7 @@ class DownloadConsumer(MqConstants):
             'error': 0,
             'data': msg
         })
-        log.info("MQ: Key {} => Queueing: {}".format(self.KEY_PROGRESS, data))
+        log.debug("MQ: Key {} => Queueing: {}".format(self.KEY_PROGRESS, data))
         properties = pika.spec.BasicProperties(
             content_type="application/json", delivery_mode=1)
         self.channel.basic_publish(

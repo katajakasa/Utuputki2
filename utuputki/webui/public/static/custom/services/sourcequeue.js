@@ -25,45 +25,41 @@ app.factory('SourceQueue', ['$location', '$rootScope', 'SockService', 'AUTH_EVEN
             }
         }
 
-        function queue_event(msg) {
-            if (msg['error'] == 0) {
-                if(msg['query'] == 'fetchall') {
+        function queue_event(msg, query) {
+            if (msg['error'] == 1) {
+                last_error = msg['data']['message'];
+                console.log(last_error);
+                if(query == 'add') {
+                    $rootScope.$broadcast(SYNC_EVENTS.queueAddFailed);
+                }
+            } else {
+                if(query == 'fetchall') {
                     queues = msg['data'];
                     $rootScope.$broadcast(SYNC_EVENTS.queuesRefresh);
                     return;
                 }
-                if(msg['query'] == 'add') {
+                if(query == 'add') {
                     $rootScope.$broadcast(SYNC_EVENTS.queueAddSuccess);
                     return;
                 }
-                if(msg['query'] == 'status') {
+                if(query == 'status') {
                     update_status(msg['data']['source_id'], msg['data']['status']);
                     $rootScope.$broadcast(SYNC_EVENTS.queuesRefresh);
                     return;
                 }
-                if(msg['query'] == 'single') {
+                if(query == 'single') {
                     update_single_data(msg['data']);
                     $rootScope.$broadcast(SYNC_EVENTS.queuesRefresh);
                     return;
                 }
                 console.error("Unknown incoming queue packet subtype!")
-            } else {
-                last_error = msg['data']['message'];
-                if(msg['query'] == 'add') {
-                    $rootScope.$broadcast(SYNC_EVENTS.queueAddFailed);
-                }
             }
         }
 
         function setup() {
             SockService.add_recv_handler('queue', queue_event);
             $rootScope.$on(AUTH_EVENTS.loginSuccess, function (event, args) {
-                SockService.send({
-                    'type': 'queue',
-                    'message': {
-                        'query': 'fetchall'
-                    }
-                });
+                SockService.send_msg('queue', {}, 'fetchall');
             });
         }
 
@@ -81,14 +77,10 @@ app.factory('SourceQueue', ['$location', '$rootScope', 'SockService', 'AUTH_EVEN
         }
 
         function add(player_id, url) {
-            SockService.send({
-                'type': 'queue',
-                'message': {
-                    'query': 'add',
-                    'player_id': player_id,
-                    'url': url
-                }
-            });
+            SockService.send_msg('queue', {
+                'player_id': player_id,
+                'url': url
+            }, 'add');
         }
 
         function remove(queue_id, remove) {

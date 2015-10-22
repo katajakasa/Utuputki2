@@ -12,10 +12,8 @@ class PlayerHandler(HandlerBase):
         if not self.is_user_auth():
             return
 
-        query = packet_msg.get('query')
-
         # Fetch all players. Use this to init client state
-        if query == 'fetchall':
+        if self.query == 'fetchall':
             s = db_session()
             players = [player.serialize() for player in s.query(Player).all()]
             s.close()

@@ -81,29 +81,27 @@ class QueueHandler(HandlerBase):
         if not self.is_user_auth():
             return
 
-        query = packet_msg.get('query')
-
         # Fetch all queues. Use this to init client state
-        if query == 'fetchall':
+        if self.query == 'fetchall':
             self.handle_fetchall_sig()
 
         # Fetch a single queue (for refreshing)
-        if query == 'fetchone':
+        if self.query == 'fetchone':
             s = db_session()
             try:
                 queue = s.query(SourceQueue).filter_by(user=self.sock.uid).one().serialize()
                 self.send_message(queue)
             except NoResultFound:
-                self.send_error('No queue found', 404, query=query)
+                self.send_error('No queue found', 404)
             finally:
                 s.close()
 
         # Add new item to the queue. Log to DB, send signal
-        if query == 'add':
+        if self.query == 'add':
             url = packet_msg.get('url')
             player_id = packet_msg.get('player_id')
             if not url or not player_id:
-                self.send_error('Invalid input data', 500, query=query)
+                self.send_error('Invalid input data', 500)
                 return
 
             queue_id = self.ensure_sourcequeue(player_id)
@@ -116,7 +114,7 @@ class QueueHandler(HandlerBase):
 
             # Error out if necessary
             if not youtube_hash and not other_url:
-                self.send_error('Invalid URL', 500, query=query)
+                self.send_error('Invalid URL', 500)
                 return
 
             # First, attempt to find the source from database. If it exists, simply use that.
@@ -138,7 +136,7 @@ class QueueHandler(HandlerBase):
                 s = db_session()
                 try:
                     s.query(Media).filter_by(user=self.sock.uid, source=found_src.id, queue=queue_id).one()
-                    self.send_error('Url is already in the queue', 500, query=query)
+                    self.send_error('Url is already in the queue', 500)
                     return
                 except NoResultFound:
                     pass
@@ -160,7 +158,7 @@ class QueueHandler(HandlerBase):
                     current_str = format_time_delta(info['duration'])
                     limit_str = format_time_delta(settings.LIMIT_DURATION)
                     self.send_error('Video is too long ({}). Current limit is {}.'
-                                    .format(current_str, limit_str), 500, query=query)
+                                    .format(current_str, limit_str), 500)
                     return
 
                 # Use video desc and title
@@ -208,9 +206,9 @@ class QueueHandler(HandlerBase):
 
             # Resend all queue data (for now)
             self.handle_fetchall_sig()
-            self.send_message({}, query=query)
+            self.send_message({})
             log.info("[{}] New media added to queue".format(self.sock.sid[0:6]))
 
         # Drop entry from Queue. Media entries MAY be cleaned up later.
-        if query == 'del':
+        if self.query == 'del':
             pass

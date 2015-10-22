@@ -12,10 +12,8 @@ class EventHandler(HandlerBase):
         if not self.is_user_auth():
             return
 
-        query = packet_msg.get('query')
-
         # Fetch all events. Use this to init client state
-        if query == 'fetchall':
+        if self.query == 'fetchall':
             s = db_session()
             events = [event.serialize() for event in s.query(Event).filter_by(visible=True).all()]
             s.close()
