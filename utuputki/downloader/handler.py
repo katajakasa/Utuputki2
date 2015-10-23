@@ -114,8 +114,17 @@ class DownloadConsumer(MqConstants):
 
                     # Start downloading
                     log.info("Downloading {} to {}".format(source.youtube_hash, file_path))
-                    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                        ydl.download(['http://www.youtube.com/watch?v=' + source.youtube_hash])
+                    try:
+                        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                            ydl.download(['http://www.youtube.com/watch?v=' + source.youtube_hash])
+                    except youtube_dl.ExtractorError, e:
+                        s = db_session()
+                        source.status = MEDIASTATUS['error'];
+                        source.message = "DL Error"
+                        s.add(source)
+                        s.commit()
+                        s.close()
+                        log.info("Error while attempting to download: {}".format(str(e)))
                 else:
                     log.warn("Cannot yet download other urls!")
 

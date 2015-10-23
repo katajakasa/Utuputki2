@@ -33,7 +33,7 @@ class RegisterHandler(HandlerBase):
             self.send_error('Email should be between 3 and 128 characters long', 400)
             return
 
-        if len(password) < 9:
+        if len(password) < 8:
             self.send_error('Password should be at least 8 characters long', 400)
             return
 

@@ -38,7 +38,7 @@ class UtuputkiSock(SockJSConnection):
 
     def broadcast(self, msg, req_auth=True, avoid_self=True, client_type=None):
         """ Broadcast message from websocket handlers to all clients """
-        log.debug("Broadcasting {}, auth={}, avoid={}, client_t={}".format(msg, req_auth, avoid_self, client_type))
+        # log.debug("Broadcasting {}, auth={}, avoid={}, client_t={}".format(msg, req_auth, avoid_self, client_type))
         for client in self.clients:
             if (client is not self and avoid_self) or not avoid_self:
                 if not client_type or (client_type == client.client_type):
@@ -61,10 +61,10 @@ class UtuputkiSock(SockJSConnection):
         packet_query = message.get('query')
 
         # Censor login packets for obvious reasons ...
-        if packet_type != 'login':
-            log.debug("Message: {}.".format(raw_message))
-        else:
-            log.debug("Message: **login**")
+        # if packet_type != 'login':
+        #     log.debug("Message: {}.".format(raw_message))
+        # else:
+        #     log.debug("Message: **login**")
 
         # Find and run callback
         cbs = {

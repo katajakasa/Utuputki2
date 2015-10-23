@@ -83,7 +83,7 @@ if __name__ == '__main__':
     app = web.Application(handlers, conf)
 
     # Start up everything
-    app.listen(settings.PORT)
+    app.listen(settings.PORT, address="0.0.0.0")
     try:
         io_loop.start()
     except KeyboardInterrupt:
