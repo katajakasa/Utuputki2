@@ -97,6 +97,17 @@ if 'clear_media' in sys.argv:
     print("Media and Sources cleared.")
     exit(0)
 
+if 'list_users' in sys.argv:
+    settings.config_init()
+    db_init(settings.DATABASE_CONFIG)
+    s = db_session()
+    users = s.query(User).all()
+    s.close()
+    print("{:3} {:16} {:16} {:32}".format("ID","Username","Nickname", "Email"))
+    for user in users:
+        print("{:3} {:16} {:16} {:32}".format(user.id, user.username, user.nickname, user.email))
+    exit(0)
+
 
 print("Utuputki utilities")
 print("create_admin - Creates a new admin user")
@@ -106,4 +117,5 @@ print("list_events - List all events")
 print("create_player - Create a player for event")
 print("list_players - List all players")
 print("clear_media - Clear all media and sources from db")
+print("list_users - List all users")
 exit(0)
