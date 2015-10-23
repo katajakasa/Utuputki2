@@ -118,13 +118,14 @@ class DownloadConsumer(MqConstants):
                         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                             ydl.download(['http://www.youtube.com/watch?v=' + source.youtube_hash])
                     except youtube_dl.ExtractorError, e:
-                        s = db_session()
-                        source.status = MEDIASTATUS['error'];
+                        source.status = MEDIASTATUS['error']
                         source.message = "DL Error"
                         s.add(source)
                         s.commit()
+                        self.channel.basic_ack(method_frame.delivery_tag)
                         s.close()
                         log.info("Error while attempting to download: {}".format(str(e)))
+                        continue
                 else:
                     log.warn("Cannot yet download other urls!")
 
@@ -147,6 +148,9 @@ class DownloadConsumer(MqConstants):
 
         except KeyboardInterrupt:
             return
+
+    def __reduce_ex__(self, *args, **kwargs):
+        return super(DownloadConsumer, self).__reduce_ex__(*args, **kwargs)
 
     def close(self):
         self.channel.close()
