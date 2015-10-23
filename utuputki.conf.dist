@@ -1,42 +1,61 @@
+# This is a sample configuration file for Utuputki2
 [utuputki]
 
 # Server port
+# Default is 8000
 PORT=8000
 
+# Source URL for your videos.
+# Default is http://localhost:8000/video/ for local testing.
+#SOURCE_URL=https://www.mydomain.com/utuputki/video/
+SOURCE_URL=http://localhost:8000/video/
+
 # Current timezone.
+# Default is Europe/Helsinki
 TIMEZONE=Europe/Helsinki
 
 # Only set on development boxes.
+# Default is False
 DEBUG=False
 
 # Database access string. See SQLAlchemy for more info
+# By default we try to use a local sqlite database
 DATABASE_CONFIG=mysql://username:password@localhost/databasename
 
 # AMQP broker url. See RabbitMQ configuration for more info.
+# Default is amqp://guest:guest@localhost:5672//
 AMQP_URL=amqp://guest:guest@localhost:5672/utuputki
 
+# Logging level
 # 0 = Debug
 # 1 = Info
 # 2 = Warning
 # 3 = Error
 # 4 = Critical
+# Default is 2
 LOG_LEVEL=1
 
 # Note that the directory must exist!
 # If DEBUG = True, this will be ignored and errors go to stdout.
+# Default is /var/log/utuputki/utuputki-ui.log
 LOG_FILE=/var/log/utuputki/utuputki-ui.log
 
 # This is where the converted files are stored (persistent)
+# Default is /tmp
 CACHE_DIR=/tmp
 
 # This is a temporary cache for files. Should be cleared every now and then.
+# Default is /tmp
 TMP_DIR=/tmp
 
-# Limit video/audio duration
+# Limit video/audio duration (in seconds)
+# Default is 1800
 LIMIT_DURATION = 900
 
-# Limit video filesize
+# Limit video filesize (in bytes)
+# Default is 90MB
 LIMIT_VIDEO_SIZE = 134217728
 
-# Limit audio filesize
-LIMIT_VIDEO_SIZE = 10485760
+# Limit audio filesize (in bytes)
+# Default is 10MB
+LIMIT_AUDIO_SIZE = 10485760

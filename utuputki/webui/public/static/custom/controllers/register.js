@@ -22,9 +22,7 @@ app.controller('RegisterController', ['$scope', '$location', '$rootScope', 'AUTH
                 templateOptions: {
                     type: 'text',
                     required: true,
-                    label: 'Nickname',
-                    minlength: 4,
-                    maxlength: 32
+                    label: 'Nickname'
                 }
             },
             {
@@ -33,9 +31,7 @@ app.controller('RegisterController', ['$scope', '$location', '$rootScope', 'AUTH
                 templateOptions: {
                     type: 'text',
                     required: true,
-                    label: 'Username',
-                    minlength: 6,
-                    maxlength: 32
+                    label: 'Username'
                 }
             },
             {
@@ -44,8 +40,7 @@ app.controller('RegisterController', ['$scope', '$location', '$rootScope', 'AUTH
                 templateOptions: {
                     type: 'password',
                     required: true,
-                    label: 'Password',
-                    minlength: 8
+                    label: 'Password'
                 }
             },
             {
@@ -53,10 +48,7 @@ app.controller('RegisterController', ['$scope', '$location', '$rootScope', 'AUTH
                 type: 'input',
                 templateOptions: {
                     type: 'text',
-                    label: 'Email address',
-                    pattern: "(.+)@(.+)",
-                    minlength: 3,
-                    maxlength: 128
+                    label: 'Email address'
                 }
             }
         ];

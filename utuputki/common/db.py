@@ -53,6 +53,7 @@ class Player(Base):
     event = Column(ForeignKey('event.id'))
     name = Column(String(32))
     last = Column(ForeignKey('media.id'), default=None)
+    status = Column(Integer, default=0)
 
     def serialize(self, show_token=False):
         return {
@@ -91,7 +92,7 @@ class Source(Base):
     __tablename__ = "source"
     id = Column(Integer, primary_key=True)
     hash = Column(String(64), default='')
-    file_path = Column(String(512), default='')
+    file_name = Column(String(256), default='')
     file_ext = Column(String(4))
     mime_type = Column(String(32))
     size_bytes = Column(Integer, default=0)

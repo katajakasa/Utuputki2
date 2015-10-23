@@ -30,18 +30,20 @@ config_values = [
 
 # Defaults
 PORT = 8000
+SOURCE_URL = 'http://localhost:'+str(PORT)+'/video/'
 TIMEZONE = "Europe/Helsinki"
 DEBUG = False
 DATABASE_CONFIG = default_db
 PUBLIC_PATH = os.path.join(BASEDIR, "utuputki/webui/public")
 AMQP_URL = default_amqp
-LOG_LEVEL = 0
+LOG_LEVEL = 2
 LOG_FILE = 'utuputki_ui.log'
 CACHE_DIR = '/tmp'
 TMP_DIR = '/tmp'
 LIMIT_DURATION = 1800
 LIMIT_VIDEO_SIZE = 90 * 1024 * 1024
 LIMIT_AUDIO_SIZE = 10 * 1024 * 1024
+
 
 # Read configuration file
 def config_init():

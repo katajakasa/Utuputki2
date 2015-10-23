@@ -89,6 +89,7 @@ if 'clear_media' in sys.argv:
     settings.config_init()
     db_init(settings.DATABASE_CONFIG)
     s = db_session()
+    s.query(Player).update({'last': None})
     s.query(Media).delete()
     s.query(Source).delete()
     s.commit()

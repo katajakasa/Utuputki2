@@ -67,16 +67,16 @@ class DownloadConsumer(MqConstants):
                     ydl_opts = {
                         'logger': log,
                         'cachedir': settings.TMP_DIR,
-                        'simulate': True,
-                        'format': req_format
+                        'format': req_format,
+                        'outtmpl': '%(id)s.%(ext)s'
                     }
 
                     # Download information
                     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                        info = ydl.extract_info('http://www.youtube.com/watch?v=' + source.youtube_hash)
+                        info = ydl.extract_info('http://www.youtube.com/watch?v=' + source.youtube_hash, download=False)
+                        file_name = ydl.prepare_filename(info)
 
-                    # Form the filename
-                    file_name = "tmp_{}.{}".format(source.id, info['ext'])
+                    # Form a correct path to the file
                     file_path = os.path.join(settings.CACHE_DIR, file_name)
                     ydl_opts['outtmpl'] = file_path
 
@@ -88,8 +88,8 @@ class DownloadConsumer(MqConstants):
                     # Update status
                     source.status = MEDIASTATUS['downloading']
                     source.length_seconds = info['duration']
-                    source.file_ext = info['ext']
-                    source.file_path = file_path
+                    source.file_ext = os.path.splitext(file_name)[1][1:]
+                    source.file_name = file_name
                     source.mime_type = mimetypes.guess_type('file://'+file_path)[0]
 
                     # Save video and audio information
@@ -113,8 +113,7 @@ class DownloadConsumer(MqConstants):
                     self.send_msg('single', source.serialize())
 
                     # Start downloading
-                    log.info("Downloading {} to {}".format(source.youtube_hash, source.file_path))
-                    ydl_opts['simulate'] = False
+                    log.info("Downloading {} to {}".format(source.youtube_hash, file_path))
                     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                         ydl.download(['http://www.youtube.com/watch?v=' + source.youtube_hash])
                 else:

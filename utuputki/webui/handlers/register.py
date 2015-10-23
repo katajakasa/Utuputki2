@@ -21,12 +21,12 @@ class RegisterHandler(HandlerBase):
             self.send_error('Fill all fields', 400)
             return
 
-        if len(username) < 6 or len(username) > 32:
-            self.send_error('Username should be between 6 and 32 characters long', 400)
+        if len(username) < 5 or len(username) > 32:
+            self.send_error('Username should be between 5 and 32 characters long', 400)
             return
 
-        if len(nickname) < 4 or len(nickname) > 32:
-            self.send_error('Nickname should be between 4 and 32 characters long', 400)
+        if len(nickname) < 5 or len(nickname) > 32:
+            self.send_error('Nickname should be between 5 and 32 characters long', 400)
             return
 
         if email and (len(email) < 3 or len(email) > 128):

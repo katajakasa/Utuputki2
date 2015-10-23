@@ -30,8 +30,11 @@ class UtuputkiSock(SockJSConnection):
 
     def write_message(self, msg):
         """ Send message from MQ interface """
-        if self.authenticated and self.client_type == 'user':
-            self.send(msg)
+        if self.authenticated:
+            if self.client_type == 'user':
+                self.send(msg)
+            else:
+                self.send({'type': 'playerdev', 'query': 'poke', 'data': {}})
 
     def broadcast(self, msg, req_auth=True, avoid_self=True):
         """ Broadcast message from websocket handlers to all clients """
