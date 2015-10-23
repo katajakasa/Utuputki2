@@ -83,7 +83,7 @@ class PlayerDeviceHandler(HandlerBase):
                 }, query='source')
 
                 # Some logging
-                log.info("Player {} is playing {}".format(self.sock.uid, source.title))
+                #log.info(u"Player {} is playing {}".format(self.sock.uid, source.title))
 
                 # Update last played media track to db
                 s = db_session()
