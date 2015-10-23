@@ -102,6 +102,9 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             var len = queue.items[0].length;
             for(var i = 0; i < len; i++) {
                 var field = queue.items[0][i];
+                if(field.played) {
+                    continue;
+                }
                 var source = field.source[0];
 
                 // Format status message

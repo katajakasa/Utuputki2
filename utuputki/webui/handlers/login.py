@@ -13,6 +13,10 @@ log = logging.getLogger(__name__)
 
 class LoginHandler(HandlerBase):
     def handle(self, packet_msg):
+        # If we are already authenticated, don't bother with this
+        if self.sock.authenticated:
+            return
+
         username = packet_msg.get('username', '')
         password = packet_msg.get('password', '')
         token = packet_msg.get('token')

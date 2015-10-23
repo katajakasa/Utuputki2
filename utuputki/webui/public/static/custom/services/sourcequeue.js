@@ -15,6 +15,16 @@ app.factory('SourceQueue', ['$location', '$rootScope', 'SockService', 'AUTH_EVEN
             }
         }
 
+        function update_played(media_id, played) {
+            for(var i = 0; i < queues.length; i++) {
+                for(var k = 0; k < queues[i].items[0].length; k++) {
+                    if(queues[i].items[0][k].id == media_id) {
+                        queues[i].items[0][k].played = played;
+                    }
+                }
+            }
+        }
+
         function update_single_data(data) {
             for(var i = 0; i < queues.length; i++) {
                 for(var k = 0; k < queues[i].items[0].length; k++) {
@@ -46,6 +56,10 @@ app.factory('SourceQueue', ['$location', '$rootScope', 'SockService', 'AUTH_EVEN
                     update_status(msg['data']['source_id'], msg['data']['status']);
                     $rootScope.$broadcast(SYNC_EVENTS.queuesRefresh);
                     return;
+                }
+                if(query == 'played_change') {
+                    update_played(msg['data']['media_id'], msg['data']['played']);
+                    $rootScope.$broadcast(SYNC_EVENTS.queuesRefresh);
                 }
                 if(query == 'single') {
                     update_single_data(msg['data']);

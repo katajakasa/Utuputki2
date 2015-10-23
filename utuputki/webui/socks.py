@@ -36,14 +36,16 @@ class UtuputkiSock(SockJSConnection):
             else:
                 self.send({'type': 'playerdev', 'query': 'poke', 'data': {}})
 
-    def broadcast(self, msg, req_auth=True, avoid_self=True):
+    def broadcast(self, msg, req_auth=True, avoid_self=True, client_type=None):
         """ Broadcast message from websocket handlers to all clients """
+        log.debug("Broadcasting {}, auth={}, avoid={}, client_t={}".format(msg, req_auth, avoid_self, client_type))
         for client in self.clients:
             if (client is not self and avoid_self) or not avoid_self:
-                if req_auth and client.authenticated:
-                    client.send(msg)
-                else:
-                    client.send(msg)
+                if not client_type or (client_type == client.client_type):
+                    if req_auth and client.authenticated:
+                        client.send(msg)
+                    else:
+                        client.send(msg)
 
     def on_message(self, raw_message):
         # Load packet and parse as JSON

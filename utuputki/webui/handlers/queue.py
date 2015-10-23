@@ -135,7 +135,7 @@ class QueueHandler(HandlerBase):
             if found_src:
                 s = db_session()
                 try:
-                    s.query(Media).filter_by(user=self.sock.uid, source=found_src.id, queue=queue_id).one()
+                    s.query(Media).filter_by(user=self.sock.uid, source=found_src.id, queue=queue_id, played=False).one()
                     self.send_error('Url is already in the queue', 500)
                     return
                 except NoResultFound:
@@ -181,6 +181,9 @@ class QueueHandler(HandlerBase):
                 s.add(media)
                 s.commit()
                 s.close()
+
+                # Inform playerdevices about this (in case they are waiting for news about new media)
+                self.broadcast('playerdev', {}, query='poke', client_type="token")
             else:
                 # Okay, Let's save the first draft and then poke at the downloader with MQ message
                 s = db_session()

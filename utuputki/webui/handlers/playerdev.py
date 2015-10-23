@@ -18,7 +18,6 @@ class PlayerDeviceHandler(HandlerBase):
         if self.query == 'status_change':
             status = packet_msg.get('status')
             end = packet_msg.get('end', False)
-            log.info("STATUS_CHANGE: {} {}".format(status, end))
 
             # Get previous player state from database
             s = db_session()
@@ -41,7 +40,11 @@ class PlayerDeviceHandler(HandlerBase):
                         s.add(media)
                         s.commit()
 
-                        # TODO: ANNOUNCE PLAYBACK DONE FOR EVERYONE
+                        # Announce playback done for all users
+                        self.broadcast('queue', {
+                            'media_id': media.id,
+                            'played': media.played
+                        }, query="played_change", client_type='user')
                     except NoResultFound:
                         pass
                     finally:
