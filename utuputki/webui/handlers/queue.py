@@ -150,8 +150,12 @@ class QueueHandler(HandlerBase):
 
             # If this is a youtube url, attempt to fetch information for it
             if youtube_hash:
-                with youtube_dl.YoutubeDL({'logger': log, 'simulate': True}) as ydl:
-                    info = ydl.extract_info('http://www.youtube.com/watch?v=' + youtube_hash)
+                with youtube_dl.YoutubeDL({'logger': log}) as ydl:
+                    try:
+                        info = ydl.extract_info('http://www.youtube.com/watch?v=' + youtube_hash, download=False)
+                    except youtube_dl.DownloadError, e:
+                        self.send_error(str(e), 500)
+                        return
 
                 # Check video duration
                 if info['duration'] > settings.LIMIT_DURATION:
