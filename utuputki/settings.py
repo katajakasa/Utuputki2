@@ -16,6 +16,7 @@ config_values = [
     'PORT',
     'TIMEZONE',
     'DEBUG',
+    'SOURCE_URL',
     'DATABASE_CONFIG',
     'PUBLIC_PATH',
     'AMQP_URL',
