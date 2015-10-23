@@ -81,9 +81,9 @@ class DownloadConsumer(MqConstants):
                     ydl_opts['outtmpl'] = file_path
 
                     # If we are in debug mode, also dump the file information as json
-                    if settings.DEBUG:
-                        with open(os.path.join(settings.TMP_DIR, file_name)+'.json', 'wb') as f:
-                            f.write(json.dumps(info))
+                    # if settings.DEBUG:
+                    #     with open(os.path.join(settings.TMP_DIR, file_name)+'.json', 'wb') as f:
+                    #         f.write(json.dumps(info))
 
                     # Update status
                     source.status = MEDIASTATUS['downloading']
@@ -117,14 +117,14 @@ class DownloadConsumer(MqConstants):
                     try:
                         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                             ydl.download(['http://www.youtube.com/watch?v=' + source.youtube_hash])
-                    except youtube_dl.ExtractorError, e:
+                    except Exception, e:
                         source.status = MEDIASTATUS['error']
                         source.message = "DL Error"
                         s.add(source)
                         s.commit()
                         self.channel.basic_ack(method_frame.delivery_tag)
                         s.close()
-                        log.info("Error while attempting to download: {}".format(str(e)))
+                        log.info(u"Error while attempting to download: {}".format(str(e)))
                         continue
                 else:
                     log.warn("Cannot yet download other urls!")

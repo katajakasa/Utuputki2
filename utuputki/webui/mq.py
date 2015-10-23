@@ -79,7 +79,7 @@ class MessageQueue(MqConstants):
         self.channel.basic_publish(exchange='message', routing_key=key, body=data, properties=properties)
 
     def notify(self, data):
-        log.info("MQ: Notifying {} client(s) ...".format(len(self.event_listeners)))
+        log.debug("MQ: Notifying {} client(s) ...".format(len(self.event_listeners)))
         for listener in self.event_listeners:
             listener.write_message(data)
 
