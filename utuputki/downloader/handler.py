@@ -149,9 +149,6 @@ class DownloadConsumer(MqConstants):
         except KeyboardInterrupt:
             return
 
-    def __reduce_ex__(self, *args, **kwargs):
-        return super(DownloadConsumer, self).__reduce_ex__(*args, **kwargs)
-
     def close(self):
         self.channel.close()
         self.connection.close()
