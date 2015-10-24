@@ -25,6 +25,7 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
             enableVerticalScrollbar: 0,
             rowHeight: 30,
             columnDefs: [
+                {name: 'Id', field: 'id', width: 60},
                 {name: 'Title', field: 'title'},
                 {name: 'description', field: 'description'},
                 {name: 'Status', field: 'status', width: 90},
@@ -111,6 +112,7 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
 
                 // Add field
                 $scope.grid_opts.data.push({
+                    'id': i+1,
                     'title': source.title,
                     'description': source.description,
                     'status': status,
