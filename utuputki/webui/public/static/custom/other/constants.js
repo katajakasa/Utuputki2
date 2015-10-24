@@ -22,7 +22,8 @@ app.constant('SYNC_EVENTS', {
     queueAddSuccess: 'queue-add-success',
     queueAddFailed: 'queue-add-failed',
     queuesRefresh: 'queues-refresh',
-    mediasRefresh: 'medias-refresh'
+    mediasRefresh: 'medias-refresh',
+    currentPlayerChange: 'current-player-change'
 });
 
 app.constant('USERLEVELS', {

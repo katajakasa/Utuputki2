@@ -4,6 +4,7 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', 
     function ($location, $rootScope, SockService, AUTH_EVENTS, SYNC_EVENTS) {
         var last_error = "";
         var players = [];
+        var current_player = null;
 
         function player_event(msg, query) {
             if (msg['error'] == 1) {
@@ -12,6 +13,10 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', 
                 if(query == 'fetchall') {
                     players = msg['data'];
                     $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
+                    if(current_player == null && players.length > 0) {
+                        current_player = players[0];
+                        $rootScope.$broadcast(SYNC_EVENTS.currentPlayerChange);
+                    }
                 }
                 if(query == 'change') {
                     for(var i = 0; i < players.length; i++) {
@@ -42,6 +47,15 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', 
             return out;
         }
 
+        function get_current_player() {
+            return current_player;
+        }
+
+        function set_current_player(player) {
+            current_player = player;
+            $rootScope.$broadcast(SYNC_EVENTS.currentPlayerChange);
+        }
+
         function get_last_error() {
             return last_error;
         }
@@ -49,7 +63,9 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', 
         return {
             setup: setup,
             get_players: get_players,
-            get_last_error: get_last_error
+            get_last_error: get_last_error,
+            get_current_player: get_current_player,
+            set_current_player: set_current_player
         };
     }
 ]);

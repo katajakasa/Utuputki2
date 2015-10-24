@@ -2,10 +2,6 @@
 
 app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$location', 'Player', 'Event', 'SourceQueue', 'Session', 'SYNC_EVENTS',
     function ($scope, $window, $rootScope, $location, Player, Event, SourceQueue, Session, SYNC_EVENTS) {
-        $scope.events = [];
-        $scope.players = [];
-        $scope.c_event = null;
-        $scope.c_player = null;
         $scope.data = [];
         $scope.gridApi = null;
 
@@ -53,23 +49,6 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             };
         };
 
-        function refresh_events() {
-            $scope.events = Event.get_events();
-            if($scope.events.length > 0) {
-                $scope.c_event = $scope.events[$scope.events.length - 1];
-            }
-        }
-
-        function refresh_players() {
-            if($scope.c_event == null) {
-                return;
-            }
-            $scope.players = Player.get_players($scope.c_event.id);
-            if($scope.players.length > 0) {
-                $scope.c_player = $scope.players[$scope.players.length-1];
-            }
-        }
-
         function refresh_grid() {
             if($scope.gridApi == null)
                 return;
@@ -77,7 +56,8 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
         }
 
         function refresh_queue() {
-            if($scope.c_player == null) {
+            var c_player = Player.get_current_player();
+            if(c_player == null) {
                 return;
             }
 
@@ -93,7 +73,7 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             $scope.grid_opts.minRowsToShow = 0;
             $scope.grid_opts.virtualizationThreshold = 0;
 
-            var num = SourceQueue.get_queue_num($scope.c_player.id);
+            var num = SourceQueue.get_queue_num(c_player.id);
             if(num < 0) {
                 refresh_grid();
                 return;
@@ -103,7 +83,7 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             for(var i = 0; i < len; i++) {
                 var field = queue.items[0][i];
                 // Show only entries which have not yet been played by this player
-                if(field.id <= $scope.c_player.last) {
+                if(field.id <= c_player.last) {
                     continue;
                 }
                 // Make sure user ID matches, we only want to see our own media here.
@@ -157,8 +137,6 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
         }
 
         function init() {
-            refresh_events();
-            refresh_players();
             refresh_queue();
 
             $rootScope.$on(SYNC_EVENTS.queueAddFailed, function (event, args) {
@@ -171,27 +149,10 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             $rootScope.$on(SYNC_EVENTS.queuesRefresh, function(event, args) {
                 refresh_queue();
             });
-            $rootScope.$on(SYNC_EVENTS.playersRefresh, function(event, args) {
-                refresh_players();
-                refresh_queue();
-            });
-            $rootScope.$on(SYNC_EVENTS.eventsRefresh, function(event, args) {
-                refresh_events();
-                refresh_players();
+            $rootScope.$on(SYNC_EVENTS.currentPlayerChange, function(event, args) {
                 refresh_queue();
             });
         }
-
-        $scope.sel_event = function(event) {
-            $scope.c_event = event;
-            refresh_players();
-            refresh_queue();
-        };
-
-        $scope.sel_player = function(player) {
-            $scope.c_player = player;
-            refresh_queue();
-        };
 
         // Form handling for url adding
         $scope.add_media = function(data) {

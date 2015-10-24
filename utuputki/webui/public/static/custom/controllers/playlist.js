@@ -1,11 +1,7 @@
 'use strict';
 
-app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$location', 'Player', 'Event', 'Playlist', 'Session', 'SYNC_EVENTS',
-    function ($scope, $window, $rootScope, $location, Player, Event, Playlist, Session, SYNC_EVENTS) {
-        $scope.events = [];
-        $scope.players = [];
-        $scope.c_event = null;
-        $scope.c_player = null;
+app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$location', 'Player', 'Event', 'Playlist', 'Session', 'SYNC_EVENTS', 'AUTH_EVENTS',
+    function ($scope, $window, $rootScope, $location, Player, Event, Playlist, Session, SYNC_EVENTS, AUTH_EVENTS) {
         $scope.data = [];
         $scope.gridApi = null;
 
@@ -51,24 +47,6 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
             };
         };
 
-        function refresh_events() {
-            $scope.events = Event.get_events();
-            if($scope.events.length > 0) {
-                $scope.c_event = $scope.events[$scope.events.length - 1];
-            }
-        }
-
-        function refresh_players() {
-            if($scope.c_event == null) {
-                return;
-            }
-            $scope.players = Player.get_players($scope.c_event.id);
-            if($scope.players.length > 0) {
-                $scope.c_player = $scope.players[$scope.players.length-1];
-                Playlist.query($scope.c_player.id);
-            }
-        }
-
         function refresh_grid() {
             if($scope.gridApi == null)
                 return;
@@ -76,7 +54,8 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
         }
 
         function refresh_playlist() {
-            if($scope.c_player == null) {
+            var c_player = Player.get_current_player();
+            if(c_player == null) {
                 return;
             }
 
@@ -97,7 +76,7 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
             for(var i = 0; i < len; i++) {
                 var field = playlist[i];
                 // Show only entries which have not yet been played by this player
-                if(field.id <= $scope.c_player.last) {
+                if(field.id <= c_player.last) {
                     continue;
                 }
                 var source = field.source;
@@ -126,31 +105,17 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
         }
 
         function init() {
-            refresh_events();
-            refresh_players();
-            refresh_playlist();
+            var c_player = Player.get_current_player();
+            Playlist.query(c_player.id);
 
             $rootScope.$on(SYNC_EVENTS.mediasRefresh, function(event, args) {
                 refresh_playlist();
             });
-            $rootScope.$on(SYNC_EVENTS.playersRefresh, function(event, args) {
-                refresh_players();
-            });
-            $rootScope.$on(SYNC_EVENTS.eventsRefresh, function(event, args) {
-                refresh_events();
-                refresh_players();
+            $rootScope.$on(SYNC_EVENTS.currentPlayerChange, function(event, args) {
+                var c_player = Player.get_current_player();
+                Playlist.query(c_player.id);
             });
         }
-
-        $scope.sel_event = function(event) {
-            $scope.c_event = event;
-            refresh_players();
-        };
-
-        $scope.sel_player = function(player) {
-            $scope.c_player = player;
-            Playlist.query($scope.c_player.id);
-        };
 
         init();
     }
