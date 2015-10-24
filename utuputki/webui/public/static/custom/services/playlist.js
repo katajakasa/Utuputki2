@@ -22,6 +22,15 @@ app.factory('Playlist', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS'
             SockService.add_recv_handler('playlist', queue_event);
         }
 
+        function get_media(media_id) {
+            for(var i = 0; i < medias.length; i++) {
+                if(medias[i].id == media_id) {
+                    return medias[i];
+                }
+            }
+            return null;
+        }
+
         function get_playlist() {
             return medias;
         }
@@ -38,7 +47,8 @@ app.factory('Playlist', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS'
             setup: setup,
             query: query,
             get_playlist: get_playlist,
-            get_last_error: get_last_error
+            get_last_error: get_last_error,
+            get_media: get_media
         };
     }
 ]);

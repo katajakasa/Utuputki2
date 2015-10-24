@@ -26,3 +26,6 @@ class LogoutHandler(HandlerBase):
         self.sock.sid = None
         self.sock.uid = None
         self.sock.level = 0
+
+        # Send required skip count
+        self.send_req_skip_count()

@@ -51,6 +51,14 @@ class UtuputkiSock(SockJSConnection):
                     else:
                         client.send(msg)
 
+    def get_online_user_count(self, req_auth=False):
+        num = 0
+        for client in self.clients:
+            if (req_auth and client.authenticated) or not req_auth:
+                if client.client_type == 'user':
+                    num += 1
+        return num
+
     def on_message(self, raw_message):
         # Load packet and parse as JSON
         try:

@@ -1,5 +1,23 @@
 <div class="col-sm-6 col-lg-4">
     <h2>Current player playlists</h2>
+    <div class="input-group queue_add_block" ng-controller="PlayerManagerController">
+        <span class="input-group-addon">Playback</span>
+        <span class="input-group-addon">{{ now_playing }}</span>
+        <span class="input-group-addon">{{ status }}</span>
+        <span class="input-group-addon" ng-if="skip_enabled">Skip {{ current_skip_count }} / {{ req_skip_count }}</span>
+
+        <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"></span></button>
+            <ul class="dropdown-menu dropdown-menu-right">
+                <li><a href="" ng-click="on_skip_current()">Skip</a></li>
+                <li ng-if="is_admin()" role="separator" class="divider"></li>
+                <li ng-if="is_admin()" ><a href="#">Stop</a></li>
+                <li ng-if="is_admin()" ><a href="#">Pause</a></li>
+                <li ng-if="is_admin()" ><a href="#">Play</a></li>
+                <li ng-if="is_admin()" ><a href="#">Force skip</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 <div class="col-sm-12 queue_show_block">
     <div class="queue_info" ng-if="grid_opts.data">

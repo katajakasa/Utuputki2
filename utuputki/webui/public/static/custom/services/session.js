@@ -2,24 +2,24 @@
 
 app.service('Session', [
     function () {
-        this.create = function (sid, uid, user) {
+        this.create = function (sid, uid, level) {
             this.sid = sid;
             this.uid = uid;
-            this.user = user;
+            this.level = level;
             localStorage['sid'] = sid;
         };
         this.destroy = function () {
             this.sid = '';
             this.uid = null;
-            this.user = 0;
+            this.level = 0;
             localStorage.removeItem('sid');
         };
 
         this.hasLevel = function(level) {
-            return(level >= this.user.level)
+            return(level <= this.level)
         };
         this.getLevel = function() {
-            return this.user.level;
+            return this.level;
         };
     }
 ]);

@@ -66,6 +66,18 @@ class Player(Base):
         }
 
 
+class Skip(Base):
+    __tablename__ = "skip"
+    id = Column(Integer, primary_key=True)
+    user = Column(ForeignKey('user.id'))
+    media = Column(ForeignKey('media.id'))
+    player = Column(ForeignKey('player.id'))
+
+    __table_args__ = (
+        UniqueConstraint('user', 'media', 'player', name='_user_media_player_uc'),
+    )
+
+
 class SourceQueue(Base):
     __tablename__ = "sourcequeue"
     id = Column(Integer, primary_key=True)

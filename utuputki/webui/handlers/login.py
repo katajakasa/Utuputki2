@@ -35,6 +35,7 @@ class LoginHandler(HandlerBase):
             self.sock.authenticated = True
             self.sock.client_type = 'token'
             self.sock.uid = player.id
+            self.sock.level = 0
 
             # Send login success message
             self.send_message({
@@ -77,6 +78,9 @@ class LoginHandler(HandlerBase):
                     'sid': self.sock.sid,
                     'user': user.serialize()
                 })
+
+                # Send required skip count
+                self.send_req_skip_count()
 
                 # Dump out log
                 log.info("[{}] Logged in".format(self.sock.sid[0:6]))
