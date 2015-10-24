@@ -171,7 +171,7 @@ class QueueHandler(HandlerBase):
                         return
 
                 # Check video duration
-                if info['duration'] > settings.LIMIT_DURATION:
+                if info['duration'] > settings.LIMIT_DURATION and not self.is_admin():
                     current_str = format_time_delta(info['duration'])
                     limit_str = format_time_delta(settings.LIMIT_DURATION)
                     self.send_error('Video is too long ({}). Current limit is {}.'
@@ -220,6 +220,7 @@ class QueueHandler(HandlerBase):
                 # Send message to kick the downloader
                 self.sock.mq.send_msg(self.sock.mq.KEY_DOWNLOAD, {
                     'source_id': source.id,
+                    'no_limit': self.is_admin()
                 })
 
                 s.close()

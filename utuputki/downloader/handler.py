@@ -61,8 +61,11 @@ class DownloadConsumer(MqConstants):
 
                 # Check how we need to handle this
                 if source.youtube_hash:
-                    req_format = 'bestvideo[height <=? 720][fps <=? 30][filesize<{}]+bestaudio[filesize<{}]/best'\
-                        .format(settings.LIMIT_VIDEO_SIZE, settings.LIMIT_AUDIO_SIZE)
+                    if data['no_limit']:
+                        req_format = 'bestvideo[height <=? 720][fps <=? 30]+bestaudio[abr<=128]/best'
+                    else:
+                        req_format = 'bestvideo[height <=? 720][fps <=? 30][filesize<{}]+bestaudio[filesize<{}]/best'\
+                            .format(settings.LIMIT_VIDEO_SIZE, settings.LIMIT_AUDIO_SIZE)
 
                     ydl_opts = {
                         'logger': log,
