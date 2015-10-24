@@ -23,7 +23,8 @@ app.constant('SYNC_EVENTS', {
     queueAddFailed: 'queue-add-failed',
     queuesRefresh: 'queues-refresh',
     mediasRefresh: 'medias-refresh',
-    currentPlayerChange: 'current-player-change'
+    currentPlayerChange: 'current-player-change',
+    playerPlaybackChange: 'current-player-song-change'
 });
 
 app.constant('USERLEVELS', {

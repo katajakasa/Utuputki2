@@ -115,6 +115,9 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
                 var c_player = Player.get_current_player();
                 Playlist.query(c_player.id);
             });
+            $rootScope.$on(SYNC_EVENTS.playerPlaybackChange, function(event, args) {
+                refresh_playlist();
+            });
         }
 
         init();

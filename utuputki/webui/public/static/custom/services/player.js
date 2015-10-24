@@ -20,11 +20,12 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', 
                 }
                 if(query == 'change') {
                     for(var i = 0; i < players.length; i++) {
-                        if(players[i].id == msg['player_id']) {
-                            players[i].last = msg['last_id'];
+                        if(players[i].id == msg['data']['player_id']) {
+                            players[i].last = msg['data']['last_id'];
                         }
                     }
-                    $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
+                    console.log(players);
+                    $rootScope.$broadcast(SYNC_EVENTS.playerPlaybackChange);
                 }
 
             }

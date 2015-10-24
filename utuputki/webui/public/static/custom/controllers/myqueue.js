@@ -152,6 +152,9 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             $rootScope.$on(SYNC_EVENTS.currentPlayerChange, function(event, args) {
                 refresh_queue();
             });
+            $rootScope.$on(SYNC_EVENTS.playerPlaybackChange, function(event, args) {
+                refresh_queue();
+            });
         }
 
         // Form handling for url adding
