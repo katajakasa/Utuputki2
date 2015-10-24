@@ -80,8 +80,9 @@ class MessageQueue(MqConstants):
 
     def notify(self, data):
         log.debug("MQ: Notifying {} client(s) ...".format(len(self.event_listeners)))
+        event = json.loads(data)
         for listener in self.event_listeners:
-            listener.write_message(data)
+            listener.write_message(event)
 
     def add_event_listener(self, listener):
         self.event_listeners.add(listener)

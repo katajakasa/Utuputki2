@@ -156,10 +156,11 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
 
         // Form handling for url adding
         $scope.add_media = function(data) {
-            if($scope.c_player == null) {
+            var c_player = Player.get_current_player();
+            if(c_player == null) {
                 return;
             }
-            SourceQueue.add($scope.c_player.id, $scope.add_model.url);
+            SourceQueue.add(c_player.id, $scope.add_model.url);
         };
         $scope.add_model = {url: ''};
         $scope.add_error = "";

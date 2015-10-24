@@ -33,7 +33,7 @@ class UtuputkiSock(SockJSConnection):
         """ Send message from MQ interface """
         if self.authenticated:
             if self.client_type == 'user':
-                self.send(msg)
+                self.send(json.dumps(msg))
             else:
                 if msg['status'] == MEDIASTATUS['finished']:
                     self.send({'type': 'playerdev', 'query': 'poke', 'data': {}})

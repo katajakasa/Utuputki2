@@ -75,7 +75,7 @@ class QueueHandler(HandlerBase):
         s = db_session()
         queues = [queue.serialize() for queue in s.query(SourceQueue).filter_by(user=self.sock.uid).all()]
         s.close()
-        self.send_message(queues)
+        self.send_message(queues, query="fetchall")
 
     def handle(self, packet_msg):
         if not self.is_user_auth():
