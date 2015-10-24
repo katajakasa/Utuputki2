@@ -97,6 +97,34 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
             }
         }
 
+        function forceskip_current() {
+            var c_player = get_current_player();
+            if(c_player != null) {
+                SockService.send_msg('player', {'player_id': c_player.id}, 'force_skip');
+            }
+        }
+
+        function stop_current() {
+            var c_player = get_current_player();
+            if(c_player != null) {
+                SockService.send_msg('player', {'player_id': c_player.id}, 'stop');
+            }
+        }
+
+        function play_current() {
+            var c_player = get_current_player();
+            if(c_player != null) {
+                SockService.send_msg('player', {'player_id': c_player.id}, 'play');
+            }
+        }
+
+        function pause_current() {
+            var c_player = get_current_player();
+            if(c_player != null) {
+                SockService.send_msg('player', {'player_id': c_player.id}, 'pause');
+            }
+        }
+
         function set_current_player(player) {
             current_player = player;
             $rootScope.$broadcast(SYNC_EVENTS.currentPlayerChange);
@@ -134,7 +162,11 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
             get_current_status: get_current_status,
             get_current_skip_count: get_current_skip_count,
             skip_current: skip_current,
-            refresh: refresh
+            refresh: refresh,
+            forceskip_current: forceskip_current,
+            stop_current: stop_current,
+            play_current: play_current,
+            pause_current: pause_current
         };
     }
 ]);

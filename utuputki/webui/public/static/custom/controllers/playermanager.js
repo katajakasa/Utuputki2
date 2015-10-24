@@ -23,8 +23,10 @@ app.controller('PlayerManagerController', ['$scope', '$rootScope', '$location', 
             });
             $rootScope.$on(SYNC_EVENTS.playerPlaybackChange, function (event, args) {
                 var media = Player.get_current_media();
-                $scope.now_playing = media.source.title;
-                $scope.now_playing_duration =  moment.duration(media.source.length_seconds, "seconds").format("mm:ss", { trim: false });
+                if(media != null) {
+                    $scope.now_playing = media.source.title;
+                    $scope.now_playing_duration =  moment.duration(media.source.length_seconds, "seconds").format("mm:ss", { trim: false });
+                }
                 $scope.current_skip_count = 0;
                 var st = Player.get_current_status();
                 if(st != null) {
@@ -47,6 +49,34 @@ app.controller('PlayerManagerController', ['$scope', '$rootScope', '$location', 
             var st = Player.get_current_status();
             if(st != null && st != 0) {
                 Player.skip_current();
+            }
+        };
+
+        $scope.on_stop_current = function() {
+            var st = Player.get_current_status();
+            if(st != null && st != 0) {
+                Player.stop_current();
+            }
+        };
+
+        $scope.on_play_current = function() {
+            var st = Player.get_current_status();
+            if(st != null && st != 1) {
+                Player.play_current();
+            }
+        };
+
+        $scope.on_pause_current = function() {
+            var st = Player.get_current_status();
+            if(st != null && st != 0) {
+                Player.pause_current();
+            }
+        };
+
+        $scope.on_forceskip_current = function() {
+            var st = Player.get_current_status();
+            if(st != null && st != 0) {
+                Player.forceskip_current();
             }
         };
 

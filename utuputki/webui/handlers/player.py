@@ -100,13 +100,46 @@ class PlayerHandler(HandlerBase):
             return
 
         if self.query == 'pause' and self.is_admin():
-            pass
+            player_id = packet_msg.get('player_id')
+            if player_id:
+                log.info("ADMIN: Force status = 2 on player %d", player_id)
+                self._send_message('playerdev', {'status': 2}, query='set_status', target_uid=player_id)
+            return
 
         if self.query == 'play' and self.is_admin():
-            pass
+            player_id = packet_msg.get('player_id')
+            s = db_session()
+            try:
+                player = s.query(Player).filter_by(id=player_id).one()
+            except NoResultFound:
+                return
+            finally:
+                s.close()
+
+            if player.status > 0:
+                log.info("ADMIN: Force status = 1 on player %d", player_id)
+                self._send_message('playerdev', {'status': 1}, query='set_status', target_uid=player_id)
+            else:
+                PlayerDeviceHandler(self.sock, 'playerdev', 'status_change').send_source(player)
+            return
 
         if self.query == 'force_skip' and self.is_admin():
-            pass
+            player_id = packet_msg.get('player_id')
+            s = db_session()
+            try:
+                player = s.query(Player).filter_by(id=player_id).one()
+            except NoResultFound:
+                return
+            finally:
+                s.close()
+
+            log.info("ADMIN: Force skipping on player %d", player_id)
+            PlayerDeviceHandler(self.sock, 'playerdev', 'status_change').send_source(player)
+            return
 
         if self.query == 'stop' and self.is_admin():
-            pass
+            player_id = packet_msg.get('player_id')
+            if player_id:
+                log.info("ADMIN: Force status = 0 on player %d", player_id)
+                self._send_message('playerdev', {'status': 0}, query='set_status', target_uid=player_id)
+            return
