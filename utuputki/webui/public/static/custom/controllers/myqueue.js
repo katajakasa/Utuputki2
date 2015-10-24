@@ -114,18 +114,26 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
                 }
 
                 // Format duration
-                var duration = moment.duration(source.length_seconds, "seconds").format();
+                var duration = moment.duration(source.length_seconds, "seconds").format("mm:ss");
 
                 // Video and audio codec information
                 var video = '';
                 if(source.video.codec != '') {
                     var v = source.video;
-                    video = v.codec + '@' + v.bitrate + 'kbps, ' + v.width + 'x' + v.height;
+                    if(v.bitrate > 0) {
+                        video = v.codec + '@' + v.bitrate + 'kbps, ' + v.width + 'x' + v.height;
+                    } else {
+                        video = v.codec + ', ' + v.width + 'x' + v.height;
+                    }
                 }
                 var audio = '';
                 if(source.audio.codec != '') {
                     var a = source.audio;
-                    audio = a.codec + '@' + a.bitrate + 'kbps';
+                    if(a.bitrate > 0) {
+                        audio = a.codec + '@' + a.bitrate + 'kbps';
+                    } else {
+                        audio = a.codec;
+                    }
                 }
 
                 // Add field
