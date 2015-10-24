@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import os
+os.sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import logging
 import sys
 from time import sleep
-os.sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from tornado import web, ioloop
 from sockjs.tornado import SockJSRouter
@@ -13,14 +14,6 @@ from common.db import db_init
 from mq import MessageQueue
 from socks import UtuputkiSock
 import settings
-
-
-# Test handler for 502 messages
-class Test502Handler(web.RequestHandler):
-    def get(self):
-        self.clear()
-        self.set_status(502)
-        self.finish("<html><body>502</body></html>")
 
 
 if __name__ == '__main__':

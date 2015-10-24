@@ -44,6 +44,11 @@ app.config(['$routeProvider',
                 controller: 'PlaylistController',
                 requireLogin: true
             }).
+            when('/stats', {
+                templateUrl: '/partials/fame.html',
+                controller: 'StatisticsController',
+                requireLogin: true
+            }).
             when('/', {
                 templateUrl: '/partials/myqueue.html',
                 controller: 'MyQueueController',

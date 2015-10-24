@@ -4,7 +4,7 @@ import json
 import logging
 from common.db import MEDIASTATUS
 from sockjs.tornado import SockJSConnection
-from handlers import login, logout, authenticate, queue, register, player, event, playerdev, playlist, unknown
+from handlers import login, logout, authenticate, queue, register, player, event, playerdev, playlist, stats, unknown
 
 log = logging.getLogger(__name__)
 
@@ -37,12 +37,11 @@ class UtuputkiSock(SockJSConnection):
             else:
                 # If this is a "finished" status message from MQ, send poke to players
                 if msg['data']['status'] == MEDIASTATUS['finished']:
-                    log.debug("Sending Poke to player %d!", self.uid)
+                    log.debug(u"Sending Poke to player %d!", self.uid)
                     self.send({'type': 'playerdev', 'query': 'poke', 'data': {}})
 
     def broadcast(self, msg, req_auth=True, avoid_self=True, client_type=None):
         """ Broadcast message from websocket handlers to all clients """
-        # log.debug("Broadcasting {}, auth={}, avoid={}, client_t={}".format(msg, req_auth, avoid_self, client_type))
         for client in self.clients:
             if (client is not self and avoid_self) or not avoid_self:
                 if not client_type or (client_type == client.client_type):
@@ -73,10 +72,10 @@ class UtuputkiSock(SockJSConnection):
         packet_query = message.get('query')
 
         # Censor login packets for obvious reasons ...
-        # if packet_type != 'login':
-        #     log.debug("Message: {}.".format(raw_message))
-        # else:
-        #     log.debug("Message: **login**")
+        if packet_type != 'login':
+            log.debug(u"Message: %s", raw_message)
+        else:
+            log.debug(u"Message: **login**")
 
         # Find and run callback
         cbs = {
@@ -89,6 +88,7 @@ class UtuputkiSock(SockJSConnection):
             'player': player.PlayerHandler,
             'playerdev': playerdev.PlayerDeviceHandler,
             'playlist': playlist.PlaylistHandler,
+            'stats': stats.StatsHandler,
             'unknown': unknown.UnknownHandler
         }
         cbs[packet_type if packet_type in cbs else 'unknown'](self, packet_type, packet_query).handle(packet_msg)

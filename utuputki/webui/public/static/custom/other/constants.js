@@ -25,7 +25,8 @@ app.constant('SYNC_EVENTS', {
     mediasRefresh: 'medias-refresh',
     currentPlayerChange: 'current-player-change',
     playerPlaybackChange: 'current-player-song-change',
-    playerSkipCountChange: 'current-player-req-skip-count-change'
+    playerSkipCountChange: 'current-player-req-skip-count-change',
+    statsRefresh: 'statis-refresh'
 });
 
 app.constant('USERLEVELS', {

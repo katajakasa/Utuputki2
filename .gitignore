@@ -62,5 +62,4 @@ target/
 # Others
 utuputki.conf
 utuputki.db
-utuputki/webui/public/static/style/site.css
 utuputki/webui/public/static/components

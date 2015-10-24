@@ -73,7 +73,7 @@ class HandlerBase(object):
 
     def broadcast(self, mtype, message, query=None, req_auth=True, avoid_self=True, client_type=None):
         msg = json.dumps(self.format_msg(mtype, message, 0, query))
-        log.info(u"Broadcast message: %s", msg)
+        log.debug(u"Broadcast message: %s", msg)
         self.sock.broadcast(msg, req_auth=req_auth, avoid_self=avoid_self, client_type=client_type)
 
     def send_error(self, message, code, query=None, target_uid=None):
