@@ -5,13 +5,13 @@
     <div class="row">
         <div class="col-lg-6 col-md-6">
             <div ng-if="error" class="alert alert-danger" role="alert">{{ error }}</div>
-            <div class="input-group">
+            <form class="input-group">
                 <span class="input-group-addon">@</span>
                 <input type="text" class="form-control" ng-model="add_model.url" placeholder="Media url ...">
                 <span class="input-group-btn submit-button">
-                    <button class="btn btn-default" type="button" ng-click="add_media()">Add</button>
+                    <button class="btn btn-default" type="submit" ng-click="add_media()">Add</button>
                 </span>
-            </div>
+            </form>
         </div>
     </div>
 </div>
