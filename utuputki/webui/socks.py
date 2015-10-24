@@ -35,7 +35,9 @@ class UtuputkiSock(SockJSConnection):
             if self.client_type == 'user':
                 self.send(json.dumps(msg))
             else:
-                if msg['status'] == MEDIASTATUS['finished']:
+                # If this is a "finished" status message from MQ, send poke to players
+                if msg['data']['status'] == MEDIASTATUS['finished']:
+                    log.debug("Sending Poke to player %d!", self.uid)
                     self.send({'type': 'playerdev', 'query': 'poke', 'data': {}})
 
     def broadcast(self, msg, req_auth=True, avoid_self=True, client_type=None):

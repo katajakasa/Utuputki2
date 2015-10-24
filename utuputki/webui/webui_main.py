@@ -15,6 +15,14 @@ from socks import UtuputkiSock
 import settings
 
 
+# Test handler for 502 messages
+class Test502Handler(web.RequestHandler):
+    def get(self):
+        self.clear()
+        self.set_status(502)
+        self.finish("<html><body>502</body></html>")
+
+
 if __name__ == '__main__':
     print("Utuputki2 Web UI Daemon starting up ...")
 
