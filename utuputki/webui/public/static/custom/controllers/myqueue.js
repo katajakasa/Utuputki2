@@ -100,8 +100,10 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             }
             var queue = SourceQueue.get_queue(num);
             var len = queue.items[0].length;
+            console.log(Session.uid);
             for(var i = 0; i < len; i++) {
                 var field = queue.items[0][i];
+                console.log(field);
                 // Show only entries which have not yet been played by this player
                 if(field.id <= $scope.c_player.last) {
                     continue;
