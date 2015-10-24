@@ -10,6 +10,7 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
             $scope.grid_opts.columnDefs[2].visible = (w > 900);
             $scope.grid_opts.columnDefs[3].visible = (w > 500);
             $scope.grid_opts.columnDefs[4].visible = (w > 400);
+            $scope.grid_opts.columnDefs[5].visible = (w > 400);
             refresh_grid();
         }
 
@@ -26,7 +27,8 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
                 {name: 'Title', field: 'title'},
                 {name: 'description', field: 'description'},
                 {name: 'Status', field: 'status', width: 90},
-                {name: 'duration', field: 'duration', width: 90}
+                {name: 'Duration', field: 'duration', width: 90},
+                {name: 'Start', field: 'projstart', width: 90}
             ],
             onRegisterApi: function(gridApi){
                 $scope.gridApi = gridApi;
@@ -73,6 +75,7 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
 
             var playlist = Playlist.get_playlist();
             var len = playlist.length;
+            var start_sec = 0;
             for(var i = 0; i < len; i++) {
                 var field = playlist[i];
                 // Show only entries which have not yet been played by this player
@@ -88,7 +91,9 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
                 }
 
                 // Format duration
-                var duration = moment.duration(source.length_seconds, "seconds").format("mm:ss", { trim: false });
+                var duration = moment.duration(source.length_seconds, "seconds").format("hh:mm:ss", { trim: false });
+                var projstart = moment.duration(start_sec, "seconds").format("hh:mm:ss", { trim: false });
+                start_sec += source.length_seconds;
 
                 // Add field
                 $scope.grid_opts.data.push({
@@ -96,7 +101,8 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
                     'title': source.title,
                     'description': source.description,
                     'status': status,
-                    'duration': duration
+                    'duration': duration,
+                    'projstart': projstart
                 });
             }
             $scope.grid_opts.minRowsToShow = $scope.grid_opts.data.length;

@@ -7,10 +7,11 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
 
         function redo_visibility(w) {
             $scope.grid_opts.columnDefs[1].visible = (w > 900);
-            $scope.grid_opts.columnDefs[4].visible = (w > 1100);
             $scope.grid_opts.columnDefs[5].visible = (w > 1100);
+            $scope.grid_opts.columnDefs[6].visible = (w > 1100);
             $scope.grid_opts.columnDefs[2].visible = (w > 400);
             $scope.grid_opts.columnDefs[3].visible = (w > 400);
+            $scope.grid_opts.columnDefs[4].visible = (w > 400);
             refresh_grid();
         }
 
@@ -25,8 +26,9 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             columnDefs: [
                 {name: 'Title', field: 'title'},
                 {name: 'description', field: 'description'},
-                {name: 'Status', field: 'status', width: 90},
-                {name: 'duration', field: 'duration', width: 90},
+                {name: 'Status', field: 'status', width: 100},
+                {name: 'Duration', field: 'duration', width: 90},
+                {name: 'Start', field: 'projstart', width: 90},
                 {name: 'Video', field: 'video', width: 240},
                 {name: 'Audio', field: 'audio', width: 140}
             ],
@@ -80,17 +82,19 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             }
             var queue = SourceQueue.get_queue(num);
             var len = queue.items[0].length;
+            var start_sec = 0;
             for(var i = 0; i < len; i++) {
                 var field = queue.items[0][i];
+                var source = field.source;
                 // Show only entries which have not yet been played by this player
                 if(field.id <= c_player.last) {
                     continue;
                 }
                 // Make sure user ID matches, we only want to see our own media here.
                 if(field.user_id != Session.uid) {
+                    start_sec += source.length_seconds;
                     continue;
                 }
-                var source = field.source;
 
                 // Format status message
                 var status = status_table[source.status];
@@ -99,7 +103,9 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
                 }
 
                 // Format duration
-                var duration = moment.duration(source.length_seconds, "seconds").format("mm:ss");
+                var duration = moment.duration(source.length_seconds, "seconds").format("hh:mm:ss", { trim: false });
+                var projstart = moment.duration(start_sec, "seconds").format("hh:mm:ss", { trim: false });
+                start_sec += source.length_seconds;
 
                 // Video and audio codec information
                 var video = '';
@@ -127,6 +133,7 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
                     'description': source.description,
                     'status': status,
                     'duration': duration,
+                    'projstart': projstart,
                     'video': video,
                     'audio': audio
                 });
