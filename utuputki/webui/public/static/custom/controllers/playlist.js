@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$location', 'Player', 'Event', 'SourceQueue', 'Session', 'SYNC_EVENTS',
-    function ($scope, $window, $rootScope, $location, Player, Event, SourceQueue, Session, SYNC_EVENTS) {
+app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$location', 'Player', 'Event', 'Playlist', 'Session', 'SYNC_EVENTS',
+    function ($scope, $window, $rootScope, $location, Player, Event, Playlist, Session, SYNC_EVENTS) {
         $scope.events = [];
         $scope.players = [];
         $scope.c_event = null;
@@ -63,6 +63,7 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
             $scope.players = Player.get_players($scope.c_event.id);
             if($scope.players.length > 0) {
                 $scope.c_player = $scope.players[$scope.players.length-1];
+                Playlist.query($scope.c_player.id);
             }
         }
 
@@ -72,7 +73,7 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
             $scope.gridApi.core.queueRefresh();
         }
 
-        function refresh_queue() {
+        function refresh_playlist() {
             if($scope.c_player == null) {
                 return;
             }
@@ -89,15 +90,10 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
             $scope.grid_opts.minRowsToShow = 0;
             $scope.grid_opts.virtualizationThreshold = 0;
 
-            var num = SourceQueue.get_queue_num($scope.c_player.id);
-            if(num < 0) {
-                refresh_grid();
-                return;
-            }
-            var queue = SourceQueue.get_queue(num);
-            var len = queue.items[0].length;
+            var playlist = Playlist.get_playlist();
+            var len = playlist.length;
             for(var i = 0; i < len; i++) {
-                var field = queue.items[0][i];
+                var field = playlist[i];
                 // Show only entries which have not yet been played by this player
                 if(field.id <= $scope.c_player.last) {
                     continue;
@@ -129,50 +125,29 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
         function init() {
             refresh_events();
             refresh_players();
-            refresh_queue();
+            refresh_playlist();
 
-            $rootScope.$on(SYNC_EVENTS.queueAddFailed, function (event, args) {
-                $scope.error = SourceQueue.get_last_error();
-            });
-            $rootScope.$on(SYNC_EVENTS.queueAddSuccess, function (event, args) {
-                $scope.error = "";
-                $scope.add_model.url = '';
-            });
-            $rootScope.$on(SYNC_EVENTS.queuesRefresh, function(event, args) {
-                refresh_queue();
+            $rootScope.$on(SYNC_EVENTS.mediasRefresh, function(event, args) {
+                refresh_playlist();
             });
             $rootScope.$on(SYNC_EVENTS.playersRefresh, function(event, args) {
                 refresh_players();
-                refresh_queue();
             });
             $rootScope.$on(SYNC_EVENTS.eventsRefresh, function(event, args) {
                 refresh_events();
                 refresh_players();
-                refresh_queue();
             });
         }
 
         $scope.sel_event = function(event) {
             $scope.c_event = event;
             refresh_players();
-            refresh_queue();
         };
 
         $scope.sel_player = function(player) {
             $scope.c_player = player;
-            refresh_queue();
+            Playlist.query($scope.c_player.id);
         };
-
-        // Form handling for url adding
-        $scope.add_media = function(data) {
-            if($scope.c_player == null) {
-                return;
-            }
-            SourceQueue.add($scope.c_player.id, $scope.add_model.url);
-        };
-        $scope.add_model = {url: ''};
-        $scope.add_error = "";
-
 
         init();
     }

@@ -21,7 +21,8 @@ app.constant('SYNC_EVENTS', {
     playersRefresh: 'players-refresh',
     queueAddSuccess: 'queue-add-success',
     queueAddFailed: 'queue-add-failed',
-    queuesRefresh: 'queues-refresh'
+    queuesRefresh: 'queues-refresh',
+    mediasRefresh: 'medias-refresh'
 });
 
 app.constant('USERLEVELS', {

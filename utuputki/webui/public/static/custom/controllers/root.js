@@ -1,7 +1,7 @@
 'use strict';
 
-app.run(['$rootScope', '$location', 'AuthService', 'SockService', 'Session', 'SourceQueue', 'Player', 'Event', 'AUTH_EVENTS',
-    function ($rootScope, $location, AuthService, SockService, Session, SourceQueue, Player, Event, AUTH_EVENTS) {
+app.run(['$rootScope', '$location', 'AuthService', 'SockService', 'Session', 'SourceQueue', 'Player', 'Event', 'Playlist', 'AUTH_EVENTS',
+    function ($rootScope, $location, AuthService, SockService, Session, SourceQueue, Player, Event, Playlist, AUTH_EVENTS) {
 
         // Make sure we are logged in the next page requires that
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
@@ -39,6 +39,7 @@ app.run(['$rootScope', '$location', 'AuthService', 'SockService', 'Session', 'So
         SourceQueue.setup();
         Player.setup();
         Event.setup();
+        Playlist.setup();
         AuthService.setup();
 
         // Synchronize global session_id to AuthService.session_id

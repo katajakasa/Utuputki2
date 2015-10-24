@@ -73,9 +73,9 @@ class QueueHandler(HandlerBase):
 
     def handle_fetchall_sig(self):
         s = db_session()
-        queues = [queue.serialize() for queue in s.query(SourceQueue).all()]
+        queues = [queue.serialize() for queue in s.query(SourceQueue).filter_by(user=self.sock.uid).all()]
         s.close()
-        self.send_message(queues, query='fetchall')
+        self.send_message(queues)
 
     def handle(self, packet_msg):
         if not self.is_user_auth():
