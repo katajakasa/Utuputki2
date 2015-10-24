@@ -3,6 +3,7 @@
     <div class="input-group queue_add_block" ng-controller="PlayerManagerController">
         <span class="input-group-addon">Playback</span>
         <span class="input-group-addon">{{ now_playing }}</span>
+        <span class="input-group-addon" ng-if="np_duration_enabled">{{ now_playing_duration }}</span>
         <span class="input-group-addon">{{ status }}</span>
         <span class="input-group-addon" ng-if="skip_enabled">Skip {{ current_skip_count }} / {{ req_skip_count }}</span>
 

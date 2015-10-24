@@ -5,8 +5,10 @@ app.controller('PlayerManagerController', ['$scope', '$rootScope', '$location', 
         $scope.req_skip_count = 1;
         $scope.current_skip_count = 0;
         $scope.now_playing = "-";
+        $scope.now_playing_duration = 0;
         $scope.status = "Stopped";
         $scope.skip_enabled = false;
+        $scope.np_duration_enabled = false;
 
         var statuslist = [
             'Stopped',
@@ -20,18 +22,23 @@ app.controller('PlayerManagerController', ['$scope', '$rootScope', '$location', 
                 $scope.current_skip_count = Player.get_current_skip_count();
             });
             $rootScope.$on(SYNC_EVENTS.playerPlaybackChange, function (event, args) {
-                $scope.now_playing = Player.get_current_media().source.title;
+                var media = Player.get_current_media();
+                $scope.now_playing = media.source.title;
+                $scope.now_playing_duration =  moment.duration(media.source.length_seconds, "seconds").format("mm:ss", { trim: false });
                 $scope.current_skip_count = 0;
                 var st = Player.get_current_status();
                 if(st != null) {
                     if(st == 0) {
                         $scope.now_playing = '-';
+                        $scope.now_playing_duration = 0;
                     }
                     $scope.status = statuslist[st];
                     $scope.skip_enabled = (st != 0);
                 } else {
                     $scope.now_playing = '-';
+                    $scope.now_playing_duration = 0;
                 }
+                $scope.np_duration_enabled = ($scope.now_playing_duration != 0);
             });
             Player.refresh();
         }
