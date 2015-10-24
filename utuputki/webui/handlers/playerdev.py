@@ -17,7 +17,6 @@ class PlayerDeviceHandler(HandlerBase):
         # Fetch all players. Use this to init client state
         if self.query == 'status_change':
             status = packet_msg.get('status')
-            end = packet_msg.get('end', False)
 
             # Get previous player state from database
             s = db_session()
@@ -30,25 +29,10 @@ class PlayerDeviceHandler(HandlerBase):
                 s.close()
 
             # Remote status == STOPPED => attempt to come up with a new source
-            if status == 0 and end:
-                # Update last played media row with played = True if necessary
+            if status == 0:
+                last_id = 0
                 if player.last:
-                    s = db_session()
-                    try:
-                        media = s.query(Media).filter_by(id=player.last).one()
-                        media.played = True
-                        s.add(media)
-                        s.commit()
-
-                        # Announce playback done for all users
-                        self.broadcast('queue', {
-                            'media_id': media.id,
-                            'played': media.played
-                        }, query="played_change", client_type='user')
-                    except NoResultFound:
-                        pass
-                    finally:
-                        s.close()
+                    last_id = player.last
 
                 # Attempt to fetch the next available media for this player
                 s = db_session()
@@ -56,7 +40,7 @@ class PlayerDeviceHandler(HandlerBase):
                     .filter(
                         SourceQueue.target == self.sock.uid,
                         Media.queue == SourceQueue.id,
-                        Media.played == False)\
+                        Media.id > last_id)\
                     .filter(
                         Source.id == Media.source,
                         Source.status == MEDIASTATUS['finished']) \
@@ -89,6 +73,13 @@ class PlayerDeviceHandler(HandlerBase):
                 s = db_session()
                 player.last = media.id
                 s.add(player)
+
+                # Announce playback status change for all users
+                self.broadcast('player', {
+                    'last_id': media.id,
+                    'player_id': player.id
+                }, query="change", client_type='user')
+
                 s.commit()
                 s.close()
             else:

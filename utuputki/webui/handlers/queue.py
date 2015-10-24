@@ -7,7 +7,7 @@ from sqlalchemy.orm.exc import NoResultFound
 import youtube_dl
 
 from handlerbase import HandlerBase
-from common.db import db_session, SourceQueue, Media, Source
+from common.db import db_session, SourceQueue, Media, Source, Player
 from common.utils import format_time_delta
 import settings
 
@@ -135,9 +135,22 @@ class QueueHandler(HandlerBase):
             if found_src:
                 s = db_session()
                 try:
-                    s.query(Media).filter_by(user=self.sock.uid, source=found_src.id, queue=queue_id, played=False).one()
-                    self.send_error('Url is already in the queue', 500)
+                    player = s.query(Player).filter_by(id=player_id).one()
+                except NoResultFound:
+                    self.send_error('Invalid input data', 500)
                     return
+                finally:
+                    s.close()
+
+                s = db_session()
+                try:
+                    res = s.query(Media)\
+                        .filter(Media.user == self.sock.uid, Media.source == found_src.id, Media.queue == queue_id)\
+                        .all()
+                    for r in res:
+                        if r.id > player.last:
+                            self.send_error('Url is already in the queue', 500)
+                            return
                 except NoResultFound:
                     pass
                 finally:

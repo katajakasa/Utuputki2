@@ -46,14 +46,15 @@ if __name__ == '__main__':
                             datefmt=log_datefmt)
 
     log = logging.getLogger(__name__)
-    log.info("Server port = {}.".format(settings.PORT))
-    log.info("Public path = {}".format(settings.PUBLIC_PATH))
+    log.info(u"Server port = {}.".format(settings.PORT))
+    log.info(u"Server addr = {}.".format(settings.BIND_ADDRESS))
+    log.info(u"Public path = {}".format(settings.PUBLIC_PATH))
 
     # Set up the database
     db_init(settings.DATABASE_CONFIG)
 
     # Just log success
-    log.info("Init OK & server running.")
+    log.info(u"Init OK & server running.")
 
     # IO Loop for websockets and the amqp stuff
     io_loop = ioloop.IOLoop.instance()
@@ -83,7 +84,7 @@ if __name__ == '__main__':
     app = web.Application(handlers, conf)
 
     # Start up everything
-    app.listen(settings.PORT, address="0.0.0.0")
+    app.listen(settings.PORT, address=settings.BIND_ADDRESS)
     try:
         io_loop.start()
     except KeyboardInterrupt:

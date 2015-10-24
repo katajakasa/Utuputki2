@@ -14,6 +14,7 @@ default_amqp = 'amqp://guest:guest@localhost:5672//'
 # Config values that we should attempt to read
 config_values = [
     'PORT',
+    'BIND_ADDRESS',
     'TIMEZONE',
     'DEBUG',
     'SOURCE_URL',
@@ -31,6 +32,7 @@ config_values = [
 
 # Defaults
 PORT = 8000
+BIND_ADDRESS = "0.0.0.0"
 SOURCE_URL = 'http://localhost:'+str(PORT)+'/video/'
 TIMEZONE = "Europe/Helsinki"
 DEBUG = False

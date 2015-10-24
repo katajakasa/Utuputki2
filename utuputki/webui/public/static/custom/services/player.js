@@ -9,8 +9,19 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', 
             if (msg['error'] == 1) {
                 last_error = msg['data']['message'];
             } else {
-                players = msg['data'];
-                $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
+                if(query == 'fetchall') {
+                    players = msg['data'];
+                    $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
+                }
+                if(query == 'change') {
+                    for(var i = 0; i < players.length; i++) {
+                        if(players[i].id == msg['player_id']) {
+                            players[i].last = msg['last_id'];
+                        }
+                    }
+                    $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
+                }
+
             }
         }
 

@@ -82,10 +82,10 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             }
 
             var status_table = [
-                'Not Started',
-                'Fetching metadata',
-                'Downloading',
-                'Finished',
+                'Not started',
+                'Metadata',
+                'Download',
+                'On queue',
                 'Error'
             ];
 
@@ -102,10 +102,10 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             var len = queue.items[0].length;
             for(var i = 0; i < len; i++) {
                 var field = queue.items[0][i];
-                if(field.played) {
+                if(field.id <= $scope.c_player.last) {
                     continue;
                 }
-                var source = field.source[0];
+                var source = field.source;
 
                 // Format status message
                 var status = status_table[source.status];

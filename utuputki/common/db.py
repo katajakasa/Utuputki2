@@ -60,7 +60,9 @@ class Player(Base):
             'id': self.id,
             'token': self.token if show_token else None,
             'name': self.name,
+            'last': self.last,
             'event_id': self.event,
+            'status': self.status
         }
 
 
@@ -145,18 +147,16 @@ class Media(Base):
     source = Column(ForeignKey('source.id'), nullable=True, default=None)
     user = Column(ForeignKey('user.id'))
     queue = Column(ForeignKey('sourcequeue.id'))
-    played = Column(Boolean, default=False)
 
     def serialize(self):
         s = db_session()
-        source_entry = s.query(Source).filter_by(id=self.source).one().serialize() if self.source else None,
+        source_entry = s.query(Source).filter_by(id=self.source).one().serialize() if self.source else None
         s.close()
         return {
             'id': self.id,
             'source_id': self.source,
             'source': source_entry,
-            'user_id': self.user,
-            'played': self.played
+            'user_id': self.user
         }
 
 
