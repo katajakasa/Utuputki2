@@ -73,7 +73,7 @@ class QueueHandler(HandlerBase):
 
     def handle_fetchall_sig(self):
         s = db_session()
-        queues = [queue.serialize() for queue in s.query(SourceQueue).filter_by(user=self.sock.uid).all()]
+        queues = [queue.serialize() for queue in s.query(SourceQueue).all()]
         s.close()
         self.send_message(queues, query='fetchall')
 

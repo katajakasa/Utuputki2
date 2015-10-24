@@ -1,10 +1,28 @@
 <div class="col-sm-6 col-lg-4">
     <h2>Current playlist</h2>
-    <p>Not implemented yet!</p>
-    <p>TODO:</p>
-    <ul>
-        <li>Upcoming and old videos</li>
-        <li>Track skipping</li>
-        <li>Now playing</li>
-    </ul>
+    <div class="btn-group" role="group" aria-label="">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                {{ c_event.name }}
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li ng-repeat="event in events"><a href="" ng-click="sel_event(event)">{{ event.name }}</a></li>
+            </ul>
+        </div>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                {{ c_player.name }}
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li ng-repeat="player in players"><a href="" ng-click="sel_player(player)">{{ player.name }}</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="col-sm-12 queue_show_block">
+    <div class="queue_info" ng-if="grid_opts.data">
+        <div ui-grid="grid_opts" ui-grid-auto-resize ng-style="getTableHeight()" class="queue_grid"></div>
+    </div>
 </div>

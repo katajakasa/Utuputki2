@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$location', 'Player', 'Event', 'SourceQueue', 'SYNC_EVENTS',
-    function ($scope, $window, $rootScope, $location, Player, Event, SourceQueue, SYNC_EVENTS) {
+app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$location', 'Player', 'Event', 'SourceQueue', 'Session', 'SYNC_EVENTS',
+    function ($scope, $window, $rootScope, $location, Player, Event, SourceQueue, Session, SYNC_EVENTS) {
         $scope.events = [];
         $scope.players = [];
         $scope.c_event = null;
@@ -102,7 +102,12 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             var len = queue.items[0].length;
             for(var i = 0; i < len; i++) {
                 var field = queue.items[0][i];
+                // Show only entries which have not yet been played by this player
                 if(field.id <= $scope.c_player.last) {
+                    continue;
+                }
+                // Make sure user ID matches, we only want to see our own media here.
+                if(field.user_id != Session.uid) {
                     continue;
                 }
                 var source = field.source;
