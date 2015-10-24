@@ -36,7 +36,7 @@ class StatsHandler(HandlerBase):
                     'name': names[m[0]]
                 })
                 k += 1
-            sorted(out, key=lambda om: om['number'])
+            sorted(out, key=lambda om: om['amount'])
             self.send_message(out)
 
         if self.query == 'fetch_most_given':
