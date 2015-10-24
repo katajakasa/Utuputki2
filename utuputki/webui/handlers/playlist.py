@@ -19,6 +19,6 @@ class PlaylistHandler(HandlerBase):
                 s = db_session()
                 medias = [media.serialize()
                           for media in s.query(Media).filter(Media.queue == SourceQueue.id,
-                                                             SourceQueue.target == player_id).all()]
+                                                             SourceQueue.target == player_id).order_by(Media.id.asc()).all()]
                 s.close()
                 self.send_message(medias)
