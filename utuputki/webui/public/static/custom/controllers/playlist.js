@@ -10,9 +10,10 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
         $scope.gridApi = null;
 
         function redo_visibility(w) {
-            $scope.grid_opts.columnDefs[1].visible = (w > 900);
-            $scope.grid_opts.columnDefs[2].visible = (w > 400);
-            $scope.grid_opts.columnDefs[3].visible = (w > 400);
+            $scope.grid_opts.columnDefs[0].visible = (w > 400);
+            $scope.grid_opts.columnDefs[2].visible = (w > 900);
+            $scope.grid_opts.columnDefs[3].visible = (w > 500);
+            $scope.grid_opts.columnDefs[4].visible = (w > 400);
             refresh_grid();
         }
 
