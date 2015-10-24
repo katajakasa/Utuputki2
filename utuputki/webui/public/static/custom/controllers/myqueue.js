@@ -100,6 +100,7 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             }
             var queue = SourceQueue.get_queue(num);
             var len = queue.items[0].length;
+            console.log(queue.items);
             console.log(Session.uid);
             for(var i = 0; i < len; i++) {
                 var field = queue.items[0][i];
