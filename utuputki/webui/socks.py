@@ -2,6 +2,7 @@
 
 import json
 import logging
+from common.db import MEDIASTATUS
 from sockjs.tornado import SockJSConnection
 from handlers import login, logout, authenticate, queue, register, player, event, playerdev, unknown
 
@@ -34,7 +35,8 @@ class UtuputkiSock(SockJSConnection):
             if self.client_type == 'user':
                 self.send(msg)
             else:
-                self.send({'type': 'playerdev', 'query': 'poke', 'data': {}})
+                if msg['status'] == MEDIASTATUS['finished']:
+                    self.send({'type': 'playerdev', 'query': 'poke', 'data': {}})
 
     def broadcast(self, msg, req_auth=True, avoid_self=True, client_type=None):
         """ Broadcast message from websocket handlers to all clients """

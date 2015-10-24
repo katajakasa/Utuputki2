@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import os
 from handlerbase import HandlerBase
 from common.db import db_session, Player, Media, SourceQueue, Source, MEDIASTATUS
 import settings
@@ -61,9 +62,17 @@ class PlayerDeviceHandler(HandlerBase):
                     source = s.query(Source).filter_by(id=media.source).one()
                 s.close()
 
+                # Try to fix file path (by youtube_dl)
+                store_file = os.path.join(settings.CACHE_DIR, source.file_name)
+                base_file = os.path.splitext(source.file_name)
+                if os.path.isfile(store_file):
+                    real_file = source.file_name
+                else:
+                    real_file = "{}.{}".format(base_file[0], 'mkv')
+
                 # Send playback request. We will get status back later.
                 self.send_message({
-                    'url': settings.SOURCE_URL+source.file_name
+                    'url': settings.SOURCE_URL+real_file
                 }, query='source')
 
                 # Some logging
