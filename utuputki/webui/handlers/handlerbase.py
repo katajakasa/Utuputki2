@@ -17,6 +17,8 @@ class HandlerBase(object):
         count = self.sock.get_online_user_count(req_auth=True) / 2
         if count < 1:
             count = 1
+        if count > 5:
+            count = 5
         return count
 
     def send_req_skip_count(self):
