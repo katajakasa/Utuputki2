@@ -42,6 +42,11 @@ class PlayerDeviceHandler(HandlerBase):
                 'state': player.serialize()
             }, query="change", client_type='user', avoid_self=False)
 
+            # Send playback request. We will get status back later.
+            self.send_message({
+                'status': 0
+            }, query='set_status', target_uid=player.id)
+
             s.close()
             log.info("No media for player, staying as STOPPED.")
             return
