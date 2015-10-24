@@ -29,14 +29,13 @@ class StatsHandler(HandlerBase):
 
             out = []
             k = 1
-            for m in counts.iteritems():
+            for m in sorted(counts.iteritems(), key=lambda x: x[1], reverse=True):
                 out.append({
                     'number': k,
                     'amount': m[1],
                     'name': names[m[0]]
                 })
                 k += 1
-            sorted(out, key=lambda om: om['amount'])
             self.send_message(out)
 
         if self.query == 'fetch_most_given':
