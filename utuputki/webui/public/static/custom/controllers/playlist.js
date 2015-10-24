@@ -107,7 +107,7 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
                 }
 
                 // Format duration
-                var duration = moment.duration(source.length_seconds, "seconds").format("mm:ss");
+                var duration = moment.duration(source.length_seconds, "seconds").format("mm:ss", { trim: false });
 
                 // Add field
                 $scope.grid_opts.data.push({
