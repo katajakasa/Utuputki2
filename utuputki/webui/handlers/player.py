@@ -137,9 +137,10 @@ class PlayerHandler(HandlerBase):
             PlayerDeviceHandler(self.sock, 'playerdev', 'status_change').send_source(player)
             return
 
+        # Maintenance mode, not stop (even if it is named so)
         if self.query == 'stop' and self.is_admin():
             player_id = packet_msg.get('player_id')
             if player_id:
-                log.info("ADMIN: Force status = 0 on player %d", player_id)
-                self._send_message('playerdev', {'status': 0}, query='set_status', target_uid=player_id)
+                log.info("ADMIN: Force status = 4 on player %d", player_id)
+                self._send_message('playerdev', {'status': 4}, query='set_status', target_uid=player_id)
             return

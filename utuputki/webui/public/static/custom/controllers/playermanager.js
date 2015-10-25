@@ -13,7 +13,9 @@ app.controller('PlayerManagerController', ['$scope', '$rootScope', '$location', 
         var statuslist = [
             'Stopped',
             'Playing',
-            'Paused'
+            'Paused',
+            '',
+            'Maintenance'
         ];
 
         function init() {
@@ -29,6 +31,7 @@ app.controller('PlayerManagerController', ['$scope', '$rootScope', '$location', 
                 }
                 $scope.current_skip_count = 0;
                 var st = Player.get_current_status();
+                console.log(st);
                 if(st != null) {
                     if(st == 0) {
                         $scope.now_playing = '-';
