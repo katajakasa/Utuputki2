@@ -15,6 +15,7 @@ Setting up RabbitMQ
 -------------------
 
 A quick example (edit as necessary):
+
 1. sudo rabbitmqctl add_user utuputki utuputki
 2. sudo rabbitmqctl add_vhost utuputki
 3. sudo rabbitmqctl set_permissions -p utuputki utuputki ".*" ".*" ".*"
