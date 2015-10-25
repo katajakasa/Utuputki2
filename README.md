@@ -1,6 +1,12 @@
 # Utuputki2
 
-Utuputki 2 project.
+Utuputki 2 Server and Downloader modules.
+
+Utuputki2 is a communal LAN-party Screen management software. Users may queue youtube-videos to playlist, which the player
+then show on the screen in order. This repository contains the WWW-UI and Downloader/conversion daemon. See
+Utuputki2-client project for the player component.
+
+![Screenshot](https://raw.githubusercontent.com/katajakasa/Utuputki2/master/media/screen.png)
 
 Requirements
 ------------
