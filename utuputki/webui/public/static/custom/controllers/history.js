@@ -23,7 +23,7 @@ app.controller('HistoryController', ['$scope', '$window', '$rootScope', '$locati
             rowHeight: 30,
             columnDefs: [
                 {name: 'Id', field: 'id', width: 60},
-                {name: 'Title', field: 'title'},
+                {name: 'Title', cellTemplate: '<div class="ui-grid-cell-contents"><a href="{{row.entity.url}}">{{row.entity.title}}</a></div>'},
                 {name: 'description', field: 'description'},
                 {name: 'Status', field: 'status', width: 90},
                 {name: 'Duration', field: 'duration', width: 90}
@@ -92,7 +92,8 @@ app.controller('HistoryController', ['$scope', '$window', '$rootScope', '$locati
                     'title': source.title,
                     'description': source.description,
                     'status': status,
-                    'duration': duration
+                    'duration': duration,
+                    'url': 'http://youtu.be/'+source.youtube_hash
                 });
             }
             $scope.grid_opts.minRowsToShow = $scope.grid_opts.data.length;

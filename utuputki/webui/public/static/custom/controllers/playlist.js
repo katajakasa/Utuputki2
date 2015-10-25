@@ -24,7 +24,7 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
             rowHeight: 30,
             columnDefs: [
                 {name: 'Id', field: 'id', width: 60},
-                {name: 'Title', field: 'title'},
+                {name: 'Title', cellTemplate: '<div class="ui-grid-cell-contents"><a href="{{row.entity.url}}">{{row.entity.title}}</a></div>'},
                 {name: 'description', field: 'description'},
                 {name: 'Status', field: 'status', width: 90},
                 {name: 'Duration', field: 'duration', width: 90},
@@ -102,7 +102,8 @@ app.controller('PlaylistController', ['$scope', '$window', '$rootScope', '$locat
                     'description': source.description,
                     'status': status,
                     'duration': duration,
-                    'projstart': projstart
+                    'projstart': projstart,
+                    'url': 'http://youtu.be/'+source.youtube_hash
                 });
             }
             $scope.grid_opts.minRowsToShow = $scope.grid_opts.data.length;

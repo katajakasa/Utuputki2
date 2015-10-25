@@ -23,7 +23,7 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
             enableVerticalScrollbar: 0,
             rowHeight: 30,
             columnDefs: [
-                {name: 'Title', field: 'title'},
+                {name: 'Title', cellTemplate: '<div class="ui-grid-cell-contents"><a href="{{row.entity.url}}">{{row.entity.title}}</a></div>'},
                 {name: 'description', field: 'description'},
                 {name: 'Status', field: 'status', width: 100},
                 {name: 'Duration', field: 'duration', width: 90},
@@ -128,7 +128,8 @@ app.controller('MyQueueController', ['$scope', '$window', '$rootScope', '$locati
                     'status': status,
                     'duration': duration,
                     'video': video,
-                    'audio': audio
+                    'audio': audio,
+                    'url': 'http://youtu.be/'+source.youtube_hash
                 });
             }
             $scope.grid_opts.minRowsToShow = $scope.grid_opts.data.length;
