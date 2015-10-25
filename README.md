@@ -20,16 +20,21 @@ A quick example (edit as necessary):
 2. sudo rabbitmqctl add_vhost utuputki
 3. sudo rabbitmqctl set_permissions -p utuputki utuputki ".*" ".*" ".*"
 
-Running
--------
+Installing
+----------
 
-Again, Run all commands in utuputki-webui directory.
+Run all commands in utuputki-webui directory.
 
 1. Create utuputki.conf in project root (or ~/.utuputki.conf or /etc/utuputki.conf) and edit it as necessary.
    See utuputki.conf.dist for help.
 2. Run database migrations with alembic: `alembic upgrade head`.
 3. Create an admin user, a new event and a player for the event (currently via the tools module, see below)
 4. Run the apps (see below). Enjoy!
+
+Running
+-------
+
+Run all commands in utuputki-webui directory.
 
 To start the apps:
 * `python -m utuputki.webui.webui_main` to run the main www-ui

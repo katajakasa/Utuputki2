@@ -5,6 +5,10 @@
 # Default is 8000
 PORT=8000
 
+# Address to bind to
+# Default is 0.0.0.0 (Bind to all interfaces)
+BIND_ADDRESS=127.0.0.1
+
 # Source URL for your videos.
 # This needs to point to the URL of your server, at which the video files are available.
 # Default is http://localhost:8000/video/ for local testing.
@@ -41,12 +45,14 @@ LOG_LEVEL=1
 # Default is /var/log/utuputki/utuputki-ui.log
 LOG_FILE=/var/log/utuputki/utuputki-ui.log
 
-# This is where the converted files are stored (persistent)
+# This is where the converted files are stored. This should be persistent storage!
 # Default is /tmp
+# CACHE_DIR=/mnt/storage/utuputki2/cache
 CACHE_DIR=/tmp
 
 # This is a temporary cache for files. Should be cleared every now and then.
 # Default is /tmp
+# CACHE_DIR=/mnt/storage/utuputki2/tmp
 TMP_DIR=/tmp
 
 # Limit video/audio duration (in seconds)
