@@ -101,6 +101,29 @@ app.controller('HistoryController', ['$scope', '$window', '$rootScope', '$locati
             refresh_grid();
         }
 
+        $scope.export = function() {
+            var c_player = Player.get_current_player();
+            if(c_player == null) {
+                return;
+            }
+
+            var playlist = Playlist.get_playlist();
+            var out = [];
+            for(var i = 0; i < playlist.length; i++) {
+                var field = playlist[i];
+                var source = field.source;
+                var duration = moment.duration(source.length_seconds, "seconds").format("hh:mm:ss", { trim: false });
+                out.push([
+                    source.id,
+                    source.title,
+                    duration,
+                    'http://youtu.be/'+source.youtube_hash,
+                    source.description
+                ]);
+            }
+            exportToCsv("playlist.csv", out);
+        };
+
         function init() {
             var c_player = Player.get_current_player();
             Playlist.query(c_player.id);
