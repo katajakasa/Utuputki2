@@ -10,6 +10,7 @@ app.controller('NavController', ['$scope', '$rootScope', '$location', 'AuthServi
         $scope.sites = [
             {url: '/', name: 'My Queue', requireLogin: true},
             {url: '/playlist', name: 'Playlist', requireLogin: true},
+            {url: '/history', name: 'History', requireLogin: true},
             {url: '/stats', name: 'Statistics', requireLogin: true},
             {url: '/login', name: 'Login', requireLogin: false},
             {url: '/register', name: 'Register', requireLogin: false},
