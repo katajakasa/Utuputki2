@@ -6,6 +6,7 @@
 PORT=8000
 
 # Source URL for your videos.
+# This needs to point to the URL of your server, at which the video files are available.
 # Default is http://localhost:8000/video/ for local testing.
 #SOURCE_URL=https://www.mydomain.com/utuputki/video/
 SOURCE_URL=http://localhost:8000/video/

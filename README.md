@@ -27,7 +27,15 @@ Again, Run all commands in utuputki-webui directory.
 1. Create utuputki.conf in project root (or ~/.utuputki.conf or /etc/utuputki.conf) and edit it as necessary.
    See utuputki.conf.dist for help.
 2. Run database migrations with alembic: `alembic upgrade head`.
-3. Run with `python src/utuputki.py`.
+3. Create an admin user, a new event and a player for the event (currently via the tools module, see below)
+4. Run the apps (see below). Enjoy!
+
+To start the apps:
+* `python -m utuputki.webui.webui_main` to run the main www-ui
+* `python -m utuputki.downloader.downloader_main` to start the downloader daemon.
+
+To run the tools (for creating the event and a player)
+* `python -m utuputki.tools <command>`
 
 Notes
 -----
