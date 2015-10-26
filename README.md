@@ -22,7 +22,13 @@ Utuputki2-client project for the player component.
 
 #### 2.2. Windows
 
-No instructions yet. User needs to get and install the packages by himself. It IS possible to run on windows though!
+No instructions yet. User needs to get and install the packages by himself. It IS possible to run on windows though! In general:
+
+1. Get [Python 2.7](https://www.python.org/downloads/) and install it. You'll get pip preinstalled, but you'll have to install virtualenv yourself. Remember to add `python27/` and `python27/Scripts` to your PATH to make things easier.
+2. Install [Node.js and npm](https://nodejs.org/en/). Also add `nodejs/` directory to your PATH. Install bower with `npm install -g bower`.
+3. Download and Install [OTP](http://www.erlang.org/download.html), and then install [RabbitMQ-server](https://www.rabbitmq.com/install-windows.html). You'll want to add `rabbitmq_server-3.5.6/sbin` to your PATH.
+4. Download and install your SQL server of choice. MySQL is tested & works. Other than that, no guidance here, google will help :)
+5. Hop to the linux guide above for the rest of the steps. Make sure to replace paths with windows alternatives etc.
 
 ## 3. Configuration
 
