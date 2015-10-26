@@ -46,7 +46,7 @@ A quick example below (edit as necessary). See [rabbitmqctl man page](https://ww
 2. Create a new virtual host: `sudo rabbitmqctl add_vhost utuputki`
 3. Grant all rights to user on vhost: `sudo rabbitmqctl set_permissions -p utuputki utuputki ".*" ".*" ".*"`
 
-## 3.3. Nginx
+### 3.3. Nginx
 
 It is generally a good idea to let a web server like Nginx serve all your video files and static content, freeing tornado to handle only the sockjs connections. An example nginx configuration can be found at `deploy/utuputki-nginx.conf`.
 
