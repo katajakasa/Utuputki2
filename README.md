@@ -57,8 +57,8 @@ To run the tools (for creating the event and a player)
 
 ## 3. Nginx
 
-It is generally a good idea to let a web server like Nginx to server all your video files and static content, freeing tornado to server sockjs connections. An example nginx configuration can be found at deploy/utuputki-nginx.conf.
+It is generally a good idea to let a web server like Nginx serve all your video files and static content, freeing tornado to handle only the sockjs connections. An example nginx configuration can be found at `deploy/utuputki-nginx.conf`.
 
 ## 4. License
 
-MIT. See LICENSE in the repository root.
+MIT. See `LICENSE` in the repository root.
