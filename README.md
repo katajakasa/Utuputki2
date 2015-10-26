@@ -16,7 +16,7 @@ Run all commands in utuputki-webui directory.
 
 #### Debian/Ubuntu
 
-1. `sudo apt-get install npm python2.7-dev python-pip python-virtualenv rabbitmq-server`. Also install an SQL server of your choice (mysql and sqlite3 tested)
+1. `sudo apt-get install npm python2.7-dev python-pip python-virtualenv rabbitmq-server`. Also install an SQL server of your choice (mysql and sqlite3 tested). For RabbitMQ configuration, see below.
 2. Install bower, eg. `sudo npm install -g bower`. Please see [Bower installation  instructions](http://bower.io/#install-bower) for details
 3. Create a virtualenv `virtualenv /path/to/virtualenv/utuputki2` and activate it `source /path/to/virtualenv/utuputki2/bin/activate`. See [virtualenv documentation](https://virtualenv.pypa.io/en/latest/) for details.
 4. Install python requirements: `pip install --upgrade -r deploy/requirements.txt`.
@@ -36,7 +36,7 @@ No instructions yet. User needs to get and install the packages by himself. It I
 
 ### Setting up RabbitMQ
 
-A quick example (edit as necessary):
+A quick example below (edit as necessary). See [rabbitmqctl man page](https://www.rabbitmq.com/man/rabbitmqctl.1.man.html) and [RabbitMQ manual](https://www.rabbitmq.com/download.html) for more instructions.
 
 1. sudo rabbitmqctl add_user utuputki utuputki
 2. sudo rabbitmqctl add_vhost utuputki
