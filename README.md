@@ -38,9 +38,9 @@ No instructions yet. User needs to get and install the packages by himself. It I
 
 A quick example below (edit as necessary). See [rabbitmqctl man page](https://www.rabbitmq.com/man/rabbitmqctl.1.man.html) and [RabbitMQ manual](https://www.rabbitmq.com/download.html) for more instructions.
 
-1. sudo rabbitmqctl add_user utuputki utuputki
-2. sudo rabbitmqctl add_vhost utuputki
-3. sudo rabbitmqctl set_permissions -p utuputki utuputki ".*" ".*" ".*"
+1. Create a new user with a password: `sudo rabbitmqctl add_user utuputki utuputki`
+2. Create a new virtual host: `sudo rabbitmqctl add_vhost utuputki`
+3. Grant all rights to user on vhost: `sudo rabbitmqctl set_permissions -p utuputki utuputki ".*" ".*" ".*"`
 
 ## Running
 
@@ -52,6 +52,10 @@ To start the apps:
 
 To run the tools (for creating the event and a player)
 * `python -m utuputki.tools <command>`
+
+## Nginx
+
+It is generally a good idea to let a web server like Nginx to server all your video files and static content, freeing tornado to server sockjs connections. An example nginx configuration can be found at deploy/utuputki-nginx.conf.
 
 ## License
 
