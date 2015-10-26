@@ -49,12 +49,6 @@ To start the apps:
 To run the tools (for creating the event and a player)
 * `python -m utuputki.tools <command>`
 
-Notes
------
-
-* Making new alembic revisions: `alembic revision --autogenerate -m "My short desc"`. Remember to check results!
-* Running migrations: `alembic upgrade head`.
-
 License
 -------
 
