@@ -9,7 +9,6 @@ Utuputki2-client project for the player component.
 ![Screenshot](https://raw.githubusercontent.com/katajakasa/Utuputki2/master/media/screen.png)
 
 ## Installing
-----------
 
 Run all commands in utuputki-webui directory.
 
@@ -43,8 +42,7 @@ A quick example (edit as necessary):
 2. sudo rabbitmqctl add_vhost utuputki
 3. sudo rabbitmqctl set_permissions -p utuputki utuputki ".*" ".*" ".*"
 
-Running
--------
+## Running
 
 Run all commands in utuputki-webui directory.
 
@@ -55,7 +53,6 @@ To start the apps:
 To run the tools (for creating the event and a player)
 * `python -m utuputki.tools <command>`
 
-License
--------
+## License
 
 MIT. See LICENSE in the repository root.
