@@ -8,34 +8,40 @@ Utuputki2-client project for the player component.
 
 ![Screenshot](https://raw.githubusercontent.com/katajakasa/Utuputki2/master/media/screen.png)
 
-Requirements
-------------
-
-Run all commands in utuputki-webui directory.
-
-1. Platform requirements: python2.7, python2.7-dev, nodejs + npm + bower, RabbitMQ.
-2. Python requirements: `pip install --upgrade -r deploy/requirements.txt`
-3. JS requirements `bower install`
-
-Setting up RabbitMQ
--------------------
-
-A quick example (edit as necessary):
-
-1. sudo rabbitmqctl add_user utuputki utuputki
-2. sudo rabbitmqctl add_vhost utuputki
-3. sudo rabbitmqctl set_permissions -p utuputki utuputki ".*" ".*" ".*"
-
-Installing
+## Installing
 ----------
 
 Run all commands in utuputki-webui directory.
+
+### Requirements
+
+#### Debian/Ubuntu
+
+1. `sudo apt-get install npm python2.7-dev python-pip python-virtualenv rabbitmq-server`. Also install an SQL server of your choice (mysql and sqlite3 tested)
+2. Install bower, eg. `sudo npm install -g bower`. Please see [Bower installation  instructions](http://bower.io/#install-bower) for details
+3. Create a virtualenv `virtualenv /path/to/virtualenv/utuputki2` and activate it `source /path/to/virtualenv/utuputki2/bin/activate`. See [virtualenv documentation](https://virtualenv.pypa.io/en/latest/) for details.
+4. Install python requirements: `pip install --upgrade -r deploy/requirements.txt`.
+5. Install JS requirements `bower install`.
+
+#### Windows
+
+No instructions yet. User needs to get and install the packages by himself. It IS possible to run on windows though!
+
+### Setting up the servers
 
 1. Create utuputki.conf in project root (or ~/.utuputki.conf or /etc/utuputki.conf) and edit it as necessary.
    See utuputki.conf.dist for help.
 2. Run database migrations with alembic: `alembic upgrade head`.
 3. Create an admin user, a new event and a player for the event (currently via the tools module, see below)
 4. Run the apps (see below). Enjoy!
+
+### Setting up RabbitMQ
+
+A quick example (edit as necessary):
+
+1. sudo rabbitmqctl add_user utuputki utuputki
+2. sudo rabbitmqctl add_vhost utuputki
+3. sudo rabbitmqctl set_permissions -p utuputki utuputki ".*" ".*" ".*"
 
 Running
 -------
