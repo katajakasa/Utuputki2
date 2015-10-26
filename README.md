@@ -31,8 +31,10 @@ No instructions yet. User needs to get and install the packages by himself. It I
 1. Create utuputki.conf in project root (or ~/.utuputki.conf or /etc/utuputki.conf) and edit it as necessary.
    See utuputki.conf.dist for help.
 2. Run database migrations with alembic: `alembic upgrade head`.
-3. Create an admin user, a new event and a player for the event (currently via the tools module, see below)
-4. Run the apps (see below). Enjoy!
+3. Create an admin user: `python -m utuputki.tools create_admin`. Admin user can upload any length videos and manage playback, while normal users will be limited in video duration and management options.
+4. Create a new event: `python -m utuputki.tools create_event`. There can be multiple events, eg. "My Lanparty 2015", "New lan party 2016", etc.
+5. Create a new player for the event `python -m utuputki.tools create_player`. A sinle event can have multiple players, for example if there are multiple screens.
+6. Run the apps (see below). Enjoy!
 
 ### Setting up RabbitMQ
 
