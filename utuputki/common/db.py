@@ -222,7 +222,7 @@ class Session(Base):
 def db_init(engine_str):
     _engine = create_engine(engine_str+'?charset=utf8', pool_recycle=3600)
     _session.configure(bind=_engine)
-    Base.metadata.create_all(_engine)
+    #Base.metadata.create_all(_engine)
 
 
 def db_session():
