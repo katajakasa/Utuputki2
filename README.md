@@ -58,7 +58,7 @@ After installing mysql, this is how you set up a database:
 
 1. On commandline, run `mysql -u root -p`. This will take you to MySQL command prompt.
 2. On mysql commandline, run `CREATE DATABASE utuputki2;`.
-3. On mysql commandline, run `GRANT ALL PRIVILEGES ON utuputki2.* To '<username>'@'localhost' IDENTIFIED BY '<password>';`. Pick a good username and password, and make sure to change 'localhost' if your server is located elsewhere. Database name may be switched if you wish to do so (remember to update your configuration accordingly!).
+3. On mysql commandline, run `GRANT ALL PRIVILEGES ON utuputki2.* To '<username>'@'localhost' IDENTIFIED BY '<password>';`. Pick a good username and a secure password. Database name may be switched if you wish to do so. Remember to update the DATABASE_CONFIG setting in your utuputki.conf accordingly!.
 
 ### 3.4. Nginx
 
