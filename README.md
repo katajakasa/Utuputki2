@@ -64,6 +64,13 @@ After installing mysql, this is how you set up a database:
 
 It is generally a good idea to let a web server like Nginx serve all your video files and static content, freeing tornado to handle only the sockjs connections. An example nginx configuration can be found at `deploy/utuputki-nginx.conf`.
 
+Short guide to set up:
+
+1. Copy `deploy/utuputki-nginx.conf` to `/etc/nginx/sites-available/utuputki.conf`
+2. Make a link to the new conf file from sites-enabled: `ln -s /etc/nginx/sites-available/utuputki.conf /etc/nginx/sites-enabled/utuputki`
+3. Make changed to the `/etc/nginx/sites-available/utuputki.conf`. See the commends for explanations.
+4. Reload nginx (mechanism depends on your distribution).
+
 ## 4. Running
 
 Run all commands in utuputki-webui directory.
