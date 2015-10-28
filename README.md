@@ -52,6 +52,13 @@ A quick example below (edit as necessary). See [rabbitmqctl man page](https://ww
 2. Create a new virtual host: `sudo rabbitmqctl add_vhost utuputki`
 3. Grant all rights to user on vhost: `sudo rabbitmqctl set_permissions -p utuputki utuputki ".*" ".*" ".*"`
 
+### 3.3. Setting up MySQL
+
+After installing mysql, this is how you set up a database:
+1. On commandline, run `mysql -u root -p`. This will take you to MySQL command prompt.
+2. On mysql commandline, run `CREATE DATABASE utuputki2;`.
+3. On mysql commandline, run `GRANT ALL PRIVILEGES ON utuputki2.* To '<username>'@'localhost' IDENTIFIED BY '<password>';`. Pick a good username and password, and make sure to change 'localhost' if your server is located elsewhere. Database name may be switched if you wish to do so (remember to update your configuration accordingly!).
+
 ### 3.3. Nginx
 
 It is generally a good idea to let a web server like Nginx serve all your video files and static content, freeing tornado to handle only the sockjs connections. An example nginx configuration can be found at `deploy/utuputki-nginx.conf`.
