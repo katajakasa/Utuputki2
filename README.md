@@ -68,7 +68,7 @@ Short guide to set up:
 
 1. Copy `deploy/utuputki-nginx.conf` to `/etc/nginx/sites-available/utuputki.conf`
 2. Make a link to the new conf file from sites-enabled: `ln -s /etc/nginx/sites-available/utuputki.conf /etc/nginx/sites-enabled/utuputki`
-3. Make changed to the `/etc/nginx/sites-available/utuputki.conf`. See the commends for explanations.
+3. Make changed to the `/etc/nginx/sites-available/utuputki.conf`. See the comments for explanations.
 4. Reload nginx (mechanism depends on your distribution).
 
 ## 4. Running
