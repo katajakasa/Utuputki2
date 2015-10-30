@@ -12,6 +12,8 @@ then show on the screen in order. This repository contains the WWW-UI and Downlo
 
 ## 2. Requirements
 
+For help with configuring mysql, rabbitmq, and (optionally) nginx see sections 3.2,  3.3 and 3.4.
+
 #### 2.1. Debian/Ubuntu
 
 1. `sudo apt-get install npm python2.7-dev python-pip python-virtualenv rabbitmq-server`. Also install an SQL server of your choice (mysql and sqlite3 tested). A proper SQL server (like MySQL) is absolutely preferred! For help with RabbitMQ configuration, see below.
@@ -21,8 +23,6 @@ then show on the screen in order. This repository contains the WWW-UI and Downlo
 5. Install JS requirements `bower install`. Run this in the Utuputki2 project directory!
 
 #### 2.2. Windows
-
-No instructions yet. User needs to get and install the packages by himself. It IS possible to run on windows though! In general:
 
 1. Get [Python 2.7](https://www.python.org/downloads/) and install it. You'll get pip preinstalled, but you'll have to install virtualenv yourself. Remember to add `python27/` and `python27/Scripts` to your PATH to make things easier.
 2. Install [Node.js and npm](https://nodejs.org/en/). Also add `nodejs/` directory to your PATH. Install bower with `npm install -g bower`.
