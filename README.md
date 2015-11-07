@@ -1,5 +1,7 @@
 # Utuputki2
 
+[![Code Health](https://landscape.io/github/katajakasa/Utuputki2/master/landscape.svg?style=flat)](https://landscape.io/github/katajakasa/Utuputki2/master)
+
 ## 1. What is it ?
 
 Utuputki 2 Server and Downloader modules.
