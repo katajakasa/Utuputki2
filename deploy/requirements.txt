@@ -1,9 +1,9 @@
-tornado==4.2.1
+tornado==4.3
 sockjs-tornado==1.0.2
-sqlalchemy==1.0.8
+sqlalchemy==1.0.11
 isodate==0.5.4
 passlib==1.6.5
-alembic==0.8.3
+alembic==0.8.4
 pika==0.10.0
 pytz
 youtube-dl
