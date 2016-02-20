@@ -43,7 +43,11 @@ if 'create_test_admin' in sys.argv:
 if 'create_event' in sys.argv:
     settings.config_init()
     db_init(settings.DATABASE_CONFIG)
-    name = raw_input("Event name: ")
+
+    if len(sys.argv) == 3:
+        name = sys.argv[2]
+    else:
+        name = raw_input("Event name: ")
 
     s = db_session()
     event = Event(name=name, visible=True)
@@ -65,8 +69,13 @@ if 'list_events' in sys.argv:
 if 'create_player' in sys.argv:
     settings.config_init()
     db_init(settings.DATABASE_CONFIG)
-    event_id = int(raw_input("Event ID: "))
-    name = raw_input("Player name: ")
+
+    if len(sys.argv) == 4:
+        event_id = int(sys.argv[2])
+        name = sys.argv[3]
+    else:
+        event_id = int(raw_input("Event ID: "))
+        name = raw_input("Player name: ")
 
     s = db_session()
     player = Player(event=event_id, name=name, token=generate_session()[:16])

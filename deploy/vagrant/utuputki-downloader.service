@@ -1,0 +1,12 @@
+[Unit]
+Description=Utuputki2 downloader daemon
+After=utuputki-webui.service
+
+[Service]
+WorkingDirectory=/vagrant
+ExecStart=/home/vagrant/env/bin/python -m utuputki.downloader.downloader_main
+User=vagrant
+Group=vagrant
+
+[Install]
+WantedBy=multi-user.target

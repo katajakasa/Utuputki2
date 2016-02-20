@@ -1,0 +1,11 @@
+[Unit]
+Description=Utuputki2 webui
+
+[Service]
+WorkingDirectory=/vagrant
+ExecStart=/home/vagrant/env/bin/python -m utuputki.webui.webui_main
+User=vagrant
+Group=vagrant
+
+[Install]
+WantedBy=multi-user.target

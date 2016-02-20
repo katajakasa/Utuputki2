@@ -59,7 +59,10 @@ target/
 # Pycharm
 .idea
 
-# Others
+# Configs etc
 utuputki.conf
 utuputki.db
 utuputki/webui/public/static/components
+
+# Vagrant
+.vagrant
