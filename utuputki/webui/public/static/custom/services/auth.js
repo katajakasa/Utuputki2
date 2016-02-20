@@ -61,6 +61,7 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'User', 'AUTH_
             SockService.send_msg('register', {
                 'username': new_user.username,
                 'password': new_user.password,
+                'password2': new_user.password2,
                 'nickname': new_user.nickname,
                 'email': new_user.email
             });

@@ -14,10 +14,11 @@ class RegisterHandler(HandlerBase):
     def handle(self, packet_msg):
         username = packet_msg.get('username')
         password = packet_msg.get('password')
+        password2 = packet_msg.get('password2')
         email = packet_msg.get('email', '')
         nickname = packet_msg.get('nickname')
 
-        if not username or not password or not nickname:
+        if not username or not password or not nickname or not password2:
             self.send_error('Fill all fields', 400)
             return
 
@@ -35,6 +36,10 @@ class RegisterHandler(HandlerBase):
 
         if len(password) < 8:
             self.send_error('Password should be at least 8 characters long', 400)
+            return
+
+        if password != password2:
+            self.send_error('Passwords don\'t match!', 400)
             return
 
         # Make sure the nickname is not yet reserved

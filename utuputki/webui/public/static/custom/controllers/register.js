@@ -44,6 +44,15 @@ app.controller('RegisterController', ['$scope', '$location', '$rootScope', 'AUTH
                 }
             },
             {
+                key: 'password2',
+                type: 'input',
+                templateOptions: {
+                    type: 'password',
+                    required: true,
+                    label: 'Password (again)'
+                }
+            },
+            {
                 key: 'email',
                 type: 'input',
                 templateOptions: {
