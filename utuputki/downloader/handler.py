@@ -28,7 +28,7 @@ class DownloadConsumer(MqConstants):
             'query': mtype,
             'data': msg
         })
-        log.debug("MQ: Key %s => Queueing: %s", self.KEY_PROGRESS, data)
+        log.debug(u"MQ: Key %s => Queueing: %s", self.KEY_PROGRESS, data)
         properties = pika.spec.BasicProperties(
             content_type="application/json", delivery_mode=1)
         self.channel.basic_publish(
@@ -46,7 +46,7 @@ class DownloadConsumer(MqConstants):
                     source = s.query(Source).filter_by(id=data['source_id']).one()
                 except NoResultFound:
                     s.close()
-                    log.warn("Could not find source!")
+                    log.warn(u"Could not find source!")
                     self.channel.basic_ack(method_frame.delivery_tag)
                     continue
 
@@ -116,7 +116,7 @@ class DownloadConsumer(MqConstants):
                     self.send_msg('single', source.serialize())
 
                     # Start downloading
-                    log.info("Downloading {} to {}".format(source.youtube_hash, file_path))
+                    log.info(u"Downloading %s to %s", source.youtube_hash, file_path)
                     try:
                         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                             ydl.download(['http://www.youtube.com/watch?v=' + source.youtube_hash])
@@ -130,10 +130,10 @@ class DownloadConsumer(MqConstants):
                         log.info(u"Error while attempting to download: %s", str(e))
                         continue
                 else:
-                    log.warn("Cannot yet download other urls!")
+                    log.warn(u"Cannot yet download other urls!")
 
                 # Save everything and dequeue this entry
-                log.info("Download finished.")
+                log.info(u"Download finished.")
                 source.status = MEDIASTATUS['finished']
                 source.message = 'Video downloaded successfully.'
                 s.add(source)
@@ -147,7 +147,7 @@ class DownloadConsumer(MqConstants):
                 # Finish up
                 s.close()
                 self.channel.basic_ack(method_frame.delivery_tag)
-                log.info("Tag %s marked done.", method_frame.delivery_tag)
+                log.info(u"Tag %s marked done.", method_frame.delivery_tag)
 
         except KeyboardInterrupt:
             return

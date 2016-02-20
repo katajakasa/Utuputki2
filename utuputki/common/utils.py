@@ -6,7 +6,6 @@ import pytz
 import isodate
 import datetime
 import binascii
-import logging
 
 
 def utc_now():
