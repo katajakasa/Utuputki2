@@ -48,7 +48,7 @@ class PlayerDeviceHandler(HandlerBase):
             }, query='set_status', target_uid=player.id)
 
             s.close()
-            log.info("No media for player, staying as STOPPED.")
+            log.info(u"No media for player, staying as STOPPED.")
             return
         else:
             source = s.query(Source).filter_by(id=media.source).one()
@@ -68,7 +68,7 @@ class PlayerDeviceHandler(HandlerBase):
         }, query='source', target_uid=player.id)
 
         # Some logging
-        log.info(u"Player {} is playing {}".format(self.sock.uid, source.id))
+        log.info(u"Player %s is playing %s", self.sock.uid, source.id)
 
         # Update last played media track to db
         s = db_session()
@@ -97,7 +97,7 @@ class PlayerDeviceHandler(HandlerBase):
             try:
                 player = s.query(Player).filter_by(id=self.sock.uid).one()
             except NoResultFound:
-                log.warn("Requested player {} was not found!".format(self.sock.uid))
+                log.warn(u"Requested player %s was not found!", self.sock.uid)
                 return
             finally:
                 s.close()

@@ -58,17 +58,17 @@ class PlayerHandler(HandlerBase):
                 s.add(skip)
                 s.commit()
             except IntegrityError:
-                log.debug("Hissatsu! Double skip!")
+                log.debug(u"Hissatsu! Double skip!")
                 return
             finally:
                 s.close()
 
-            log.info("User %s requested skipping media %s on player %s", self.sock.uid, player.last, player.id)
+            log.info(u"User %s requested skipping media %s on player %s", self.sock.uid, player.last, player.id)
 
             # Broadcast skip count
             skips = s.query(Skip).filter_by(player=player.id, media=player.last).count()
             if skips >= self.get_req_skip_count():
-                log.info("All skip votes gathered; skipping %d", player.last)
+                log.info(u"All skip votes gathered; skipping %d", player.last)
                 PlayerDeviceHandler(self.sock, 'playerdev', 'status_change').send_source(player)
             else:
                 self.broadcast('player', {
@@ -102,7 +102,7 @@ class PlayerHandler(HandlerBase):
         if self.query == 'pause' and self.is_admin():
             player_id = packet_msg.get('player_id')
             if player_id:
-                log.info("ADMIN: Force status = 2 on player %d", player_id)
+                log.info(u"ADMIN: Force status = 2 on player %d", player_id)
                 self._send_message('playerdev', {'status': 2}, query='set_status', target_uid=player_id)
             return
 
@@ -117,7 +117,7 @@ class PlayerHandler(HandlerBase):
                 s.close()
 
             if player.status > 0:
-                log.info("ADMIN: Force status = 1 on player %d", player_id)
+                log.info(u"ADMIN: Force status = 1 on player %d", player_id)
                 self._send_message('playerdev', {'status': 1}, query='set_status', target_uid=player_id)
             else:
                 PlayerDeviceHandler(self.sock, 'playerdev', 'status_change').send_source(player)
@@ -133,7 +133,7 @@ class PlayerHandler(HandlerBase):
             finally:
                 s.close()
 
-            log.info("ADMIN: Force skipping on player %d", player_id)
+            log.info(u"ADMIN: Force skipping on player %d", player_id)
             PlayerDeviceHandler(self.sock, 'playerdev', 'status_change').send_source(player)
             return
 
@@ -141,6 +141,6 @@ class PlayerHandler(HandlerBase):
         if self.query == 'stop' and self.is_admin():
             player_id = packet_msg.get('player_id')
             if player_id:
-                log.info("ADMIN: Force status = 4 on player %d", player_id)
+                log.info(u"ADMIN: Force status = 4 on player %d", player_id)
                 self._send_message('playerdev', {'status': 4}, query='set_status', target_uid=player_id)
             return

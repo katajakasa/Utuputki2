@@ -41,7 +41,7 @@ if __name__ == '__main__':
                             datefmt=log_datefmt)
     else:
         logging.basicConfig(filename=settings.LOG_FILE,
-                            filemode='wb',
+                            filemode='ab',
                             level=level,
                             format=log_format,
                             datefmt=log_datefmt)

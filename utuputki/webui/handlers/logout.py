@@ -19,7 +19,7 @@ class LogoutHandler(HandlerBase):
         s.close()
 
         # Dump out log
-        log.info("[{}] Logged out".format(self.sock.sid[0:6]))
+        log.info(u"[%s] Logged out", self.sock.sid[0:6])
 
         # De-auth & clear session information
         self.sock.authenticated = False

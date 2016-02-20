@@ -228,7 +228,7 @@ class QueueHandler(HandlerBase):
             # Resend all queue data (for now)
             self.handle_fetchall_sig()
             self.send_message({})
-            log.info("[{}] New media added to queue".format(self.sock.sid[0:6]))
+            log.info("[%s] New media added to queue", self.sock.sid[0:6])
 
         # Drop entry from Queue. Media entries MAY be cleaned up later.
         if self.query == 'del':

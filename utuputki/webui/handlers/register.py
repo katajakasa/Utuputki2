@@ -63,5 +63,5 @@ class RegisterHandler(HandlerBase):
         s.close()
 
         # Send simple notification
-        log.info("Registered new user {}.".format(username))
+        log.info(u"Registered new user %s.", username)
         self.send_message({})

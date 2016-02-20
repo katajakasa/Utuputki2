@@ -9,6 +9,6 @@ log = logging.getLogger(__name__)
 class UnknownHandler(HandlerBase):
     def handle(self, packet_msg):
         if packet_msg:
-            log.info("Missing or unknown packet type!")
+            log.info(u"Missing or unknown packet type!")
         else:
-            log.info("Erroneous and/or unserializable packet!")
+            log.info(u"Erroneous and/or unserializable packet!")

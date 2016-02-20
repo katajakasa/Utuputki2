@@ -27,7 +27,7 @@ class LoginHandler(HandlerBase):
                 player = s.query(Player).filter_by(token=token).one()
             except NoResultFound:
                 self.send_error('Incorrect token', 401)
-                log.info("Invalid token.")
+                log.info(u"Invalid token.")
                 return
             finally:
                 s.close()
@@ -42,14 +42,14 @@ class LoginHandler(HandlerBase):
                 'name': player.name
             })
 
-            log.info("[{}] Token logged in".format(token[0:6]))
+            log.info(u"[%s] Token logged in", token[0:6])
         else:
             s = db_session()
             try:
                 user = s.query(User).filter_by(username=username).one()
             except NoResultFound:
                 self.send_error('Incorrect username or password', 401)
-                log.info("Invalid username or password.")
+                log.info(u"Invalid username or password.")
                 return
             finally:
                 s.close()
@@ -83,7 +83,7 @@ class LoginHandler(HandlerBase):
                 self.send_req_skip_count()
 
                 # Dump out log
-                log.info("[{}] Logged in".format(self.sock.sid[0:6]))
+                log.info(u"[%s] Logged in", self.sock.sid[0:6])
             else:
                 self.send_error('Incorrect username or password', 401)
-                log.info("Invalid username or password.")
+                log.info(u"Invalid username or password.")

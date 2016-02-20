@@ -6,7 +6,7 @@ For help with configuring mysql, rabbitmq, and (optionally) nginx see sections 3
 
 ### 1.1. Debian/Ubuntu
 
-1. `sudo apt-get install npm python2.7-dev python-pip python-virtualenv rabbitmq-server`. Also install an SQL server 
+1. `sudo apt-get install npm python2.7-dev python-pip python-virtualenv rabbitmq-server ffmpeg`. Also install an SQL server 
     of your choice (mysql and sqlite3 tested). A proper SQL server (like MySQL) is absolutely preferred! For help with 
     RabbitMQ configuration, see below.
 2. Install bower, eg. `sudo npm install -g bower`. Please see 

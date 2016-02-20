@@ -28,7 +28,7 @@ class DownloadConsumer(MqConstants):
             'query': mtype,
             'data': msg
         })
-        log.debug("MQ: Key {} => Queueing: {}".format(self.KEY_PROGRESS, data))
+        log.debug("MQ: Key %s => Queueing: %s", self.KEY_PROGRESS, data)
         properties = pika.spec.BasicProperties(
             content_type="application/json", delivery_mode=1)
         self.channel.basic_publish(
@@ -127,7 +127,7 @@ class DownloadConsumer(MqConstants):
                         s.commit()
                         self.channel.basic_ack(method_frame.delivery_tag)
                         s.close()
-                        log.info(u"Error while attempting to download: {}".format(str(e)))
+                        log.info(u"Error while attempting to download: %s", str(e))
                         continue
                 else:
                     log.warn("Cannot yet download other urls!")
@@ -147,7 +147,7 @@ class DownloadConsumer(MqConstants):
                 # Finish up
                 s.close()
                 self.channel.basic_ack(method_frame.delivery_tag)
-                log.info("Tag {} marked done.".format(method_frame.delivery_tag))
+                log.info("Tag %s marked done.", method_frame.delivery_tag)
 
         except KeyboardInterrupt:
             return

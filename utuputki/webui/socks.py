@@ -27,7 +27,7 @@ class UtuputkiSock(SockJSConnection):
         self.ip = info.ip
         self.clients.add(self)
         self.mq.add_event_listener(self)
-        log.info("Connection accepted")
+        log.info(u"Connection accepted")
 
     def write_message(self, msg):
         """ Send message from MQ interface """
@@ -97,7 +97,7 @@ class UtuputkiSock(SockJSConnection):
         pass
 
     def on_close(self):
-        log.info("Connection closed")
+        log.info(u"Connection closed")
         self.clients.remove(self)
         self.mq.del_event_listener(self)
         self.uid = None

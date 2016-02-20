@@ -12,7 +12,7 @@ add-apt-repository ppa:nginx/stable
 apt-get -y -qq update
 apt-get -y -qq install \
     npm build-essential python2.7-dev python-pip python-virtualenv \
-    rabbitmq-server nginx-full mysql-server libmysqlclient-dev
+    rabbitmq-server nginx-full mysql-server libmysqlclient-dev ffmpeg
 
 # Virtual environment
 ENV=/home/vagrant/env

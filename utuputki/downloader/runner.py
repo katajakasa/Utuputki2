@@ -32,7 +32,7 @@ class Runner(object):
                                 datefmt=log_datefmt)
         else:
             logging.basicConfig(filename=settings.LOG_FILE,
-                                filemode='wb',
+                                filemode='ab',
                                 level=level,
                                 format=log_format,
                                 datefmt=log_datefmt)
@@ -44,7 +44,7 @@ class Runner(object):
         self.consumer = DownloadConsumer(settings.AMQP_URL)
 
         # All done
-        self.log.info("Init OK & daemon running.")
+        self.log.info(u"Init OK & daemon running.")
 
     def run(self):
         self.consumer.handle()
