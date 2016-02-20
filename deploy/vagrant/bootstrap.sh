@@ -14,15 +14,8 @@ apt-get -y -qq install \
     npm build-essential python2.7-dev python-pip python-virtualenv \
     rabbitmq-server nginx-full mysql-server libmysqlclient-dev ffmpeg
 
-# Virtual environment
-ENV=/home/vagrant/env
-virtualenv ${ENV}
-${ENV}/bin/pip install --upgrade -r /vagrant/deploy/requirements.txt
-${ENV}/bin/pip install --upgrade mysql-python
-
-# Bower for JS library installation
+# Set node symlink
 ln -s /usr/bin/nodejs /usr/bin/node
-npm install -g bower
 
 # MySQL
 mysql -u root -proot -e "CREATE DATABASE utuputki;"
@@ -38,29 +31,12 @@ rm -f /etc/nginx/sites-enabled/default
 ln -s /vagrant/deploy/vagrant/utuputki-nginx.conf /etc/nginx/sites-available/utuputki
 ln -s /vagrant/deploy/vagrant/utuputki-nginx.conf /etc/nginx/sites-enabled/utuputki
 
+# Systemctl
+mkdir /usr/share/utuputki
+cp /vagrant/deploy/vagrant/utuputki-downloader.service /usr/share/utuputki/
+cp /vagrant/deploy/vagrant/utuputki-webui.service /usr/share/utuputki/
+systemctl enable /usr/share/utuputki/utuputki-webui.service
+systemctl enable /usr/share/utuputki/utuputki-downloader.service
+
 # Utuputki 2
 ln -s /vagrant/deploy/vagrant/vg-utuputki.conf /etc/utuputki.conf
-systemctl enable /vagrant/deploy/vagrant/utuputki-webui.service
-systemctl enable /vagrant/deploy/vagrant/utuputki-downloader.service
-
-mkdir /home/vagrant/cache
-mkdir /home/vagrant/tmp
-mkdir /home/vagrant/logs
-
-chown vagrant:vagrant /home/vagrant/logs
-chown vagrant:vagrant /home/vagrant/cache
-chown vagrant:vagrant /home/vagrant/tmp
-
-cd /vagrant
-bower install
-${ENV}/bin/alembic upgrade head
-${ENV}/bin/python -m utuputki.tools create_test_admin
-${ENV}/bin/python -m utuputki.tools create_event Event
-${ENV}/bin/python -m utuputki.tools create_player 1 Screen
-
-# Rock'n'roll
-systemctl restart nginx
-systemctl restart mysql
-systemctl start utuputki-webui
-sleep 1
-systemctl start utuputki-downloader

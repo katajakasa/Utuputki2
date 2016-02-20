@@ -1,6 +1,7 @@
 [Unit]
 Description=Utuputki2 downloader daemon
 After=utuputki-webui.service
+RequiredMountsFor=/vagrant
 
 [Service]
 WorkingDirectory=/vagrant

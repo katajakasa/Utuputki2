@@ -1,5 +1,6 @@
 [Unit]
 Description=Utuputki2 webui
+RequiredMountsFor=/vagrant
 
 [Service]
 WorkingDirectory=/vagrant
