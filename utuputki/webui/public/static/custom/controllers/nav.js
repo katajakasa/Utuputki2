@@ -32,6 +32,9 @@ app.controller('NavController', ['$scope', '$rootScope', '$location', 'AuthServi
             }
             return true;
         };
+        $scope.is_event_menu_visible = function() {
+            return (AuthService.is_authenticated());
+        };
 
         function refresh_events() {
             $scope.events = Event.get_events();
