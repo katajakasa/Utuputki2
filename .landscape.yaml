@@ -1,2 +1,5 @@
 requirements:
     - deploy/requirements.txt
+pylint:
+    disable:
+        - unused-argument
