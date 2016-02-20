@@ -47,9 +47,9 @@ if __name__ == '__main__':
                             datefmt=log_datefmt)
 
     log = logging.getLogger(__name__)
-    log.info(u"Server port = {}.".format(settings.PORT))
-    log.info(u"Server addr = {}.".format(settings.BIND_ADDRESS))
-    log.info(u"Public path = {}".format(settings.PUBLIC_PATH))
+    log.info(u"Server port = %d.", settings.PORT)
+    log.info(u"Server addr = %s.", settings.BIND_ADDRESS)
+    log.info(u"Public path = %s.", settings.PUBLIC_PATH)
 
     # Set up the database
     db_init(settings.DATABASE_CONFIG)
