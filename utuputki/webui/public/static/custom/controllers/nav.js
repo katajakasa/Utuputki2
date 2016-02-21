@@ -12,6 +12,7 @@ app.controller('NavController', ['$scope', '$rootScope', '$location', 'AuthServi
             {url: '/playlist', name: 'Playlist', requireLogin: true},
             {url: '/history', name: 'History', requireLogin: true},
             {url: '/stats', name: 'Statistics', requireLogin: true},
+            {url: '/profile', name: 'Profile', requireLogin: true},
             {url: '/login', name: 'Login', requireLogin: false},
             {url: '/register', name: 'Register', requireLogin: false},
             {url: '/logout', name: 'Logout', requireLogin: true}

@@ -20,7 +20,7 @@ app.value('ngSockUrl', '/sock');
 
 // URLs
 app.config(['$routeProvider',
-    function ($routeProvider) {
+    function($routeProvider) {
         $routeProvider.
             when('/login', {
                 templateUrl: '/partials/login.html',
@@ -47,6 +47,11 @@ app.config(['$routeProvider',
             when('/stats', {
                 templateUrl: '/partials/fame.html',
                 controller: 'StatisticsController',
+                requireLogin: true
+            }).
+            when('/profile', {
+                templateUrl: '/partials/profile.html',
+                controller: 'ProfileController',
                 requireLogin: true
             }).
             when('/eventadmin', {
