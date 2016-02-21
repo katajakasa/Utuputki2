@@ -49,6 +49,18 @@ app.config(['$routeProvider',
                 controller: 'StatisticsController',
                 requireLogin: true
             }).
+            when('/eventadmin', {
+                templateUrl: '/partials/eventadmin.html',
+                controller: 'EventAdminController',
+                requireLogin: true,
+                requireAdmin: true
+            }).
+            when('/playeradmin', {
+                templateUrl: '/partials/playeradmin.html',
+                controller: 'PlayerAdminController',
+                requireLogin: true,
+                requireAdmin: true
+            }).
             when('/', {
                 templateUrl: '/partials/myqueue.html',
                 controller: 'MyQueueController',

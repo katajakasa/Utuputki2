@@ -1,12 +1,18 @@
 'use strict';
 
-app.run(['$rootScope', '$location', 'AuthService', 'SockService', 'Session', 'SourceQueue', 'Player', 'Event', 'Playlist', 'Statistics', 'AUTH_EVENTS',
-    function ($rootScope, $location, AuthService, SockService, Session, SourceQueue, Player, Event, Playlist, Statistics, AUTH_EVENTS) {
+app.run(['$rootScope', '$location', 'AuthService', 'SockService', 'Session', 'SourceQueue', 'Player', 'Event', 'Playlist', 'Statistics', 'AUTH_EVENTS', 'USERLEVELS',
+    function ($rootScope, $location, AuthService, SockService, Session, SourceQueue, Player, Event, Playlist, Statistics, AUTH_EVENTS, USERLEVELS) {
 
         // Make sure we are logged in the next page requires that
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
             if(next.requireLogin) {
                 if(!AuthService.is_authenticated()) {
+                    if(next.originalPath != '/login' || current.originalPath != '/') {
+                        event.preventDefault();
+                        $location.path('/login');
+                    }
+                }
+                if(next.requireAdmin && !AuthService.is_authorized(USERLEVELS['admin'])) {
                     if(next.originalPath != '/login' || current.originalPath != '/') {
                         event.preventDefault();
                         $location.path('/login');

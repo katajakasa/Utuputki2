@@ -1,7 +1,7 @@
 'use strict';
 
-app.controller('NavController', ['$scope', '$rootScope', '$location', 'AuthService', 'Event', 'Player', 'SYNC_EVENTS', 'AUTH_EVENTS',
-    function ($scope, $rootScope, $location, AuthService, Event, Player, SYNC_EVENTS, AUTH_EVENTS) {
+app.controller('NavController', ['$scope', '$rootScope', '$location', 'AuthService', 'Event', 'Player', 'Session', 'SYNC_EVENTS', 'AUTH_EVENTS', 'USERLEVELS',
+    function ($scope, $rootScope, $location, AuthService, Event, Player, Session, SYNC_EVENTS, AUTH_EVENTS, USERLEVELS) {
         $scope.events = [];
         $scope.players = [];
         $scope.c_event = null;
@@ -20,6 +20,7 @@ app.controller('NavController', ['$scope', '$rootScope', '$location', 'AuthServi
         $scope.is_site_active = function (loc) {
             return (loc === $location.path());
         };
+
         $scope.is_site_visible = function (url) {
             for (var i = 0; i < $scope.sites.length; i++) {
                 if ($scope.sites[i].url == url) {
@@ -32,8 +33,13 @@ app.controller('NavController', ['$scope', '$rootScope', '$location', 'AuthServi
             }
             return true;
         };
+
         $scope.is_event_menu_visible = function() {
             return (AuthService.is_authenticated());
+        };
+
+        $scope.is_admin = function() {
+            return Session.hasLevel(USERLEVELS['admin']);
         };
 
         function refresh_events() {
