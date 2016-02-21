@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Rock'n'roll
 systemctl restart nginx
