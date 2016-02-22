@@ -5,7 +5,7 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'User', 'AUTH_
         var last_error = "";
 
         function auth_event(msg, query) {
-            if (msg['error'] == 1) {
+            if(msg['error'] == 1) {
                 last_error = msg['data']['message'];
                 $rootScope.$broadcast(AUTH_EVENTS.sessionTimeout);
                 console.error("Session timeout!");
@@ -27,7 +27,7 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'User', 'AUTH_
         }
 
         function login_event(msg, query) {
-            if (msg['error'] == 1) {
+            if(msg['error'] == 1) {
                 last_error = msg['data']['message'];
                 $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
             } else {
@@ -42,7 +42,7 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'User', 'AUTH_
         }
 
         function register_event(msg, query) {
-            if (msg['error'] == 1) {
+            if(msg['error'] == 1) {
                 last_error = msg['data']['message'];
                 $rootScope.$broadcast(AUTH_EVENTS.registerFailed);
             } else {
@@ -50,10 +50,29 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'User', 'AUTH_
             }
         }
 
+        function profile_event(msg, query) {
+            if(msg['error'] == 1) {
+                last_error = msg['data']['message'];
+                $rootScope.$broadcast(AUTH_EVENTS.profileFailed);
+            } else {
+                User.update(msg['data']['user']);
+                $rootScope.$broadcast(AUTH_EVENTS.profileSuccess);
+            }
+        }
+
         function login(credentials) {
             SockService.send_msg('login', {
                 'username': credentials.username,
                 'password': credentials.password
+            });
+        }
+
+        function update_profile(profile) {
+            SockService.send_msg('profile', {
+                'password': profile.password,
+                'password2': profile.password2,
+                'nickname': profile.nickname,
+                'email': profile.email
             });
         }
 
@@ -91,6 +110,7 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'User', 'AUTH_
             SockService.add_recv_handler('auth', auth_event);
             SockService.add_recv_handler('login', login_event);
             SockService.add_recv_handler('register', register_event);
+            SockService.add_recv_handler('profile', profile_event);
         }
 
         function get_last_error() {
@@ -102,6 +122,7 @@ app.factory('AuthService', ['$location', '$rootScope', 'Session', 'User', 'AUTH_
             authenticate: authenticate,
             login: login,
             logout: logout,
+            update_profile: update_profile,
             is_authorized: is_authorized,
             is_authenticated: is_authenticated,
             get_last_error: get_last_error,

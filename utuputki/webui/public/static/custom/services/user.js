@@ -21,6 +21,7 @@ app.service('User', [
 
         return {
             create: create,
+            update: create,
             destroy: destroy,
             getSettings: getSettings,
             setSettings: setSettings,

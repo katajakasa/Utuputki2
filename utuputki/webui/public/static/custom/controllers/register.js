@@ -9,6 +9,7 @@ app.controller('RegisterController', ['$scope', '$location', '$rootScope', 'AUTH
         $scope.model = {
             username: '',
             password: '',
+            password2: '',
             nickname: '',
             email: ''
         };

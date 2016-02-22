@@ -9,7 +9,9 @@ app.constant('AUTH_EVENTS', {
     notAuthenticated: 'auth-not-authenticated',
     notAuthorized: 'auth-not-authorized',
     registerSuccess: 'auth-register-success',
-    registerFailed: 'auth-register-failed'
+    registerFailed: 'auth-register-failed',
+    profileSuccess: 'auth-profile-success',
+    profileFailed: 'auth-profile-failed'
 });
 
 app.constant('SYNC_EVENTS', {

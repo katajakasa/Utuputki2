@@ -4,7 +4,8 @@ import json
 import logging
 from common.db import MEDIASTATUS
 from sockjs.tornado import SockJSConnection
-from handlers import login, logout, authenticate, queue, register, player, event, playerdev, playlist, stats, unknown
+from handlers import login, logout, authenticate, queue, register, player, event, playerdev, playlist,\
+    profile, stats, unknown
 
 log = logging.getLogger(__name__)
 
@@ -86,6 +87,7 @@ class UtuputkiSock(SockJSConnection):
             'queue': queue.QueueHandler,
             'event': event.EventHandler,
             'player': player.PlayerHandler,
+            'profile': profile.ProfileHandler,
             'playerdev': playerdev.PlayerDeviceHandler,
             'playlist': playlist.PlaylistHandler,
             'stats': stats.StatsHandler,
