@@ -20,5 +20,7 @@ Install Vagrant. The method depends on your OS.
 
 ## 4. Notes
 
+When starting an already provisioned vagrant box, you may need to run `sudo /vagrant/deploy/vagrant/restart.sh` to bring up the server processes. This is because the box sometimes starts the services before /vagrant mount is up and running.
+
 Please note that currently the Vagrant installation method is only meant for testing and development! It would probably
 be possible to use it for production, but currently that is out-of-scope for this installation file.
