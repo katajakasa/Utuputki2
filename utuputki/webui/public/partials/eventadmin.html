@@ -1,3 +1,8 @@
 <div class="col-sm-12">
     <h2>Manage Events</h2>
 </div>
+<div class="col-sm-12 queue_show_block">
+    <div class="event_info" ng-if="grid_opts.data">
+        <div ui-grid="grid_opts" ui-grid-auto-resize ng-style="getTableHeight()" class="queue_grid"></div>
+    </div>
+</div>
