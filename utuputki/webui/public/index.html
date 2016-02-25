@@ -64,7 +64,11 @@
             </ul>
             <ul class="nav navbar-nav navbar-right" ng-if="is_event_menu_visible()">
                 <li class="dropdown" ng-if="events">
-                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button"><span>{{ c_event.name }}</span> <span class="caret"></span></a>
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                        <span ng-if="c_event != null">{{ c_event.name }}</span>
+                        <span ng-if="c_event == null" class="glyphicon glyphicon-exclamation-sign"></span>
+                        <span class="caret"></span>
+                    </a>
                     <ul class="dropdown-menu">
                         <li ng-if="is_admin()"><a href="#/eventadmin">Manage Events</a></li>
                         <li ng-if="is_admin()" role="separator" class="divider"></li>
@@ -72,7 +76,11 @@
                     </ul>
                 </li>
                 <li class="dropdown" ng-if="players">
-                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button"><span>{{ c_player.name }}</span> <span class="caret"></span></a>
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                        <span ng-if="c_player != null">{{ c_player.name }}</span>
+                        <span ng-if="c_player == null" class="glyphicon glyphicon-exclamation-sign"></span>
+                        <span class="caret"></span>
+                    </a>
                     <ul class="dropdown-menu">
                         <li ng-if="is_admin()"><a href="#/playeradmin">Manage Players</a></li>
                         <li ng-if="is_admin()" role="separator" class="divider"></li>

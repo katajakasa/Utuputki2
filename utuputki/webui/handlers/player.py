@@ -6,6 +6,7 @@ from playerdev import PlayerDeviceHandler
 from common.db import db_session, Player, Skip
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import IntegrityError
+from common.utils import generate_session
 
 log = logging.getLogger(__name__)
 
@@ -15,10 +16,47 @@ class PlayerHandler(HandlerBase):
         if not self.is_user_auth():
             return
 
+        # Add new empty player
+        if self.query == 'add' and self.is_admin():
+            event_id = packet_msg.get('event_id')
+
+            s = db_session()
+            player = Player(
+                event=event_id,
+                name=u'Player {}'.format(generate_session()[:4]),
+                token=generate_session()[:16])
+            s.add(player)
+            s.commit()
+            self.send_message(player.serialize(show_token=True))
+            s.close()
+
+            log.info(u"[%s] New player added", self.sock.sid[0:6])
+            return
+
+        if self.query == 'edit' and self.is_admin():
+            player_id = packet_msg.get('id')
+            name = packet_msg.get('name')
+
+            # Get user
+            s = db_session()
+            try:
+                player = s.query(Player).filter_by(id=player_id).one()
+                player.name = name
+                s.add(player)
+                s.commit()
+                self.send_message(player.serialize(show_token=True))
+
+                log.info(u"[%s] Player %d edited", player_id, self.sock.sid[0:6])
+            except NoResultFound:
+                log.info(u"[%s] error while editing player %d: no player found", player_id, self.sock.sid[0:6])
+                return
+            finally:
+                s.close()
+
         # Fetch all players. Use this to init client state
         if self.query == 'fetchall':
             s = db_session()
-            players = [player.serialize() for player in s.query(Player).all()]
+            players = [player.serialize(show_token=self.is_admin()) for player in s.query(Player).all()]
             s.close()
             self.send_message(players)
             return

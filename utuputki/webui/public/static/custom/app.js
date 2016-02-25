@@ -8,6 +8,8 @@ var app = angular.module(
         'ui.bootstrap',
         'ui.grid',
         'ui.grid.autoResize',
+        'ui.grid.edit',
+        'ui.grid.rowEdit',
         'formly',
         'formlyBootstrap',
         'dialogs.main'

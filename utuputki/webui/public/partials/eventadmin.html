@@ -3,6 +3,10 @@
 </div>
 <div class="col-sm-12 queue_show_block">
     <div class="event_info" ng-if="grid_opts.data">
-        <div ui-grid="grid_opts" ui-grid-auto-resize ng-style="getTableHeight()" class="queue_grid"></div>
+        <div ui-grid="grid_opts" ui-grid-auto-resize ui-grid-edit ui-grid-row-edit ng-style="getTableHeight()" class="queue_grid"></div>
     </div>
+</div>
+<div class="col-sm-12">
+    <br />
+    <button type="button" id="add_row" class="btn btn-success" ng-click="add_row()">Add Row</button>
 </div>

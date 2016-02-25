@@ -44,26 +44,31 @@ app.controller('NavController', ['$scope', '$rootScope', '$location', 'AuthServi
         };
 
         function refresh_events() {
-            $scope.events = Event.get_events();
-            if($scope.events.length > 0) {
+            $scope.events = Event.get_visible_events();
+            if($scope.events.length > 0 && Event.get_selected_event() == null) {
                 $scope.c_event = $scope.events[$scope.events.length - 1];
+                Event.set_selected_event($scope.c_event.id);
                 refresh_players();
             }
         }
 
         function refresh_players() {
             if($scope.c_event == null) {
+                $scope.c_player = null;
                 return;
             }
             $scope.players = Player.get_players($scope.c_event.id);
             if($scope.players.length > 0) {
                 $scope.c_player = $scope.players[$scope.players.length-1];
+            } else {
+                $scope.c_player = null;
             }
         }
 
         $scope.on_event_change = function(event) {
             if($scope.c_event.id != event.id) {
                 $scope.c_event = event;
+                Event.set_selected_event(event.id);
                 refresh_players();
             }
         };

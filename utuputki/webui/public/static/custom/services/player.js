@@ -9,7 +9,7 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
         var media_skip_count = 0;
 
         function player_event(msg, query) {
-            if (msg['error'] == 1) {
+            if(msg['error'] == 1) {
                 last_error = msg['data']['message'];
             } else {
                 if(query == 'fetchall') {
@@ -19,6 +19,21 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
                         current_player = players[0];
                         $rootScope.$broadcast(SYNC_EVENTS.currentPlayerChange);
                     }
+                    return;
+                }
+                if(query == 'add') {
+                    players.push(msg['data']);
+                    $rootScope.$broadcast(SYNC_EVENTS.playerAdded);
+                    return;
+                }
+                if(query == "edit") {
+                    for(var k = 0; k < players.length; k++) {
+                        if(players[k].id == msg['data']['id']) {
+                            players[k].name = msg['data']['name'];
+                        }
+                    }
+                    $rootScope.$broadcast(SYNC_EVENTS.playersEdited);
+                    $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
                     return;
                 }
                 if(query == 'change') {
@@ -68,6 +83,19 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
                 }
             }
             return out;
+        }
+
+        function add_player(event_id) {
+            SockService.send_msg('player', {
+                event_id: event_id
+            }, 'add');
+        }
+
+        function edit_player(id, name) {
+            SockService.send_msg('player', {
+                'id': id,
+                'name': name
+            }, 'edit');
         }
 
         function get_current_player() {
@@ -163,6 +191,8 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
             get_current_skip_count: get_current_skip_count,
             skip_current: skip_current,
             refresh: refresh,
+            add_player: add_player,
+            edit_player: edit_player,
             forceskip_current: forceskip_current,
             stop_current: stop_current,
             play_current: play_current,

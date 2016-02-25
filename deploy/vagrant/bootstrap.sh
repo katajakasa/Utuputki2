@@ -28,8 +28,8 @@ rabbitmqctl set_permissions -p utuputki utuputki ".*" ".*" ".*"
 
 # nginx
 rm -f /etc/nginx/sites-enabled/default
-ln -s /vagrant/deploy/vagrant/utuputki-nginx.conf /etc/nginx/sites-available/utuputki
-ln -s /vagrant/deploy/vagrant/utuputki-nginx.conf /etc/nginx/sites-enabled/utuputki
+cp /vagrant/deploy/vagrant/utuputki-nginx.conf /etc/nginx/sites-available/utuputki
+ln -s /etc/nginx/sites-available/utuputki /etc/nginx/sites-enabled/utuputki
 
 # Systemctl
 mkdir /usr/share/utuputki
@@ -39,4 +39,4 @@ systemctl enable /usr/share/utuputki/utuputki-webui.service
 systemctl enable /usr/share/utuputki/utuputki-downloader.service
 
 # Utuputki 2
-ln -s /vagrant/deploy/vagrant/vg-utuputki.conf /etc/utuputki.conf
+cp /vagrant/deploy/vagrant/vg-utuputki.conf /etc/utuputki.conf

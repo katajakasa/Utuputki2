@@ -13,11 +13,13 @@ app.controller('EventAdminController', ['$scope', '$rootScope', '$location', 'Ev
             enableVerticalScrollbar: 0,
             rowHeight: 30,
             columnDefs: [
-                {name: 'ID', field: 'id', width: 100},
-                {name: 'Name', field: 'name'}
+                {name: 'ID', field: 'id', width: 100, enableCellEdit: false},
+                {name: 'Name', field: 'name'},
+                {name: 'Visible', field: 'visible', type: 'boolean'}
             ],
             onRegisterApi: function(gridApi){
                 $scope.gridApi = gridApi;
+                gridApi.rowEdit.on.saveRow($scope, $scope.save_rows);
             }
         };
 
@@ -27,6 +29,19 @@ app.controller('EventAdminController', ['$scope', '$rootScope', '$location', 'Ev
             return {
                 height: ($scope.grid_opts.data.length * rowHeight + headerHeight) + "px"
             };
+        };
+
+        $scope.save_rows = function(row) {
+            var promise = new Promise(function(resolve, reject) {
+                Event.edit_event(row.id, row.name, row.visible);
+                resolve(1);
+            });
+            $scope.gridApi.rowEdit.setSavePromise(row, promise);
+            return promise;
+        };
+
+        $scope.add_row = function() {
+            Event.add_event();
         };
 
         function refresh_grid() {
@@ -45,7 +60,7 @@ app.controller('EventAdminController', ['$scope', '$rootScope', '$location', 'Ev
         function init() {
             refresh_events();
 
-            $rootScope.$on(SYNC_EVENTS.eventsRefresh, function(event, args) {
+            $rootScope.$on(SYNC_EVENTS.eventAdded, function(event, args) {
                 refresh_events();
             });
         }
