@@ -40,9 +40,26 @@ app.factory('Event', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', '
         }
 
         function save_cache() {
-            localStorage.setItem("events_list", JSON.stringify(events));
+            var keys = ['id', 'name', 'visible'];
+
+            // Save players list
+            var filtered_events = [];
+            for(var k = 0; k < events.length; k++) {
+                var out = {};
+                for(var m = 0; m < keys.length; m++) {
+                    out[keys[m]] = events[k][keys[m]];
+                }
+                filtered_events.push(out);
+            }
+            localStorage.setItem("events_list", JSON.stringify(filtered_events));
+
+            // Save current player
             if(selected_event != null) {
-                localStorage.setItem("selected_event", JSON.stringify(selected_event));
+                var filtered_current = {};
+                for(var h = 0; h < keys.length; h++) {
+                    filtered_current[keys[h]] = selected_event[keys[h]];
+                }
+                localStorage.setItem("selected_event", JSON.stringify(filtered_current));
             }
         }
 
