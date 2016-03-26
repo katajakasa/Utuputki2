@@ -26,6 +26,7 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
                     players.push(msg['data']);
                     localStorage.setItem("players_list", JSON.stringify(players));
                     $rootScope.$broadcast(SYNC_EVENTS.playerAdded);
+                    $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
                     return;
                 }
                 if(query == "edit") {

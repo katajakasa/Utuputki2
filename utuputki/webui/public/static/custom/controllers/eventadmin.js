@@ -60,7 +60,7 @@ app.controller('EventAdminController', ['$scope', '$rootScope', '$location', 'Ev
         function init() {
             refresh_events();
 
-            $rootScope.$on(SYNC_EVENTS.eventAdded, function(event, args) {
+            $rootScope.$on(SYNC_EVENTS.eventsRefresh, function(event, args) {
                 refresh_events();
             });
         }

@@ -20,6 +20,7 @@ app.constant('SYNC_EVENTS', {
     eventsRefresh: 'events-refresh',
     eventAdded: 'event-added',
     eventsEdited: 'events-edited',
+    currentEventChange: 'current-event-change',
     playerAddSuccess: 'player-add-success',
     playerAddFailed: 'player-add-failed',
     playersRefresh: 'players-refresh',

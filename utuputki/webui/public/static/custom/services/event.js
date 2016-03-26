@@ -75,6 +75,7 @@ app.factory('Event', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', '
         function set_selected_event(event) {
             selected_event = event;
             localStorage.setItem("selected_event", JSON.stringify(event));
+            $rootScope.$broadcast(SYNC_EVENTS.currentEventChange);
         }
 
         function get_selected_event() {

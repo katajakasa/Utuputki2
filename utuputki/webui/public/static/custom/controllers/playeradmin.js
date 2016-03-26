@@ -41,7 +41,7 @@ app.controller('PlayerAdminController', ['$scope', '$rootScope', '$location', 'E
         };
 
         $scope.add_row = function() {
-            Player.add_player(Event.get_selected_event());
+            Player.add_player(Event.get_selected_event().id);
         };
 
         function refresh_grid() {
@@ -51,7 +51,7 @@ app.controller('PlayerAdminController', ['$scope', '$rootScope', '$location', 'E
         }
 
         function refresh_players() {
-            $scope.grid_opts.data = Player.get_players(Event.get_selected_event());
+            $scope.grid_opts.data = Player.get_players(Event.get_selected_event().id);
             $scope.grid_opts.minRowsToShow = $scope.grid_opts.data.length;
             $scope.grid_opts.virtualizationThreshold = $scope.grid_opts.data.length;
             refresh_grid();
@@ -60,7 +60,10 @@ app.controller('PlayerAdminController', ['$scope', '$rootScope', '$location', 'E
         function init() {
             refresh_players();
 
-            $rootScope.$on(SYNC_EVENTS.playerAdded, function(event, args) {
+            $rootScope.$on(SYNC_EVENTS.playersRefresh, function(event, args) {
+                refresh_players();
+            });
+            $rootScope.$on(SYNC_EVENTS.currentEventChange, function(event, args) {
                 refresh_players();
             });
         }
