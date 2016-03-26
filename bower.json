@@ -6,7 +6,7 @@
     "Tuomas Virtanen <katajakasa@gmail.com>"
   ],
   "description": "Lanparty Video Streamer",
-  "license": "GPLv3",
+  "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
