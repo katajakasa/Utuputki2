@@ -49,6 +49,14 @@ app.controller('StatisticsController', ['$scope', '$location', '$rootScope', 'SY
             };
         };
 
+        $scope.show_given_table = function() {
+            return ($scope.given_opts.length > 0);
+        };
+
+        $scope.show_received_table = function() {
+            return ($scope.received_opts.length > 0);
+        };
+
         function refresh_most_given() {
             $scope.given_opts.data = Statistics.get_most_given();
             $scope.given_opts.minRowsToShow = $scope.given_opts.data.length;

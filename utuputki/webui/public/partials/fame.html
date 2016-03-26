@@ -4,14 +4,16 @@
 
 <div class="col-sm-12 queue_show_block">
     <h3>Most skip votes received</h3>
-    <div class="queue_info">
+    <div class="queue_info" ng-if="show_received_table()">
         <div ui-grid="received_opts" ui-grid-auto-resize ng-style="getTableHeight(received_opts)" class="queue_grid"></div>
     </div>
+    <p ng-if="!show_received_table()">No statistics to show yet!</p>
 </div>
 
 <div class="col-sm-12 queue_show_block">
     <h3>Most skip votes given</h3>
-    <div class="queue_info">
+    <div class="queue_info" ng-if="show_given_table()">
         <div ui-grid="given_opts" ui-grid-auto-resize ng-style="getTableHeight(given_opts)" class="queue_grid"></div>
     </div>
+    <p ng-if="!show_given_table()">No statistics to show yet!</p>
 </div>
