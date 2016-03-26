@@ -81,11 +81,13 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
             localStorage.setItem("players_list", JSON.stringify(filtered_players));
 
             // Save current player
-            var filtered_current = {};
-            for(var h = 0; h < keys.length; h++) {
-                filtered_current[keys[h]] = current_player[keys[h]];
+            if(current_player != null) {
+                var filtered_current = {};
+                for(var h = 0; h < keys.length; h++) {
+                    filtered_current[keys[h]] = current_player[keys[h]];
+                }
+                localStorage.setItem("selected_player", JSON.stringify(filtered_current));
             }
-            localStorage.setItem("selected_player", JSON.stringify(filtered_current));
         }
 
         function restore_cache() {

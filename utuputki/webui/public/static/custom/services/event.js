@@ -41,7 +41,9 @@ app.factory('Event', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', '
 
         function save_cache() {
             localStorage.setItem("events_list", JSON.stringify(events));
-            localStorage.setItem("selected_event", JSON.stringify(selected_event));
+            if(selected_event != null) {
+                localStorage.setItem("selected_event", JSON.stringify(selected_event));
+            }
         }
 
         function restore_cache() {
