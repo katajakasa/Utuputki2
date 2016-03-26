@@ -24,8 +24,7 @@ app.controller('HistoryController', ['$scope', '$window', '$rootScope', '$locati
             columnDefs: [
                 {name: 'Id', field: 'id', width: 60},
                 {name: 'Title', cellTemplate: '<div class="ui-grid-cell-contents"><a href="{{row.entity.url}}">{{row.entity.title}}</a></div>'},
-                {name: 'description', field: 'description'},
-                {name: 'Status', field: 'status', width: 90},
+                {name: 'Description', field: 'description'},
                 {name: 'Duration', field: 'duration', width: 90}
             ],
             onRegisterApi: function(gridApi){
