@@ -12,10 +12,12 @@ app.factory('Event', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', '
             } else {
                 if(query == "fetchall") {
                     events = msg['data'];
+                    localStorage.setItem("events_list", JSON.stringify(events));
                     $rootScope.$broadcast(SYNC_EVENTS.eventsRefresh);
                 }
                 if(query == "add") {
                     events.push(msg['data']);
+                    localStorage.setItem("events_list", JSON.stringify(events));
                     $rootScope.$broadcast(SYNC_EVENTS.eventAdded);
                     $rootScope.$broadcast(SYNC_EVENTS.eventsRefresh);
                 }
@@ -26,6 +28,7 @@ app.factory('Event', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', '
                             events[i].name = msg['data']['name'];
                         }
                     }
+                    localStorage.setItem("events_list", JSON.stringify(events));
                     $rootScope.$broadcast(SYNC_EVENTS.eventsEdited);
                     $rootScope.$broadcast(SYNC_EVENTS.eventsRefresh);
                 }
@@ -47,6 +50,14 @@ app.factory('Event', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', '
         function setup() {
             SockService.add_recv_handler('event', event_event);
             $rootScope.$on(AUTH_EVENTS.loginSuccess, function (event, args) {
+                // Get events list and selected event from cache if they exist
+                if(localStorage.getItem("events_list") !== null) {
+                    events = JSON.parse(localStorage.getItem("events_list"));
+                    selected_event = JSON.parse(localStorage.getItem("selected_event"));
+                    $rootScope.$broadcast(SYNC_EVENTS.eventsRefresh);
+                }
+
+                // Then request for refresh from server
                 SockService.send_msg('event', {}, 'fetchall');
             });
         }
@@ -61,8 +72,9 @@ app.factory('Event', ['$location', '$rootScope', 'SockService', 'AUTH_EVENTS', '
             return ev_list;
         }
 
-        function set_selected_event(id) {
-            selected_event = id;
+        function set_selected_event(event) {
+            selected_event = event;
+            localStorage.setItem("selected_event", JSON.stringify(event));
         }
 
         function get_selected_event() {

@@ -43,8 +43,8 @@ app.run(['$rootScope', '$location', 'AuthService', 'SockService', 'Session', 'So
         // Initialize our services
         SockService.setup();
         SourceQueue.setup();
-        Player.setup();
         Event.setup();
+        Player.setup();
         Playlist.setup();
         Statistics.setup();
         AuthService.setup();

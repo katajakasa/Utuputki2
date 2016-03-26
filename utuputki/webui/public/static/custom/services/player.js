@@ -14,6 +14,7 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
             } else {
                 if(query == 'fetchall') {
                     players = msg['data'];
+                    localStorage.setItem("players_list", JSON.stringify(players));
                     $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
                     if(current_player == null && players.length > 0) {
                         current_player = players[0];
@@ -23,6 +24,7 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
                 }
                 if(query == 'add') {
                     players.push(msg['data']);
+                    localStorage.setItem("players_list", JSON.stringify(players));
                     $rootScope.$broadcast(SYNC_EVENTS.playerAdded);
                     return;
                 }
@@ -32,6 +34,7 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
                             players[k].name = msg['data']['name'];
                         }
                     }
+                    localStorage.setItem("players_list", JSON.stringify(players));
                     $rootScope.$broadcast(SYNC_EVENTS.playersEdited);
                     $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
                     return;
@@ -65,6 +68,14 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
         function setup() {
             SockService.add_recv_handler('player', player_event);
             $rootScope.$on(AUTH_EVENTS.loginSuccess, function (event, args) {
+                // If cache contains old players list & current player, fetch them
+                if(localStorage.getItem("players_list") !== null) {
+                    players = JSON.parse(localStorage.getItem("players_list"));
+                    current_player = JSON.parse(localStorage.getItem("selected_player"));
+                    $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
+                }
+
+                // ... then ask for a refresh from server
                 SockService.send_msg('player', {}, 'fetchall');
                 SockService.send_msg('player', {}, 'req_skip_count');
                 var c_player = get_current_player();
@@ -154,6 +165,7 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
         }
 
         function set_current_player(player) {
+            localStorage.setItem("selected_player", JSON.stringify(player));
             current_player = player;
             $rootScope.$broadcast(SYNC_EVENTS.currentPlayerChange);
         }
