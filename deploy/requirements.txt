@@ -5,5 +5,7 @@ isodate==0.5.4
 passlib==1.6.5
 alembic==0.8.4
 pika==0.10.0
+invoke==0.12.2
+rjsmin==1.0.12
 pytz
 youtube-dl

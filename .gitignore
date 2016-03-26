@@ -63,6 +63,7 @@ target/
 utuputki.conf
 utuputki.db
 utuputki/webui/public/static/components
+utuputki/webui/public/static/custom/app.min.js
 
 # Vagrant
 .vagrant
