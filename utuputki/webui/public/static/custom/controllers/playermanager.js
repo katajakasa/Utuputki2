@@ -18,31 +18,39 @@ app.controller('PlayerManagerController', ['$scope', '$rootScope', '$location', 
             'Maintenance'
         ];
 
+        function refresh() {
+            var media = Player.get_current_media();
+            if(media != null) {
+                $scope.now_playing = media.source.title;
+                $scope.now_playing_duration =  moment.duration(media.source.length_seconds, "seconds").format("mm:ss", { trim: false });
+            }
+            $scope.current_skip_count = 0;
+            var st = Player.get_current_status();
+            if(st != null) {
+                if(st == 0) {
+                    $scope.now_playing = '-';
+                    $scope.now_playing_duration = 0;
+                }
+                $scope.status = statuslist[st];
+                $scope.skip_enabled = (st != 0);
+            } else {
+                $scope.now_playing = '-';
+                $scope.now_playing_duration = 0;
+            }
+            $scope.np_duration_enabled = ($scope.now_playing_duration != 0);
+        }
+
         function init() {
             $rootScope.$on(SYNC_EVENTS.playerSkipCountChange, function (event, args) {
                 $scope.req_skip_count = Player.get_req_skip_count();
                 $scope.current_skip_count = Player.get_current_skip_count();
             });
             $rootScope.$on(SYNC_EVENTS.playerPlaybackChange, function (event, args) {
-                var media = Player.get_current_media();
-                if(media != null) {
-                    $scope.now_playing = media.source.title;
-                    $scope.now_playing_duration =  moment.duration(media.source.length_seconds, "seconds").format("mm:ss", { trim: false });
-                }
-                $scope.current_skip_count = 0;
-                var st = Player.get_current_status();
-                if(st != null) {
-                    if(st == 0) {
-                        $scope.now_playing = '-';
-                        $scope.now_playing_duration = 0;
-                    }
-                    $scope.status = statuslist[st];
-                    $scope.skip_enabled = (st != 0);
-                } else {
-                    $scope.now_playing = '-';
-                    $scope.now_playing_duration = 0;
-                }
-                $scope.np_duration_enabled = ($scope.now_playing_duration != 0);
+                refresh();
+            });
+            $rootScope.$on(SYNC_EVENTS.currentPlayerChange, function (event, args) {
+                refresh();
+                Player.refresh();
             });
             Player.refresh();
         }

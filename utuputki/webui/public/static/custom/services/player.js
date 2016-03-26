@@ -14,12 +14,24 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
             } else {
                 if(query == 'fetchall') {
                     players = msg['data'];
-                    save_cache();
-                    $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
+
+                    // If not player is selected, pick one if possible
                     if(current_player == null && players.length > 0) {
                         current_player = players[0];
                         $rootScope.$broadcast(SYNC_EVENTS.currentPlayerChange);
                     }
+
+                    // Refresh current player (this makes sure that the version from cache is updated)
+                    if(current_player != null && players.length > 0) {
+                        for(var u = 0; u < players.length; u++) {
+                            if(players[u].id == current_player.id) {
+                                current_player = players[u];
+                            }
+                        }
+                    }
+
+                    save_cache();
+                    $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
                     return;
                 }
                 if(query == 'add') {
