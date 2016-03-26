@@ -6,14 +6,17 @@
         <div class="col-lg-6 col-md-6">
             <form class="input-group">
                 <span class="input-group-btn submit-button">
-                    <button class="btn btn-default" type="submit" ng-click="export()">Export</button>
+                    <button class="btn btn-default" type="submit" ng-click="export()" ng-disabled="grid_opts.data.length == 0">Export</button>
                 </span>
             </form>
         </div>
     </div>
 </div>
 <div class="col-sm-12 queue_show_block">
-    <div class="queue_info" ng-if="grid_opts.data">
+    <div class="queue_info" ng-if="grid_opts.data.length > 0">
         <div ui-grid="grid_opts" ui-grid-auto-resize ng-style="getTableHeight()" class="queue_grid"></div>
     </div>
+    <p ng-if="grid_opts.data.length == 0">
+        This player has no playlist history.
+    </p>
 </div>

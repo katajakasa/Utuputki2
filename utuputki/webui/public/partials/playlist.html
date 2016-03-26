@@ -20,7 +20,8 @@
     </div>
 </div>
 <div class="col-sm-12 queue_show_block">
-    <div class="queue_info" ng-if="grid_opts.data">
+    <div class="queue_info" ng-if="grid_opts.data.length > 0">
         <div ui-grid="grid_opts" ui-grid-auto-resize ng-style="getTableHeight()" class="queue_grid"></div>
     </div>
+    <p ng-if="grid_opts.data.length == 0">There is currently no media queued for this player.</p>
 </div>

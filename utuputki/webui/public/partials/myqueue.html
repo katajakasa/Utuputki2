@@ -16,7 +16,13 @@
     </div>
 </div>
 <div class="col-sm-12 queue_show_block">
-    <div class="queue_info" ng-if="grid_opts.data">
+    <div class="queue_info" ng-if="grid_opts.data.length > 0">
         <div ui-grid="grid_opts" ui-grid-auto-resize ng-style="getTableHeight()" class="queue_grid"></div>
     </div>
+    <p ng-if="grid_opts.data.length == 0">
+        You have no media queued for this player.
+    </p>
+    <p ng-if="grid_opts.data.length == 0">
+        Add more media by inserting a valid media url to the above field and then pressing "Add".
+    </p>
 </div>
