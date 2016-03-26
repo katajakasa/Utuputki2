@@ -14,7 +14,7 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
             } else {
                 if(query == 'fetchall') {
                     players = msg['data'];
-                    localStorage.setItem("players_list", JSON.stringify(players));
+                    save_cache();
                     $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
                     if(current_player == null && players.length > 0) {
                         current_player = players[0];
@@ -24,7 +24,7 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
                 }
                 if(query == 'add') {
                     players.push(msg['data']);
-                    localStorage.setItem("players_list", JSON.stringify(players));
+                    save_cache();
                     $rootScope.$broadcast(SYNC_EVENTS.playerAdded);
                     $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
                     return;
@@ -35,7 +35,7 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
                             players[k].name = msg['data']['name'];
                         }
                     }
-                    localStorage.setItem("players_list", JSON.stringify(players));
+                    save_cache();
                     $rootScope.$broadcast(SYNC_EVENTS.playersEdited);
                     $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
                     return;
@@ -66,15 +66,41 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
             }
         }
 
+        function save_cache() {
+            var keys = ['id', 'event_id', 'name', 'last', 'status'];
+
+            // Save players list
+            var filtered_players = [];
+            for(var k = 0; k < players.length; k++) {
+                var out = {};
+                for(var m = 0; m < keys.length; m++) {
+                    out[keys[m]] = players[k][keys[m]];
+                }
+                filtered_players.push(out);
+            }
+            localStorage.setItem("players_list", JSON.stringify(filtered_players));
+
+            // Save current player
+            var filtered_current = {};
+            for(var h = 0; h < keys.length; h++) {
+                filtered_current[keys[h]] = current_player[keys[h]];
+            }
+            localStorage.setItem("selected_player", JSON.stringify(filtered_current));
+        }
+
+        function restore_cache() {
+            if(localStorage.getItem("players_list") !== null) {
+                players = JSON.parse(localStorage.getItem("players_list"));
+                current_player = JSON.parse(localStorage.getItem("selected_player"));
+                $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
+            }
+        }
+
         function setup() {
             SockService.add_recv_handler('player', player_event);
             $rootScope.$on(AUTH_EVENTS.loginSuccess, function (event, args) {
                 // If cache contains old players list & current player, fetch them
-                if(localStorage.getItem("players_list") !== null) {
-                    players = JSON.parse(localStorage.getItem("players_list"));
-                    current_player = JSON.parse(localStorage.getItem("selected_player"));
-                    $rootScope.$broadcast(SYNC_EVENTS.playersRefresh);
-                }
+                restore_cache();
 
                 // ... then ask for a refresh from server
                 SockService.send_msg('player', {}, 'fetchall');
@@ -166,8 +192,8 @@ app.factory('Player', ['$location', '$rootScope', 'SockService', 'Playlist', 'AU
         }
 
         function set_current_player(player) {
-            localStorage.setItem("selected_player", JSON.stringify(player));
             current_player = player;
+            save_cache();
             $rootScope.$broadcast(SYNC_EVENTS.currentPlayerChange);
         }
 
