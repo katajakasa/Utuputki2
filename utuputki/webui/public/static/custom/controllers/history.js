@@ -2,16 +2,7 @@
 
 app.controller('HistoryController', ['$scope', '$window', '$rootScope', '$location', 'Player', 'Event', 'Playlist', 'Session', 'SYNC_EVENTS',
     function ($scope, $window, $rootScope, $location, Player, Event, Playlist, Session, SYNC_EVENTS) {
-        $scope.data = [];
         $scope.gridApi = null;
-
-        function redo_visibility(w) {
-            $scope.grid_opts.columnDefs[0].visible = (w > 400);
-            $scope.grid_opts.columnDefs[2].visible = (w > 900);
-            $scope.grid_opts.columnDefs[3].visible = (w > 500);
-            $scope.grid_opts.columnDefs[4].visible = (w > 400);
-            refresh_grid();
-        }
 
         $scope.grid_opts = {
             enableFiltering: false,
@@ -31,6 +22,17 @@ app.controller('HistoryController', ['$scope', '$window', '$rootScope', '$locati
                 $scope.gridApi = gridApi;
             }
         };
+        $scope.grid_opts.data = [];
+
+        function redo_visibility(w) {
+            if($scope.grid_opts.data.length > 0) {
+                $scope.grid_opts.columnDefs[0].visible = (w > 400);
+                $scope.grid_opts.columnDefs[2].visible = (w > 900);
+                $scope.grid_opts.columnDefs[3].visible = (w > 500);
+                $scope.grid_opts.columnDefs[4].visible = (w > 400);
+                refresh_grid();
+            }
+        }
 
         $scope.$watch(function(){
            return $window.innerWidth;
@@ -132,7 +134,9 @@ app.controller('HistoryController', ['$scope', '$window', '$rootScope', '$locati
             });
             $rootScope.$on(SYNC_EVENTS.currentPlayerChange, function(event, args) {
                 var c_player = Player.get_current_player();
-                Playlist.query(c_player.id);
+                if(c_player != null) {
+                    Playlist.query(c_player.id);
+                }
             });
             $rootScope.$on(SYNC_EVENTS.playerPlaybackChange, function(event, args) {
                 refresh_playlist();
