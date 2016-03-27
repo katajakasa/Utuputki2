@@ -29,7 +29,6 @@ app.factory('UserList', ['$location', '$rootScope', 'SockService', 'AuthService'
                 'nickname': nickname,
                 'email': email
             }, 'edit');
-            console.log(id);
         }
 
         function setup() {
