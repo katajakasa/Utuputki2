@@ -5,7 +5,7 @@ import logging
 from common.db import MEDIASTATUS
 from sockjs.tornado import SockJSConnection
 from handlers import login, logout, authenticate, queue, register, player, event, playerdev, playlist,\
-    profile, stats, unknown
+    profile, stats, userlist, unknown
 
 log = logging.getLogger(__name__)
 
@@ -91,6 +91,7 @@ class UtuputkiSock(SockJSConnection):
             'playerdev': playerdev.PlayerDeviceHandler,
             'playlist': playlist.PlaylistHandler,
             'stats': stats.StatsHandler,
+            'userlist': userlist.UserListHandler,
             'unknown': unknown.UnknownHandler
         }
         cbs[packet_type if packet_type in cbs else 'unknown'](self, packet_type, packet_query).handle(packet_msg)

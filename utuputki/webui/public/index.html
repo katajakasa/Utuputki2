@@ -30,6 +30,7 @@
     <script type="text/javascript" src="/static/custom/controllers/playlist.js" defer></script>
     <script type="text/javascript" src="/static/custom/controllers/playeradmin.js" defer></script>
     <script type="text/javascript" src="/static/custom/controllers/eventadmin.js" defer></script>
+    <script type="text/javascript" src="/static/custom/controllers/useradmin.js" defer></script>
     <script type="text/javascript" src="/static/custom/controllers/login.js" defer></script>
     <script type="text/javascript" src="/static/custom/controllers/logout.js" defer></script>
     <script type="text/javascript" src="/static/custom/controllers/nav.js" defer></script>
@@ -47,6 +48,7 @@
     <script type="text/javascript" src="/static/custom/services/event.js" defer></script>
     <script type="text/javascript" src="/static/custom/services/player.js" defer></script>
     <script type="text/javascript" src="/static/custom/services/statistics.js" defer></script>
+    <script type="text/javascript" src="/static/custom/services/userlist.js" defer></script>
     <script type="text/javascript" src="/static/custom/other/constants.js" defer></script>
     <script type="text/javascript" src="/static/custom/other/utils.js" defer></script>
 </head>
@@ -63,6 +65,9 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right" ng-if="is_event_menu_visible()">
+                <li ng-if="is_admin()">
+                    <a href="#/useradmin">Users</a>
+                </li>
                 <li class="dropdown" ng-if="events">
                     <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button">
                         <span ng-if="c_event != null">{{ c_event.name }}</span>

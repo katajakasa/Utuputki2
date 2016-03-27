@@ -68,6 +68,12 @@ app.config(['$routeProvider',
                 requireLogin: true,
                 requireAdmin: true
             }).
+            when('/useradmin', {
+                templateUrl: '/partials/useradmin.html',
+                controller: 'UserAdminController',
+                requireLogin: true,
+                requireAdmin: true
+            }).
             when('/', {
                 templateUrl: '/partials/myqueue.html',
                 controller: 'MyQueueController',
