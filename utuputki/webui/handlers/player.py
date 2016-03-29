@@ -56,7 +56,7 @@ class PlayerHandler(HandlerBase):
         # Fetch all players. Use this to init client state
         if self.query == 'fetchall':
             s = db_session()
-            players = [player.serialize(show_token=self.is_admin()) for player in s.query(Player).all()]
+            players = [p.serialize(show_token=self.is_admin()) for p in s.query(Player).all()]
             s.close()
             self.send_message(players)
             return

@@ -4,7 +4,7 @@ import logging
 from sqlalchemy.orm.exc import NoResultFound
 
 from handlerbase import HandlerBase
-from common.db import db_session, User, Session
+from common.db import db_session, User
 
 log = logging.getLogger(__name__)
 
