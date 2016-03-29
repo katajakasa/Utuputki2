@@ -64,7 +64,7 @@ class UtuputkiSock(SockJSConnection):
         try:
             message = json.loads(raw_message)
         except ValueError:
-            unknown.UnknownHandler(self, 'unknown').handle(raw_message)
+            unknown.UnknownHandler(self, 'unknown', None).handle(raw_message)
             return
 
         # Handle packet by type
