@@ -5,7 +5,7 @@ from passlib.hash import pbkdf2_sha256
 from sqlalchemy.orm.exc import NoResultFound
 
 from handlerbase import HandlerBase
-from common.db import db_session, User, USERLEVELS
+from common.db import db_session, User
 
 log = logging.getLogger(__name__)
 
