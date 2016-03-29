@@ -32,7 +32,8 @@ class QueueHandler(HandlerBase):
         if parsed.netloc == 'youtu.be':
             return parsed.path[1:]
 
-        if parsed.netloc != 'www.youtube.com' and parsed.netloc != 'youtube.com':
+        # Make sure the domain is correct
+        if parsed.netloc not in ['www.youtube.com', 'youtube.com', 'm.youtube.com']:
             return None
 
         # Check if this is embedded video
