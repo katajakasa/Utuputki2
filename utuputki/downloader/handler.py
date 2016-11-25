@@ -134,6 +134,15 @@ class DownloadConsumer(MqConstants):
 
                 # Save everything and dequeue this entry
                 log.info(u"Download finished.")
+                
+                # Attempt to figure out youtube-dl mess
+                m_test = os.path.splitext(file_path)
+                new_file = u'{}{}'.format(m_test[0], '.mkv')
+                if os.path.isfile(new_file):
+                    source.file_ext = 'mkv'
+                    source.file_name = os.path.basename(new_file)
+                    source.mime_type = mimetypes.guess_type('file://'+new_file)[0]
+                
                 source.status = MEDIASTATUS['finished']
                 source.message = 'Video downloaded successfully.'
                 s.add(source)
